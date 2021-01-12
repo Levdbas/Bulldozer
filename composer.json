@@ -1,8 +1,9 @@
 {
     "name": "baseplate/bulldozer",
-    "description": "Package that provides functionality for all kind of WordPress themes.",
+    "description": "Framework for BasePlate based WordPress projects.",
     "type": "library",
     "license": "MIT",
+    "homepage": "https://github.com/Levdbas/Bulldozer/",
     "authors": [
         {
             "name": "Erik van der Bas",
@@ -22,5 +23,15 @@
           "BasePlate\\Bulldozer\\": "src/"
         },
         "files": ["src/helpers.php"]
+      },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.*",
+        "wp-coding-standards/wpcs": "^2.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1"
+    },
+    "scripts": {
+        "test": [
+          "phpcs"
+        ]
       }
 }

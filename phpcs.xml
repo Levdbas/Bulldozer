@@ -11,7 +11,7 @@
     <exclude-pattern>*.twig</exclude-pattern>
 
     <!-- If no files or directories are specified on the command line, check all relevant files. -->
-    <file>./lib</file>
+    <file>./src</file>
 
     <!-- Use colors in output. -->
     <arg name="colors"/>
