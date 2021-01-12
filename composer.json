@@ -1,0 +1,26 @@
+{
+    "name": "baseplate/bulldozer",
+    "description": "Package that provides functionality for all kind of WordPress themes.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Erik van der Bas",
+            "email": "erik@basedonline.nl"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.1",
+        "timber/timber": "^1.17|^2.0",
+        "composer/installers": "~1.0",
+        "symfony/finder": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+          "BasePlate\\Bulldozer\\": "src/"
+        },
+        "files": ["src/helpers.php"]
+      }
+}
