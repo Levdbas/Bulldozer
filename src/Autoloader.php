@@ -26,29 +26,34 @@ class Autoloader
       $this->finder = new Finder;
    }
 
-   function parent()
+   function parent($dirs_to_load = false)
    {
+      if ($dirs_to_load) {
+         $this->dirs_to_load = $dirs_to_load;
+      }
+
       $this->base_dir = get_template_directory() . '/lib/';
       $this->load();
    }
 
    function child(array $dirs_to_load)
    {
-      $this->base_dir = get_stylesheet_directory() . '/library/';
       $this->dirs_to_load = $dirs_to_load;
+      $this->base_dir = get_stylesheet_directory() . '/library/';
       $this->load();
    }
 
-   function load($dirs_to_load = false)
+   function load()
    {
-
       foreach ($this->dirs_to_load as &$dir_to_load) {
          $dir_to_load = $this->base_dir . '/' . $dir_to_load . '/';
       }
+
       unset($dir_to_load);
       $this->finder->files()
          ->in($this->dirs_to_load)
          ->name('*.php');
+
       foreach ($this->finder as $file) {
          require_once $file->getRealPath();
       }
