@@ -173,4 +173,15 @@ abstract class BlockRenderer
          'type' => $type,
       ]);
    }
+
+   /**
+    * Add modifier class to block classes.
+    *
+    * @param string $modifier the part after the -- from the BEM principle.
+    * @return void
+    */
+   public function add_modifier_class(string $modifier)
+   {
+      array_push($this->classes, $this->slug . '--' . $modifier);
+   }
 }
