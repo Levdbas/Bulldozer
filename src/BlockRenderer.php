@@ -8,7 +8,6 @@ use Timber;
 
 abstract class BlockRenderer
 {
-
    protected $context;
    protected $attributes;
    protected $content;
@@ -109,7 +108,7 @@ abstract class BlockRenderer
       } elseif (locate_template("/resources/views/blocks/{$this->slug}/{$this->slug}.twig")) {
          $block_path = "{$this->slug}/{$this->slug}";
       } else {
-         frontend_error(__("Block {$this->slug}.twig not found.", 'wp-lemon'));
+         Bulldozer::frontend_error(__("Block {$this->slug}.twig not found.", 'wp-lemon'));
       }
 
       Timber\Timber::render("/resources/views/blocks/{$block_path}.twig", $this->context);
@@ -157,6 +156,7 @@ abstract class BlockRenderer
 
       return $classes;
    }
+
    /**
     * Compose a notification to be shown in the backend.
     * 
