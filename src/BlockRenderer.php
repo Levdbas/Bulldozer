@@ -1,6 +1,6 @@
 <?php
 
-namespace BasePlate\Bulldozer;
+namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
 

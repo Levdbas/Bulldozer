@@ -1,8 +1,8 @@
 <?php
 
-namespace BasePlate\Bulldozer\helpers;
+namespace HighGround\Bulldozer\helpers;
 
-use BasePlate\Bulldozer\Asset;
+use HighGround\Bulldozer\Asset;
 
 /**
  * Helper function to get an asset listed in the manifest.json file.

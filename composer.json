@@ -1,5 +1,5 @@
 {
-    "name": "baseplate/bulldozer",
+    "name": "highground/bulldozer",
     "description": "Framework for BasePlate based WordPress projects.",
     "type": "library",
     "license": "MIT",
@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-          "BasePlate\\Bulldozer\\": "src/"
+          "HighGround\\Bulldozer\\": "src/"
         },
         "files": ["src/helpers.php"]
       },

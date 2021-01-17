@@ -1,6 +1,6 @@
 <?php
 
-namespace BasePlate\Bulldozer;
+namespace HighGround\Bulldozer;
 
 use Symfony\Component\Finder\Finder;
 

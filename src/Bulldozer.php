@@ -1,6 +1,6 @@
 <?php
 
-namespace BasePlate\Bulldozer;
+namespace HighGround\Bulldozer;
 
 
 class Bulldozer
