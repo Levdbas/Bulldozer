@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-01-12 16:49+0100\n"
-"PO-Revision-Date: 2021-01-12 17:02+0100\n"
+"POT-Creation-Date: 2021-01-22 17:47+0100\n"
+"PO-Revision-Date: 2021-01-22 17:48+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -19,11 +19,27 @@ msgstr ""
 msgid "Did you run Webpack for the first time?"
 msgstr "Heb je Webpack voor het eerst gedraaid?"
 
-#: Bulldozer.php:46 Bulldozer.php:55
+#: BlockRenderer.php:170
+msgid "Notice"
+msgstr "Melding"
+
+#: BlockRenderer.php:171
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: BlockRenderer.php:172
+msgid "Error"
+msgstr "Foutmelding"
+
+#: BlockRenderer.php:175
+msgid "block"
+msgstr "blok"
+
+#: Bulldozer.php:48 Bulldozer.php:58
 msgid "&rsaquo; error"
 msgstr "&rsaquo; fout"
 
-#: Bulldozer.php:65 Bulldozer.php:66
+#: Bulldozer.php:69 Bulldozer.php:70
 msgid "Timber not activated. Make sure to composer require timber/timber"
 msgstr ""
 "Timber niet geactiveerd. Zorg ervoor dat timber/timber is toegevoegd aan uw "

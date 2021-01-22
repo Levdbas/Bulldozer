@@ -166,11 +166,17 @@ abstract class BlockRenderer
     */
    public function compose_notification(string $message, string $type)
    {
+      $types = [
+         'notice' => __('Notice', 'bulldozer'),
+         'warning' => __('Warning', 'bulldozer'),
+         'error' => __('Error', 'bulldozer')
+      ];
 
       array_push($this->notifications, [
          'title' => $this->attributes['title'] . ' ' . __('block', 'wp-lemon'),
          'message' => $message,
-         'type' => $type,
+         'type' => $modifiertype,
+         'type_name' => $types[$type],
       ]);
    }
 
