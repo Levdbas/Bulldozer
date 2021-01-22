@@ -175,7 +175,7 @@ abstract class BlockRenderer
       array_push($this->notifications, [
          'title' => $this->attributes['title'] . ' ' . __('block', 'wp-lemon'),
          'message' => $message,
-         'type' => $modifiertype,
+         'type' => $type,
          'type_name' => $types[$type],
       ]);
    }
