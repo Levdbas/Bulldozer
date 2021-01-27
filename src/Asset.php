@@ -33,7 +33,7 @@ class Asset
    public function uri(): string
    {
       if ($this->error) {
-         return $this->error;
+         return false;
       }
 
       return get_stylesheet_directory_uri() . '/dist/' . $this->path;
