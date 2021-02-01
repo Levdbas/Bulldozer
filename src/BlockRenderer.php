@@ -150,6 +150,10 @@ abstract class BlockRenderer
          $classes[] = 'has-text-color has-' . esc_attr($attributes['textColor']) . '-color';
       }
 
+      if (isset($attributes['gradient']) && !empty($attributes['gradient'])) {
+         $classes[] = 'has-background-gradient has-' . esc_attr($attributes['gradient']) . '-gradient-background';
+      }
+
       if (isset($fields['image_dim']) && !empty($fields['image_dim'])) {
          $classes[] = 'has-background-dim has-background-dim-' . esc_attr($fields['image_dim']);
       }
