@@ -2,6 +2,8 @@
 
 namespace HighGround\Bulldozer;
 
+use Roots\WPConfig\Config;
+use function Env\env;
 
 class Bulldozer
 {
@@ -21,6 +23,14 @@ class Bulldozer
       self::$theme = esc_html($my_theme->get('Name'));
       add_action('after_setup_theme', [$this, 'load_textdomain']);
       $this->test_compatibility();
+   }
+
+   public static function extend_roots_config()
+   {
+      Config::define('WP_MEMORY_LIMIT', '512M');
+      Config::define('WP_MAX_MEMORY_LIMIT', '512M');
+      Config::define('BE_MEDIA_FROM_PRODUCTION_URL', env('BE_MEDIA_FROM_PRODUCTION_URL') ?: false);
+      Config::define('CONTENT_LOCK', env('CONTENT_LOCK') ?: false);
    }
 
    private function test_compatibility()
