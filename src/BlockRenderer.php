@@ -66,7 +66,7 @@ abstract class BlockRenderer
     */
    public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
    {
-      $this->context = Timber\Timber::context();
+      $this->context = Timber\Timber::get_context();
 
       $this->attributes = $attributes;
       $this->content = $content;
