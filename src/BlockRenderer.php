@@ -123,7 +123,7 @@ abstract class BlockRenderer
    {
       $attributes = $this->attributes;
       $fields = $this->fields;
-      $classes = ['wp-block acf-block ' .  $this->slug];
+      $classes = ['acf-block ' .  $this->slug];
 
       if (isset($attributes['className']) && !empty($attributes['className'])) {
          $classes[] = esc_attr($attributes['className']);
