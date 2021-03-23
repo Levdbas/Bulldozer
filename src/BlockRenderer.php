@@ -6,6 +6,17 @@ require_once 'helpers.php';
 
 use Timber;
 
+/**
+ * Base class to register a new block.
+ * 
+ * Use this class to register an extra ACF block by extending this class.
+ * The block_register() method takes the array that get's passed to acf.
+ * Add context by using the block_context() method.
+ * 
+ * The class then composes the context, html classes, additional notifications that you want to show
+ * in the backend and finally checks first the parent theme and then the child theme to look for the twig partial.
+ * This way you can overwrite the twig partial in the child theme.
+ */
 abstract class BlockRenderer
 {
    protected $context;
@@ -19,9 +30,29 @@ abstract class BlockRenderer
    public $classes = [];
    protected $notifications = [];
 
+   /**
+    * Register a new ACF Block.
+    * 
+    * The array is passed to the acf_register_block_type() function that registers the block with ACF.
+    *
+    * @link https://www.advancedcustomfields.com/resources/acf_register_block_type/
+    * @return array
+    */
    abstract public function block_register(): array;
+
+   /**
+    * Add extra block context.
+    * 
+    * Use this function to pass the results of a query, add an asset or add modifier classes.
+    *
+    * @return array
+    */
    abstract public function block_context($context): array;
 
+   /**
+    * Passes the register method to acf.
+    * @return void
+    */
    public function __construct()
    {
       add_action('acf/init', [$this, 'register']);
