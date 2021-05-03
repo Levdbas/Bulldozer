@@ -6,7 +6,8 @@ require_once 'helpers.php';
 /**
  * Site Icons is a combination of custom code
  */
-class Site_Icons {
+class Site_Icons
+{
 
 	public string $name             = '';
 	public string $short_name       = '';
@@ -40,18 +41,19 @@ class Site_Icons {
 	private $manifest_filename = '';
 	private $favicon_path      = '';
 
-	function __construct() {
-		$this->name              = get_bloginfo( 'name' );
-		$this->short_name        = get_bloginfo( 'name' );
+	function __construct()
+	{
+		$this->name              = get_bloginfo('name');
+		$this->short_name        = get_bloginfo('name');
 		$this->start_url         = home_url();
 		$this->scope             = home_url();
 		$this->manifest_filename = $this->get_manifest_filename();
 		$this->favicon_path      = $this->get_favicon_path();
 
-		add_action( 'parse_request', array( $this, 'generate_manifest' ) );
-		add_action( 'init', array( $this, 'add_rewrite_rules' ) );
-		add_action( 'wp_head', array( $this, 'add_meta_to_head' ), 0 );
-		add_filter( 'get_site_icon_url', array( $this, 'filter_favicon_path' ), 10, 2 );
+		add_action('parse_request', array($this, 'generate_manifest'));
+		add_action('init', array($this, 'add_rewrite_rules'));
+		add_action('wp_head', array($this, 'add_meta_to_head'), 0);
+		add_filter('get_site_icon_url', array($this, 'filter_favicon_path'), 10, 2);
 	}
 
 	/**
@@ -62,13 +64,14 @@ class Site_Icons {
 	 *
 	 * @return void
 	 */
-	public function get_favicon_path() {
-		if ( file_exists( get_stylesheet_directory() . '/resources/favicons/android-chrome-512x512.png' ) ) {
+	public function get_favicon_path()
+	{
+		if (file_exists(get_stylesheet_directory() . '/resources/favicons/android-chrome-512x512.png')) {
 			return get_stylesheet_directory_uri() . '/resources/favicons/';
-		} elseif ( file_exists( get_template_directory() . '/resources/favicons/android-chrome-512x512.png' ) ) {
+		} elseif (file_exists(get_template_directory() . '/resources/favicons/android-chrome-512x512.png')) {
 			return get_template_directory_uri() . '/resources/favicons/';
 		} else {
-			Bulldozer::frontend_error( __( 'No icons found at /resources/favicons/', 'wp-lemon' ) );
+			Bulldozer::frontend_error(__('No icons found at /resources/favicons/', 'wp-lemon'));
 		}
 	}
 
@@ -78,9 +81,10 @@ class Site_Icons {
 	 *
 	 * @return void
 	 */
-	private function get_manifest_filename() {
+	private function get_manifest_filename()
+	{
 		// Return empty string if not a multisite
-		if ( ! is_multisite() ) {
+		if (!is_multisite()) {
 			return 'site.webmanifest';
 		}
 
@@ -92,7 +96,8 @@ class Site_Icons {
 	 *
 	 * @return void
 	 */
-	public function add_rewrite_rules() {
+	public function add_rewrite_rules()
+	{
 		$manifest_filename = $this->manifest_filename;
 
 		add_rewrite_rule(
@@ -106,10 +111,11 @@ class Site_Icons {
 	 *
 	 * @return void
 	 */
-	private function get_icons() {
+	private function get_icons()
+	{
 		/**
-		   * default icon
-		   */
+		 * default icon
+		 */
 		$icons_array[] = array(
 			'src'     => $this->favicon_path . 'android-chrome-192x192.png',
 			'sizes'   => '192x192',
@@ -136,7 +142,8 @@ class Site_Icons {
 	 *
 	 * @return void
 	 */
-	private function create_manifest() {
+	private function create_manifest()
+	{
 		$manifest = array();
 
 		$manifest['name']             = $this->name;
@@ -158,17 +165,18 @@ class Site_Icons {
 	 * @param object $query
 	 * @return void
 	 */
-	public function generate_manifest( $query ) {
-		if ( ! property_exists( $query, 'query_vars' ) || ! is_array( $query->query_vars ) ) {
+	public function generate_manifest($query)
+	{
+		if (!property_exists($query, 'query_vars') || !is_array($query->query_vars)) {
 			return;
 		}
 
-		$query_vars_as_string = http_build_query( $query->query_vars );
+		$query_vars_as_string = http_build_query($query->query_vars);
 		$manifest_filename    = $this->manifest_filename;
 
-		if ( strpos( $query_vars_as_string, $manifest_filename ) !== false ) {
-			header( 'Content-Type: application/json' );
-			echo json_encode( $this->create_manifest() );
+		if (strpos($query_vars_as_string, $manifest_filename) !== false) {
+			header('Content-Type: application/json');
+			echo json_encode($this->create_manifest());
 			exit();
 		}
 	}
@@ -178,9 +186,10 @@ class Site_Icons {
 	 *
 	 * @return void
 	 */
-	public function add_meta_to_head() {
+	public function add_meta_to_head()
+	{
 		$tags  = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
-		$tags .= '<link rel="manifest" href="' . parse_url( home_url( '/' ) . $this->manifest_filename, PHP_URL_PATH ) . '">' . PHP_EOL;
+		$tags .= '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">' . PHP_EOL;
 		$tags .= '<meta name="theme-color" content="' . $this->theme_color . '">' . PHP_EOL;
 		echo $tags;
 	}
@@ -193,9 +202,10 @@ class Site_Icons {
 	 * @param string $size
 	 * @return void
 	 */
-	public function filter_favicon_path( $url, $size ) {
+	public function filter_favicon_path($url, $size)
+	{
 
-		switch ( $size ) {
+		switch ($size) {
 			case 32:
 				$filename = 'favicon-32x32.png';
 				break;
@@ -205,17 +215,11 @@ class Site_Icons {
 			case 192:
 				$filename = 'android-chrome-192x192.png';
 				break;
-			case 270:
-				/**
-				 * remove outdated MStile
-				 */
-				return false;
-			break;
 			case 512:
 				$filename = 'android-chrome-512x512.png';
 				break;
 			default:
-				// code...
+				return false;
 				break;
 		}
 
