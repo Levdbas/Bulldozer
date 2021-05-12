@@ -9,7 +9,7 @@ class Autoloader
 
    private $base_dir;
    private $finder;
-   private $dirs_to_load = ['routes', 'controllers', 'models', 'blocks'];
+   private $dirs_to_load = ['controllers', 'models', 'blocks'];
 
    function __construct()
    {
