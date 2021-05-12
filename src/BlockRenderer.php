@@ -134,7 +134,7 @@ abstract class BlockRenderer
     *
     * @return void
     */
-   private function render()
+   public function render()
    {
       if (locate_template("/resources/views/blocks/{$this->slug}.twig")) {
          $block_path = $this->slug;
