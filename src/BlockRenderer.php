@@ -29,6 +29,7 @@ abstract class BlockRenderer
    protected $name;
    protected $slug;
    protected $fields;
+   protected $block;
    public object $registered_fields;
    public $classes = [];
    protected $notifications = [];
@@ -82,16 +83,38 @@ abstract class BlockRenderer
     */
    public function register_block()
    {
-      $block = $this->block_register();
-      $this->name = 'acf/' . $block['name'];
-      $this->slug = $block['name'];
+      $this->block = $this->block_register();
+      $this->name = 'acf/' .  $this->block['name'];
+      $this->slug =  $this->block['name'];
       $callback = ['render_callback' => [$this, 'compile']];
-      $block = array_merge($block, $callback);
+      $this->block = array_merge($this->block, $callback);
 
-      acf_register_block_type($block);
+      acf_register_block_type($this->block);
       $this->register_block_styles();
    }
 
+   /**
+    * Register fields to the block.
+    *
+    * We first set up the block, then use the abstract method add_fields() to add fields in the extended block.
+    * Then we register the fields.
+    * 
+    * @return void
+    */
+   public function register_fields_group()
+   {
+      $this->setup_fields_group();
+      $this->add_fields();
+      acf_add_local_field_group($this->registered_fields->build());
+   }
+
+
+   /**
+    * Setup a new field group using AcfBuilder
+    *
+    * We create the group & set the location.
+    * @return FieldsBuilder
+    */
    private function setup_fields_group()
    {
       $this->registered_fields = new FieldsBuilder($this->slug);
@@ -101,12 +124,7 @@ abstract class BlockRenderer
       return $this->registered_fields;
    }
 
-   public function register_fields_group()
-   {
-      $this->setup_fields_group();
-      $this->add_fields();
-      acf_add_local_field_group($this->registered_fields->build());
-   }
+
    /**
     * Empty function that can be overwritten by the blocks to register block styles.
     *
@@ -115,6 +133,7 @@ abstract class BlockRenderer
    public function register_block_styles()
    {
    }
+
    /**
     * Compile the block
     *
@@ -128,10 +147,10 @@ abstract class BlockRenderer
    public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
    {
       $this->context = Timber\Timber::get_context();
-
       $this->attributes = $attributes;
       $this->wp_block   = $wp_block;
       $this->content    = $content;
+      $this->maybe_add_deprecation_notice();
 
       $this->is_preview = $is_preview;
       $this->post_id    = $post_id;
@@ -147,8 +166,6 @@ abstract class BlockRenderer
       $this->context['is_preview'] = $this->is_preview;
       $this->context['post_id']    = $this->post_id;
       $this->context['fields']     = $this->fields;
-
-
 
       /**
        * Merging the above context with the block_extender context given from the extended class in
@@ -241,7 +258,7 @@ abstract class BlockRenderer
       ];
 
       array_push($this->notifications, [
-         'title' => $this->attributes['title'] . ' ' . __('block', 'wp-lemon'),
+         'title' => $this->attributes['title'] . ' ' . __('block', 'bulldozer'),
          'message' => $message,
          'type' => $type,
          'type_name' => $types[$type],
@@ -257,5 +274,22 @@ abstract class BlockRenderer
    public function add_modifier_class(string $modifier)
    {
       array_push($this->classes, $this->slug . '--' . $modifier);
+   }
+
+   /**
+    * Adds notice to backend if the block is deprecated.
+    *
+    * Checks registed block array for 'lemon_deprecated'.
+    *
+    * @return void
+    */
+   private function maybe_add_deprecation_notice()
+   {
+      if (!isset($this->block['lemon_deprecated'])) {
+         return false;
+      }
+
+      $message = sprintf(esc_html__('This block is deprecated since version %1$s. Please remove this block in favor of %1$s.', 'bulldozer'), $this->attributes['lemon_deprecated']['since'], $this->attributes['lemon_deprecated']['use']);
+      $this->compose_notification($message, 'warning');
    }
 }
