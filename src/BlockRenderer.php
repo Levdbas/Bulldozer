@@ -101,21 +101,23 @@ abstract class BlockRenderer
       $this->context = Timber\Timber::get_context();
 
       $this->attributes = $attributes;
-      $this->wp_block =  $wp_block;
-      $this->content = $content;
+      $this->wp_block   = $wp_block;
+      $this->content    = $content;
 
       $this->is_preview = $is_preview;
-      $this->post_id = $post_id;
-      $this->name = $attributes['name'];
-      $this->slug = str_replace('acf/', '', $attributes['name']);
-      $this->fields = get_fields();
-      $this->classes = $this->base_block_classes();
-      $this->context['slug'] = $this->slug;
-      $this->context['block'] = $this->attributes;
-      $this->context['content'] = $this->content;
+      $this->post_id    = $post_id;
+      $this->name       = $attributes['name'];
+      $this->slug       = str_replace('acf/', '', $attributes['name']);
+      $this->fields     = get_fields();
+      $this->classes    = $this->base_block_classes();
+
+      $this->context['slug']       = $this->slug;
+      $this->context['attributes'] = $this->attributes;
+      $this->context['block']      = $this->wp_block;
+      $this->context['content']    = $this->content;
       $this->context['is_preview'] = $this->is_preview;
-      $this->context['post_id'] = $this->post_id;
-      $this->context['fields'] = $this->fields;
+      $this->context['post_id']    = $this->post_id;
+      $this->context['fields']     = $this->fields;
 
 
 
