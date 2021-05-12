@@ -4,6 +4,7 @@ namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
 
+use StoutLogic\AcfBuilder\FieldsBuilder;
 use Timber;
 
 /**
@@ -28,6 +29,7 @@ abstract class BlockRenderer
    protected $name;
    protected $slug;
    protected $fields;
+   public object $registered_fields;
    public $classes = [];
    protected $notifications = [];
 
@@ -40,6 +42,16 @@ abstract class BlockRenderer
     * @return array
     */
    abstract public function block_register(): array;
+
+   /**
+    * Register fields to the block.
+    * 
+    * The array is passed to the acf_register_block_type() function that registers the block with ACF.
+    *
+    * @link https://github.com/StoutLogic/acf-builder
+    * @return FieldsBuilder
+    */
+   abstract public function add_fields(): object;
 
    /**
     * Add extra block context.
@@ -56,7 +68,8 @@ abstract class BlockRenderer
     */
    public function __construct()
    {
-      add_action('acf/init', [$this, 'register']);
+      add_action('acf/init', [$this, 'register_block']);
+      add_action('acf/init', [$this, 'register_fields_group']);
    }
 
    /**
@@ -67,10 +80,11 @@ abstract class BlockRenderer
     *
     * @return void
     */
-   public function register()
+   public function register_block()
    {
       $block = $this->block_register();
       $this->name = 'acf/' . $block['name'];
+      $this->slug = $block['name'];
       $callback = ['render_callback' => [$this, 'compile']];
       $block = array_merge($block, $callback);
 
@@ -78,6 +92,21 @@ abstract class BlockRenderer
       $this->register_block_styles();
    }
 
+   private function setup_fields_group()
+   {
+      $this->registered_fields = new FieldsBuilder($this->slug);
+
+      $this->registered_fields
+         ->setLocation('block', '==', $this->name);
+      return $this->registered_fields;
+   }
+
+   public function register_fields_group()
+   {
+      $this->setup_fields_group();
+      $this->add_fields();
+      acf_add_local_field_group($this->registered_fields->build());
+   }
    /**
     * Empty function that can be overwritten by the blocks to register block styles.
     *

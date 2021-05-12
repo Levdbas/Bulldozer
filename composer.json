@@ -15,7 +15,8 @@
   "require": {
     "php": ">=7.1",
     "composer/installers": "~1.0",
-    "symfony/finder": "^5.1"
+    "symfony/finder": "^5.1",
+    "stoutlogic/acf-builder": "^1.11"
   },
   "autoload": {
     "psr-4": {
