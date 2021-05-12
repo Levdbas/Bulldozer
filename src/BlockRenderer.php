@@ -113,7 +113,7 @@ abstract class BlockRenderer
 
       $this->context['slug']       = $this->slug;
       $this->context['attributes'] = $this->attributes;
-      $this->context['block']      = $this->wp_block;
+      $this->context['wp_block']      = $this->wp_block;
       $this->context['content']    = $this->content;
       $this->context['is_preview'] = $this->is_preview;
       $this->context['post_id']    = $this->post_id;
