@@ -20,19 +20,82 @@ use Timber;
  */
 abstract class BlockRenderer
 {
+   /**
+    * Block property as passed to acf_register_block_type()
+    */
+   protected array $block;
+
+   /**
+    * Going to hold the block context.
+    *
+    * @var [type]
+    */
    protected $context;
+
+   /**
+    * The rendered block attributes. Only visible on the frontend.
+    *
+    * @var [type]
+    */
    protected $wp_block;
+
+   /**
+    * Block attributes. Visible on both front- and backend.
+    *
+    * @var [type]
+    */
    protected $attributes;
+
+   /**
+    * Block content.
+    *
+    * @var [type]
+    */
    protected $content;
-   protected $is_preview;
-   protected $post_id;
-   protected $name;
-   protected $slug;
+
+   /**
+    * Whether the block is showed on the frontend or backend. Backend returns true.
+    */
+   protected bool $is_preview;
+
+   /**
+    * Current post id where the block belongs to.
+    */
+   protected int $post_id;
+
+   /**
+    * Block name with acf/ prefix.
+    */
+   protected string $name;
+
+   /**
+    * Block slug without acf/prefix
+    */
+   protected string $slug;
+
+   /**
+    * Field data retrieved by get_fields();
+    *
+    * @var [type]
+    */
    protected $fields;
-   protected $block;
+
+   /**
+    * Fields registerd to the block using AcfBuilder
+    */
    public object $registered_fields;
-   public $classes = [];
-   protected $notifications = [];
+
+   /**
+    * Array of classes that are appended to the wrapper element.
+    */
+   public array $classes = [];
+
+   /**
+    * Array of notifications.
+    * Notifications are added by compose_notification()
+    *
+    * @method compose_notification()
+    */
 
    /**
     * Register a new ACF Block.
@@ -98,7 +161,9 @@ abstract class BlockRenderer
     *
     * We first set up the block, then use the abstract method add_fields() to add fields in the extended block.
     * Then we register the fields.
-    * 
+    *
+    * @method add_fields()
+    * @method setup_fields_group()
     * @return void
     */
    public function register_fields_group()
