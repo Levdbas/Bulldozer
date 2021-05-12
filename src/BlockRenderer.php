@@ -20,6 +20,7 @@ use Timber;
 abstract class BlockRenderer
 {
    protected $context;
+   protected $wp_block;
    protected $attributes;
    protected $content;
    protected $is_preview;
@@ -100,6 +101,7 @@ abstract class BlockRenderer
       $this->context = Timber\Timber::get_context();
 
       $this->attributes = $attributes;
+      $this->wp_block =  $wp_block;
       $this->content = $content;
 
       $this->is_preview = $is_preview;
