@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-05-12 17:49+0200\n"
-"PO-Revision-Date: 2021-05-12 17:49+0200\n"
+"POT-Creation-Date: 2021-05-12 18:28+0200\n"
+"PO-Revision-Date: 2021-05-12 18:28+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -19,30 +19,30 @@ msgstr ""
 msgid "Did you run Webpack for the first time?"
 msgstr "Heb je Webpack voor het eerst gedraaid?"
 
-#: BlockRenderer.php:255
+#: BlockRenderer.php:321
 msgid "Notice"
 msgstr "Melding"
 
-#: BlockRenderer.php:256
+#: BlockRenderer.php:322
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: BlockRenderer.php:257
+#: BlockRenderer.php:323
 msgid "Error"
 msgstr "Foutmelding"
 
-#: BlockRenderer.php:261
+#: BlockRenderer.php:327
 msgid "block"
 msgstr "blok"
 
-#: BlockRenderer.php:292
+#: BlockRenderer.php:358
 #, php-format
 msgid ""
-"This block is deprecated since version %1$s. Please remove this block in "
-"favor of %1$s."
+"This block is deprecated since version %1$s. Please replace this block in "
+"favor of the %2$s."
 msgstr ""
-"Dit blok is verouderd sinds versie %1$s. Verwijder dit blok ten gunste van "
-"%1$s."
+"Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
+"de %2$s."
 
 #: Bulldozer.php:58 Bulldozer.php:68
 msgid "&rsaquo; error"
