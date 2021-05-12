@@ -96,6 +96,7 @@ abstract class BlockRenderer
     *
     * @method compose_notification()
     */
+   protected array $notifications = [];
 
    /**
     * Register a new ACF Block.
@@ -257,7 +258,7 @@ abstract class BlockRenderer
          Bulldozer::frontend_error(__("Block {$this->slug}.twig not found.", 'wp-lemon'));
       }
 
-      Timber\Timber::render("/resources/views/blocks/{$block_path}.twig", $this->context);
+      Timber\Timber::render("blocks/{$block_path}.twig", $this->context);
    }
 
    /**
