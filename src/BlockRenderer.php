@@ -11,7 +11,7 @@ use Timber;
  * Base class to register a new block.
  * 
  * Use this class to register an extra ACF block by extending this class.
- * The block_register() method takes the array that get's passed to acf.
+ * The block_register() method takes the array that is passed to acf.
  * Add context by using the block_context() method.
  * 
  * The class then composes the context, html classes, additional notifications that you want to show
@@ -81,7 +81,7 @@ abstract class BlockRenderer
    protected $fields;
 
    /**
-    * Fields registerd to the block using AcfBuilder
+    * Fields registered to the block using AcfBuilder
     */
    public object $registered_fields;
 
@@ -312,7 +312,7 @@ abstract class BlockRenderer
     * Compose a notification to be shown in the backend.
     * 
     * @param string $message  The message, translatable
-    * @param string $type     type of notication, can be notice, warning or error
+    * @param string $type     type of notification, can be notice, warning or error
     * @return void
     */
    public function compose_notification(string $message, string $type)
@@ -345,7 +345,7 @@ abstract class BlockRenderer
    /**
     * Adds notice to backend if the block is deprecated.
     *
-    * Checks registed block array for 'lemon_deprecated'.
+    * Checks registered block array for 'lemon_deprecated'.
     *
     * @return void
     */
@@ -355,7 +355,7 @@ abstract class BlockRenderer
          return false;
       }
 
-      $message = sprintf(esc_html__('This block is deprecated since version %1$s. Please replace this block in favor of the %2$s.', 'bulldozer'), $this->attributes['lemon_deprecated']['since'], $this->attributes['lemon_deprecated']['use']);
+      $message = sprintf(esc_textarea('This block is deprecated since version %1$s. Please replace this block in favor of the %2$s.', 'bulldozer'), $this->attributes['lemon_deprecated']['since'], $this->attributes['lemon_deprecated']['use']);
       $this->compose_notification($message, 'warning');
    }
 }
