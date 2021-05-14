@@ -72,7 +72,6 @@ abstract class BlockRenderer
    /**
     * Field data retrieved by get_fields();
     *
-    * @var [type]
     */
    protected $fields;
 
