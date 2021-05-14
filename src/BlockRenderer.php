@@ -28,28 +28,24 @@ abstract class BlockRenderer
    /**
     * Going to hold the block context.
     *
-    * @var [type]
     */
    protected $context;
 
    /**
     * The rendered block attributes. Only visible on the frontend.
     *
-    * @var [type]
     */
    protected $wp_block;
 
    /**
     * Block attributes. Visible on both front- and backend.
     *
-    * @var [type]
     */
    protected $attributes;
 
    /**
     * Block content.
     *
-    * @var [type]
     */
    protected $content;
 
