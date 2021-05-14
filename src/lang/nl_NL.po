@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-05-12 18:28+0200\n"
-"PO-Revision-Date: 2021-05-12 18:28+0200\n"
+"POT-Creation-Date: 2021-05-14 11:08+0200\n"
+"PO-Revision-Date: 2021-05-14 11:09+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -35,20 +35,22 @@ msgstr "Foutmelding"
 msgid "block"
 msgstr "blok"
 
-#: BlockRenderer.php:358
+#: Bulldozer.php:49
 #, php-format
 msgid ""
-"This block is deprecated since version %1$s. Please replace this block in "
-"favor of the %2$s."
+"Your theme %1$s requires Bulldozer %2$s. You have %3$s installed. Please "
+"update/downgrade by setting the version number like this in your composer "
+"file: highground/bulldozer\": \"%2$s\""
 msgstr ""
-"Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
-"de %2$s."
+"Je thema %1$s vereist Bulldozer %2$s. U heeft %3$s geïnstalleerd. Update/"
+"downgrade door het versienummer als volgt in te stellen in uw composer-"
+"bestand: \"highground/bulldozer\": \"%2$s\""
 
-#: Bulldozer.php:58 Bulldozer.php:68
+#: Bulldozer.php:79 Bulldozer.php:89
 msgid "&rsaquo; error"
 msgstr "&rsaquo; fout"
 
-#: Bulldozer.php:79 Bulldozer.php:80
+#: Bulldozer.php:100 Bulldozer.php:101
 msgid "Timber not activated. Make sure to composer require timber/timber"
 msgstr ""
 "Timber niet geactiveerd. Zorg ervoor dat timber/timber is toegevoegd aan uw "
@@ -57,6 +59,14 @@ msgstr ""
 #: Site_Icons.php:74
 msgid "No icons found at /resources/favicons/"
 msgstr "Geen pictogrammen gevonden bij /resources/favicons/"
+
+#, php-format
+#~ msgid ""
+#~ "This block is deprecated since version %1$s. Please replace this block in "
+#~ "favor of the %2$s."
+#~ msgstr ""
+#~ "Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
+#~ "de %2$s."
 
 #~ msgid "WP_Lemon &rsaquo; error"
 #~ msgstr "WP_Lemon &rsaquo; fout"
