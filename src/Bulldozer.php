@@ -7,6 +7,16 @@ use function Env\env;
 
 class Bulldozer
 {
+   /**
+    * Current Bulldozer version.
+    */
+   const VERSION = '1.4.5';
+
+   /**
+    * Active theme object.
+    *
+    * @var WP_Theme
+    */
    private static $theme;
 
    public function __construct()
@@ -31,6 +41,17 @@ class Bulldozer
       Config::define('WP_MAX_MEMORY_LIMIT', '512M');
       Config::define('BE_MEDIA_FROM_PRODUCTION_URL', env('BE_MEDIA_FROM_PRODUCTION_URL') ?: false);
       Config::define('CONTENT_LOCK', env('CONTENT_LOCK') ?: false);
+   }
+
+   public function matches_required_version(string $required_version)
+   {
+      if (version_compare(self::VERSION, $required_version, '!=') && !is_admin()) {
+         $message = sprintf(__('Your theme %1$s requires Bulldozer %2$s. You have %3$s installed. Please update/downgrade by setting the version number like this in your composer file: highground/bulldozer": "%2$s"', 'bulldozer'), self::$theme, $required_version, self::VERSION);
+         add_action('after_setup_theme',  function () use ($message) {
+            self::backend_error($message);
+            self::frontend_error($message);
+         });
+      }
    }
 
    private function test_compatibility()
