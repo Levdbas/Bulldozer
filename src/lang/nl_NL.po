@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-05-14 11:08+0200\n"
-"PO-Revision-Date: 2021-05-14 11:09+0200\n"
+"POT-Creation-Date: 2021-05-24 13:48+0200\n"
+"PO-Revision-Date: 2021-05-24 13:49+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -19,21 +19,30 @@ msgstr ""
 msgid "Did you run Webpack for the first time?"
 msgstr "Heb je Webpack voor het eerst gedraaid?"
 
-#: BlockRenderer.php:321
+#: BlockRenderer.php:316
 msgid "Notice"
 msgstr "Melding"
 
-#: BlockRenderer.php:322
+#: BlockRenderer.php:317
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: BlockRenderer.php:323
+#: BlockRenderer.php:318
 msgid "Error"
 msgstr "Foutmelding"
 
-#: BlockRenderer.php:327
+#: BlockRenderer.php:322
 msgid "block"
 msgstr "blok"
+
+#: BlockRenderer.php:353
+#, php-format
+msgid ""
+"This block is deprecated since version %1$s. Please replace this block in "
+"favor of the %2$s."
+msgstr ""
+"Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van de "
+"%2$s."
 
 #: Bulldozer.php:49
 #, php-format
@@ -59,14 +68,6 @@ msgstr ""
 #: Site_Icons.php:74
 msgid "No icons found at /resources/favicons/"
 msgstr "Geen pictogrammen gevonden bij /resources/favicons/"
-
-#, php-format
-#~ msgid ""
-#~ "This block is deprecated since version %1$s. Please replace this block in "
-#~ "favor of the %2$s."
-#~ msgstr ""
-#~ "Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
-#~ "de %2$s."
 
 #~ msgid "WP_Lemon &rsaquo; error"
 #~ msgstr "WP_Lemon &rsaquo; fout"

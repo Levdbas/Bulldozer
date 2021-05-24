@@ -350,7 +350,7 @@ abstract class BlockRenderer
          return false;
       }
 
-      $message = sprintf(esc_textarea('This block is deprecated since version %1$s. Please replace this block in favor of the %2$s.', 'bulldozer'), $this->attributes['lemon_deprecated']['since'], $this->attributes['lemon_deprecated']['use']);
+      $message = sprintf(__('This block is deprecated since version %1$s. Please replace this block in favor of the %2$s.', 'bulldozer'), $this->attributes['lemon_deprecated']['since'], $this->attributes['lemon_deprecated']['use']);
       $this->compose_notification($message, 'warning');
    }
 }
