@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-05-24 13:48+0200\n"
-"PO-Revision-Date: 2021-05-24 13:49+0200\n"
+"POT-Creation-Date: 2021-06-03 13:38+0200\n"
+"PO-Revision-Date: 2021-06-03 13:38+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -19,30 +19,56 @@ msgstr ""
 msgid "Did you run Webpack for the first time?"
 msgstr "Heb je Webpack voor het eerst gedraaid?"
 
-#: BlockRenderer.php:316
+#: BlockRenderer.php:321
 msgid "Notice"
 msgstr "Melding"
 
-#: BlockRenderer.php:317
+#: BlockRenderer.php:322
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: BlockRenderer.php:318
+#: BlockRenderer.php:323
 msgid "Error"
 msgstr "Foutmelding"
 
-#: BlockRenderer.php:322
+#: BlockRenderer.php:327
 msgid "block"
 msgstr "blok"
 
-#: BlockRenderer.php:353
+#: BlockRenderer.php:358
 #, php-format
 msgid ""
 "This block is deprecated since version %1$s. Please replace this block in "
-"favor of the %2$s."
+"favor of %2$s."
 msgstr ""
-"Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van de "
+"Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
 "%2$s."
+
+#: BlockRenderer.php:381
+msgid "This block is disabled and thus not visible on the frontend."
+msgstr "Dit blok is uitgeschakeld en dus niet zichtbaar op de frontend."
+
+#: BlockRenderer.php:393
+msgid "Disable block"
+msgstr "Blok uitschakelen"
+
+#: BlockRenderer.php:394
+msgid ""
+"You can disable the block if you need to temporarily hide its content. For "
+"example, an announcement block can be still kept inside the editor but will "
+"not be show until it's enabled again."
+msgstr ""
+"U kunt het blok uitschakelen als u de inhoud tijdelijk moet verbergen. Een "
+"aankondigingsblok kan bijvoorbeeld nog steeds in de editor worden bewaard, "
+"maar wordt pas weergegeven als het opnieuw is ingeschakeld."
+
+#: BlockRenderer.php:396
+msgid "True"
+msgstr "Ja"
+
+#: BlockRenderer.php:397
+msgid "False"
+msgstr "Nee"
 
 #: Bulldozer.php:49
 #, php-format
@@ -68,6 +94,9 @@ msgstr ""
 #: Site_Icons.php:74
 msgid "No icons found at /resources/favicons/"
 msgstr "Geen pictogrammen gevonden bij /resources/favicons/"
+
+#~ msgid "Block disabled?"
+#~ msgstr "Blok uitschakelen?"
 
 #~ msgid "WP_Lemon &rsaquo; error"
 #~ msgstr "WP_Lemon &rsaquo; fout"

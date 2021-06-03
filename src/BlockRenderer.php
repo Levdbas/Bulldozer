@@ -93,6 +93,7 @@ abstract class BlockRenderer
     */
    protected array $notifications = [];
 
+   protected bool $block_disabled = false;
    /**
     * Register a new ACF Block.
     * 
@@ -143,9 +144,9 @@ abstract class BlockRenderer
    public function register_block()
    {
       $this->block = $this->block_register();
-      $this->name = 'acf/' .  $this->block['name'];
-      $this->slug =  $this->block['name'];
-      $callback = ['render_callback' => [$this, 'compile']];
+      $this->name  = 'acf/' .  $this->block['name'];
+      $this->slug  = $this->block['name'];
+      $callback    = ['render_callback' => [$this, 'compile']];
       $this->block = array_merge($this->block, $callback);
 
       acf_register_block_type($this->block);
@@ -182,6 +183,8 @@ abstract class BlockRenderer
 
       $this->registered_fields
          ->setLocation('block', '==', $this->name);
+
+      $this->add_disable_button();
       return $this->registered_fields;
    }
 
@@ -211,8 +214,6 @@ abstract class BlockRenderer
       $this->attributes = $attributes;
       $this->wp_block   = $wp_block;
       $this->content    = $content;
-      $this->maybe_add_deprecation_notice();
-
       $this->is_preview = $is_preview;
       $this->post_id    = $post_id;
       $this->name       = $attributes['name'];
@@ -220,13 +221,17 @@ abstract class BlockRenderer
       $this->fields     = get_fields();
       $this->classes    = $this->base_block_classes();
 
-      $this->context['slug']       = $this->slug;
-      $this->context['attributes'] = $this->attributes;
-      $this->context['wp_block']      = $this->wp_block;
-      $this->context['content']    = $this->content;
-      $this->context['is_preview'] = $this->is_preview;
-      $this->context['post_id']    = $this->post_id;
-      $this->context['fields']     = $this->fields;
+      $this->maybe_add_deprecation_notice();
+      $this->maybe_disable_block();
+
+      $this->context['is_disabled'] = $this->block_disabled;
+      $this->context['slug']        = $this->slug;
+      $this->context['attributes']  = $this->attributes;
+      $this->context['wp_block']    = $this->wp_block;
+      $this->context['content']     = $this->content;
+      $this->context['is_preview']  = $this->is_preview;
+      $this->context['post_id']     = $this->post_id;
+      $this->context['fields']      = $this->fields;
 
       /**
        * Merging the above context with the block_extender context given from the extended class in
@@ -346,11 +351,50 @@ abstract class BlockRenderer
     */
    private function maybe_add_deprecation_notice()
    {
-      if (!isset($this->block['lemon_deprecated'])) {
+      if (!isset($this->block['wp_lemon']['deprecated'])) {
+         return false;
+      }
+      $deprecation = $this->block['wp_lemon']['deprecated'];
+      $message = sprintf(__('This block is deprecated since version %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
+      $this->compose_notification($message, 'warning');
+   }
+
+   /**
+    * Adds notice to backend if the block is deprecated.
+    *
+    * Checks registered block array for 'lemon_deprecated'.
+    *
+    * @return void
+    */
+   private function maybe_disable_block()
+   {
+      if (!isset($this->block['wp_lemon']['show_disable_button'])) {
          return false;
       }
 
-      $message = sprintf(__('This block is deprecated since version %1$s. Please replace this block in favor of the %2$s.', 'bulldozer'), $this->attributes['lemon_deprecated']['since'], $this->attributes['lemon_deprecated']['use']);
+      if (!isset($this->fields['is_disabled']) || $this->fields['is_disabled'] === false) {
+         return false;
+      }
+
+      $this->block_disabled = true;
+
+      $message = __('This block is disabled and thus not visible on the frontend.', 'bulldozer');
       $this->compose_notification($message, 'warning');
+   }
+
+   private function add_disable_button()
+   {
+      if (!isset($this->block['wp_lemon']['show_disable_button'])) {
+         return false;
+      }
+
+      $this->registered_fields
+         ->addTrueFalse('is_disabled', [
+            'label' => __('Disable block', 'bulldozer'),
+            'instructions' => __('You can disable the block if you need to temporarily hide its content. For example, an announcement block can be still kept inside the editor but will not be show until it\'s enabled again.', 'bulldozer'),
+            'ui' => 1,
+            'ui_on_text' => __('True', 'bulldozer'),
+            'ui_off_text' => __('False', 'bulldozer'),
+         ]);
    }
 }
