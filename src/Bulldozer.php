@@ -10,7 +10,7 @@ class Bulldozer
    /**
     * Current Bulldozer version.
     */
-   const VERSION = '1.5.1';
+   const VERSION = '1.5.2';
 
    /**
     * Active theme object.
@@ -43,9 +43,9 @@ class Bulldozer
       Config::define('CONTENT_LOCK', env('CONTENT_LOCK') ?: false);
    }
 
-   public function matches_required_version(string $required_version, string $operator = '<')
+   public function matches_required_version(string $required_version, string $operator = '>=')
    {
-      if (version_compare(self::VERSION, $required_version, $operator) && !is_admin()) {
+      if (false == version_compare(self::VERSION, $required_version, $operator)) {
          $message = sprintf(__('Your theme %1$s requires at least Bulldozer %2$s. You have %3$s installed. Please update/downgrade by setting the version number like this in your composer file: highground/bulldozer": "%2$s"', 'bulldozer'), self::$theme, $required_version, self::VERSION);
          add_action('after_setup_theme',  function () use ($message) {
             self::backend_error($message);
