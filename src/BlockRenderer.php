@@ -281,7 +281,7 @@ abstract class BlockRenderer
       }
 
       if (isset($attributes['align_text']) && !empty($attributes['align_text'])) {
-         $classes[] = 'align-text-' . esc_attr($attributes['align_text']);
+         $classes[] = 'has-text-align-' . esc_attr($attributes['align_text']);
       }
 
       if (isset($attributes['align_content']) && !empty($attributes['align_content'])) {
