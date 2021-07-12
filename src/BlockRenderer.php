@@ -70,8 +70,12 @@ abstract class BlockRenderer
    protected string $slug;
 
    /**
+    * Array of css variables to add to to the styles.
+    */
+   public array $css_variables = [];
+
+   /**
     * Field data retrieved by get_fields();
-    *
     */
    protected $fields;
 
@@ -93,6 +97,9 @@ abstract class BlockRenderer
     */
    protected array $notifications = [];
 
+   /***
+    * Boolean whether block is disabled or not.
+    */
    protected bool $block_disabled = false;
    /**
     * Register a new ACF Block.
@@ -232,12 +239,12 @@ abstract class BlockRenderer
       $this->context['is_preview']  = $this->is_preview;
       $this->context['post_id']     = $this->post_id;
       $this->context['fields']      = $this->fields;
-
       /**
        * Merging the above context with the block_extender context given from the extended class in
        * /lib/controllers/blocks.php.
        */
       $this->context = array_merge($this->context, $this->block_context($this->context));
+      $this->context['inline_css']  = $this->add_css_vars();
       $this->context['notifications'] = $this->notifications;
       $this->context['classes'] = $this->classes;
       $this->render();
@@ -257,7 +264,6 @@ abstract class BlockRenderer
       } else {
          Bulldozer::frontend_error(__("Block {$this->slug}.twig not found.", 'wp-lemon'));
       }
-
       Timber\Timber::render("blocks/{$block_path}.twig", $this->context);
    }
 
@@ -396,5 +402,18 @@ abstract class BlockRenderer
             'ui_on_text' => __('True', 'bulldozer'),
             'ui_off_text' => __('False', 'bulldozer'),
          ]);
+   }
+
+   private function add_css_vars()
+   {
+      $compiled_css = '';
+      if (!empty($this->css_variables)) {
+         $compiled_css .= '#' . $this->attributes['id'] . '{';
+         foreach ($this->css_variables as $item) {
+            $compiled_css .= $item['variable'] . ':' . $item['value'] . ';';
+         }
+         $compiled_css .= '}';
+         return '<style>' . $compiled_css . '</style>';
+      }
    }
 }
