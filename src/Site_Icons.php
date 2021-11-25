@@ -8,10 +8,42 @@ require_once 'helpers.php';
  */
 class Site_Icons
 {
-
+	/**
+	 * Name of the site
+	 * 
+	 * Used in the web manifest file
+	 * Defaults to site name
+	 *
+	 * @var string
+	 */
 	public string $name             = '';
+
+	/**
+	 * Short name, used in the web manifest file.
+	 * 
+	 * Defaults to site name but can be overwritten for a shorter name.
+	 *
+	 * @var string
+	 */
 	public string $short_name       = '';
+
+	/**
+	 * Background color, used in browsers like chrome.
+	 * 
+	 * The background_color member defines a placeholder background color for the application page to display before its stylesheet is loaded. This value is used by the user agent to draw the background color of a shortcut when the manifest is available before the stylesheet has loaded.
+	 * 
+	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/background_color
+	 * @var string
+	 */
 	public string $background_color = '#f7d600';
+
+	/**
+	 * The theme_color member is a string that defines the default theme color for the application. 
+	 * This sometimes affects how the OS displays the site (e.g., on Android's task switcher, the theme color surrounds the site).
+	 * 
+	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/theme_color
+	 * @var string
+	 */
 	public string $theme_color      = '#f7d600';
 
 	/**
@@ -36,9 +68,38 @@ class Site_Icons
 	 * @var string
 	 */
 	public $orientation       = 'portrait';
+
+	/**
+	 * Start url of the app
+	 * Defaults to home url.
+	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/start_url
+	 * @var string
+	 */
 	public $start_url         = '';
+
+	/**
+	 * Defaults to home url.
+	 * 
+	 * @link  https://developer.mozilla.org/en-US/docs/Web/Manifest/scope
+	 * @var string
+	 */
 	public $scope             = '';
-	private $manifest_filename = '';
+
+	/**
+	 * Holder of the filename. We'll use this to generate the web manifest file. Defaults to 'manifest.json'.
+	 * This is overwritten in multisite sites.
+	 *
+	 * @var string
+	 */
+	private string $manifest_filename = '';
+
+	/**
+	 * Favicon path
+	 * 
+	 * We'll first search the child theme for a favicon. If not found, we'll search the parent theme.
+	 *
+	 * @var string
+	 */
 	private $favicon_path      = '';
 
 	function __construct()
@@ -79,7 +140,7 @@ class Site_Icons
 	 * Setups the file name for the manifest.
 	 * Adds blog ID if multisite.
 	 *
-	 * @return void
+	 * @return string
 	 */
 	private function get_manifest_filename()
 	{
