@@ -79,9 +79,7 @@ class Bulldozer
       $title = $title ?: self::$theme . ' ' . __('&rsaquo; error', 'bulldozer');
       $message = "<h1>{$title}<br><small>{$subtitle}</small></h1><p>{$message}</p>";
 
-      add_filter('template_include', function () use ($message, $title) {
-         wp_die($message, $title);
-      });
+      wp_die($message, $title);
    }
 
    public static function backend_error($message, $subtitle = '', $title = '')
