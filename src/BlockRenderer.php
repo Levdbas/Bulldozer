@@ -57,7 +57,7 @@ abstract class BlockRenderer
    /**
     * Current post id where the block belongs to.
     */
-   protected int $post_id;
+   protected $post_id;
 
    /**
     * Block name with acf/ prefix.
