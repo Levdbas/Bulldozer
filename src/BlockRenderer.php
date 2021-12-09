@@ -231,6 +231,7 @@ abstract class BlockRenderer
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
 
+      $this->context['block_id']    = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
       $this->context['is_disabled'] = $this->block_disabled;
       $this->context['slug']        = $this->slug;
       $this->context['attributes']  = $this->attributes;
@@ -243,7 +244,7 @@ abstract class BlockRenderer
        * Merging the above context with the block_extender context given from the extended class in
        * /lib/controllers/blocks.php.
        */
-      $this->context = array_merge($this->context, $this->block_context($this->context));
+      $this->context = $this->block_context($this->context);
       $this->context['inline_css']  = $this->add_css_vars();
       $this->context['notifications'] = $this->notifications;
       $this->context['classes'] = $this->classes;
