@@ -372,7 +372,7 @@ abstract class BlockRenderer
     */
    public function add_css_var(string $field_name, string $css_var_name)
    {
-      if (isset($this->fields[$field_name])) {
+      if (!empty($this->fields[$field_name])) {
          $this->css_variables[] = array(
             'variable' => '--' . $css_var_name,
             'value' => $this->fields[$field_name],
