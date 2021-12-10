@@ -245,7 +245,7 @@ abstract class BlockRenderer
        * /lib/controllers/blocks.php.
        */
       $this->context = $this->block_context($this->context);
-      $this->context['inline_css']  = $this->add_css_vars();
+      $this->context['inline_css']  = $this->css_variables_styles();
       $this->context['notifications'] = $this->notifications;
       $this->context['classes'] = $this->classes;
       $this->render();
@@ -317,12 +317,25 @@ abstract class BlockRenderer
 
    /**
     * Compose a notification to be shown in the backend.
-    * 
+    * @deprecated 1.8.0       Please use add_notification() instead.
     * @param string $message  The message, translatable
     * @param string $type     type of notification, can be notice, warning or error
     * @return void
     */
    public function compose_notification(string $message, string $type)
+   {
+      $this->add_notification($message, $type);
+   }
+
+
+   /**
+    * Compose a notification to be shown in the backend.
+    * 
+    * @param string $message  The message, translatable
+    * @param string $type     type of notification, can be notice, warning or error
+    * @return void
+    */
+   public function add_notification(string $message, string $type)
    {
       $types = [
          'notice' => __('Notice', 'bulldozer'),
@@ -349,6 +362,24 @@ abstract class BlockRenderer
       array_push($this->classes, $this->slug . '--' . $modifier);
    }
 
+
+   /**
+    * Add css variable with the value based on an acf field.
+    *
+    * @since 1.8.0
+    * @param string $field_name     acf field name.
+    * @param string $css_var_name   The css variable without the -- prefix.
+    */
+   public function add_css_var(string $field_name, string $css_var_name)
+   {
+      if (isset($this->fields[$field_name])) {
+         $this->css_variables[] = array(
+            'variable' => '--' . $css_var_name,
+            'value' => $this->fields[$field_name],
+         );
+      }
+   }
+
    /**
     * Adds notice to backend if the block is deprecated.
     *
@@ -363,7 +394,7 @@ abstract class BlockRenderer
       }
       $deprecation = $this->block['wp_lemon']['deprecated'];
       $message = sprintf(__('This block is deprecated since version %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
-      $this->compose_notification($message, 'warning');
+      $this->add_notification($message, 'warning');
    }
 
    /**
@@ -386,9 +417,12 @@ abstract class BlockRenderer
       $this->block_disabled = true;
 
       $message = __('This block is disabled and thus not visible on the frontend.', 'bulldozer');
-      $this->compose_notification($message, 'warning');
+      $this->add_notification($message, 'warning');
    }
 
+   /**
+    * Add disable button to block. when the right attribute is set.
+    */
    private function add_disable_button()
    {
       if (!isset($this->block['wp_lemon']['show_disable_button'])) {
@@ -405,7 +439,10 @@ abstract class BlockRenderer
          ]);
    }
 
-   private function add_css_vars()
+   /**
+    * Add style block to the block when css variables are set.
+    */
+   private function css_variables_styles()
    {
       $compiled_css = '';
       if (!empty($this->css_variables)) {

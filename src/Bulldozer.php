@@ -10,7 +10,7 @@ class Bulldozer
    /**
     * Current Bulldozer version.
     */
-   const VERSION = '1.7.0';
+   const VERSION = '1.8.0';
 
    /**
     * Active theme object.
@@ -29,8 +29,8 @@ class Bulldozer
          return;
       }
 
-      $my_theme = wp_get_theme(get_template());
-      self::$theme = esc_html($my_theme->get('Name'));
+      $active_theme = wp_get_theme(get_template());
+      self::$theme = esc_html($active_theme->get('Name'));
       add_action('after_setup_theme', [$this, 'load_textdomain']);
       $this->test_compatibility();
    }
