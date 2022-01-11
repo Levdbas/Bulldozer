@@ -150,11 +150,11 @@ abstract class BlockRenderer
     */
    public function register_block()
    {
-      $this->block = $this->block_register();
-      $this->name  = 'acf/' .  $this->block['name'];
-      $this->slug  = $this->block['name'];
-      $callback    = ['render_callback' => [$this, 'compile']];
-      $this->block = array_merge($this->block, $callback);
+      $this->block   = $this->block_register();
+      $this->name    = 'acf/' .  $this->block['name'];
+      $this->slug    = $this->block['name'];
+      $this->classes = array_merge($this->classes, ['acf-block', $this->slug]);
+      $this->block   = array_merge($this->block, ['render_callback' => [$this, 'compile']]);
 
       acf_register_block_type($this->block);
       $this->register_block_styles();
@@ -226,28 +226,30 @@ abstract class BlockRenderer
       $this->post_id    = $post_id;
       $this->name       = $attributes['name'];
       $this->slug       = str_replace('acf/', '', $attributes['name']);
-      $this->classes    = $this->base_block_classes();
+
 
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
-
-      $this->context['block_id']    = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
-      $this->context['is_disabled'] = $this->block_disabled;
-      $this->context['slug']        = $this->slug;
-      $this->context['attributes']  = $this->attributes;
-      $this->context['wp_block']    = $this->wp_block;
-      $this->context['content']     = $this->content;
-      $this->context['is_preview']  = $this->is_preview;
-      $this->context['post_id']     = $this->post_id;
-      $this->context['fields']      = $this->fields;
-      /**
-       * Merging the above context with the block_extender context given from the extended class in
-       * /lib/controllers/blocks.php.
-       */
       $this->context = $this->block_context($this->context);
-      $this->context['inline_css']  = $this->css_variables_styles();
-      $this->context['notifications'] = $this->notifications;
-      $this->context['classes'] = $this->classes;
+
+      $this->classes    = $this->block_classes();
+      $args = [
+         'block_id'      => isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'],
+         'is_disabled'   => $this->block_disabled,
+         'slug'          => $this->slug,
+         'attributes'    => $this->attributes,
+         'wp_block'      => $this->wp_block,
+         'content'       => $this->content,
+         'is_preview'    => $this->is_preview,
+         'post_id'       => $this->post_id,
+         'fields'        => $this->fields,
+         'classes'       => $this->classes,
+         'inline_css'    => $this->css_variables_styles(),
+         'notifications' => $this->notifications,
+      ];
+
+      $this->context = array_merge($this->context, $args);
+
       $this->render();
    }
 
@@ -273,11 +275,11 @@ abstract class BlockRenderer
     *
     * @return void
     */
-   private function base_block_classes()
+   private function block_classes()
    {
       $attributes = $this->attributes;
       $fields = $this->fields;
-      $classes = ['acf-block ' .  $this->slug];
+      $classes = $this->classes;
 
       if (isset($attributes['className']) && !empty($attributes['className'])) {
          $classes[] = esc_attr($attributes['className']);
