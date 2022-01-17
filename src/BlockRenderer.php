@@ -87,7 +87,7 @@ abstract class BlockRenderer
    /**
     * Array of classes that are appended to the wrapper element.
     */
-   public array $classes = [];
+   protected array $classes = [];
 
    /**
     * Array of notifications.
@@ -153,8 +153,7 @@ abstract class BlockRenderer
       $this->block   = $this->block_register();
       $this->name    = 'acf/' .  $this->block['name'];
       $this->slug    = $this->block['name'];
-      $this->classes = array_merge($this->classes, ['acf-block', $this->slug]);
-      $this->block   = array_merge($this->block, ['render_callback' => [$this, 'compile']]);
+      $this->block['render_callback'] = [$this, 'compile'];
 
       acf_register_block_type($this->block);
       $this->register_block_styles();
@@ -217,6 +216,7 @@ abstract class BlockRenderer
     */
    public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
    {
+      $this->classes    = ['acf-block', $this->slug];
       $this->fields     = get_fields();
       $this->context    = Timber\Timber::get_context();
       $this->attributes = $attributes;
@@ -227,12 +227,13 @@ abstract class BlockRenderer
       $this->name       = $attributes['name'];
       $this->slug       = str_replace('acf/', '', $attributes['name']);
 
-
+      $this->add_block_classes();
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
+
       $this->context = $this->block_context($this->context);
 
-      $this->classes    = $this->block_classes();
+
       $args = [
          'block_id'      => isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'],
          'is_disabled'   => $this->block_disabled,
@@ -275,46 +276,43 @@ abstract class BlockRenderer
     *
     * @return void
     */
-   private function block_classes()
+   private function add_block_classes()
    {
       $attributes = $this->attributes;
       $fields = $this->fields;
-      $classes = $this->classes;
 
       if (isset($attributes['className']) && !empty($attributes['className'])) {
-         $classes[] = esc_attr($attributes['className']);
+         $this->classes[] = esc_attr($attributes['className']);
       }
 
       if (isset($attributes['align']) && !empty($attributes['align'])) {
-         $classes[] = 'align' . esc_attr($attributes['align']);
+         $this->classes[] = 'align' . esc_attr($attributes['align']);
       }
 
       if (isset($attributes['align_text']) && !empty($attributes['align_text'])) {
-         $classes[] = 'has-text-align-' . esc_attr($attributes['align_text']);
+         $this->classes[] = 'has-text-align-' . esc_attr($attributes['align_text']);
       }
 
       if (isset($attributes['align_content']) && !empty($attributes['align_content'])) {
          $alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
-         $classes[] = 'has-custom-content-position is-position-' . $alignment;
+         $this->classes[] = 'has-custom-content-position is-position-' . $alignment;
       }
 
       if (isset($attributes['backgroundColor']) && !empty($attributes['backgroundColor'])) {
-         $classes[] = 'has-background has-' . esc_attr($attributes['backgroundColor']) . '-background-color';
+         $this->classes[] = 'has-background has-' . esc_attr($attributes['backgroundColor']) . '-background-color';
       }
 
       if (isset($attributes['textColor']) && !empty($attributes['textColor'])) {
-         $classes[] = 'has-text-color has-' . esc_attr($attributes['textColor']) . '-color';
+         $this->classes[] = 'has-text-color has-' . esc_attr($attributes['textColor']) . '-color';
       }
 
       if (isset($attributes['gradient']) && !empty($attributes['gradient'])) {
-         $classes[] = 'has-background-gradient has-' . esc_attr($attributes['gradient']) . '-gradient-background';
+         $this->classes[] = 'has-background-gradient has-' . esc_attr($attributes['gradient']) . '-gradient-background';
       }
 
       if (isset($fields['image_dim']) && !empty($fields['image_dim'])) {
-         $classes[] = 'has-background-dim has-background-dim-' . esc_attr($fields['image_dim']);
+         $this->classes[] = 'has-background-dim has-background-dim-' . esc_attr($fields['image_dim']);
       }
-
-      return $classes;
    }
 
    /**
