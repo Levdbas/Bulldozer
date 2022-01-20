@@ -227,12 +227,11 @@ abstract class BlockRenderer
       $this->name       = $attributes['name'];
       $this->slug       = str_replace('acf/', '', $attributes['name']);
 
-      $this->add_block_classes();
+
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
-
       $this->context = $this->block_context($this->context);
-
+      $this->add_block_classes();
 
       $args = [
          'block_id'      => isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'],
