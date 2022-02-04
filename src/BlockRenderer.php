@@ -4,6 +4,7 @@ namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
 
+use ParagonIE\Sodium\Core\Curve25519\Ge\P2;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Timber;
 
@@ -101,6 +102,15 @@ abstract class BlockRenderer
     * Boolean whether block is disabled or not.
     */
    protected bool $block_disabled = false;
+
+
+   /**
+    * Tracks children blocks.
+    *
+    * @var array
+    */
+   public array $children = [];
+
    /**
     * Register a new ACF Block.
     * 
@@ -190,7 +200,7 @@ abstract class BlockRenderer
       $this->registered_fields
          ->setLocation('block', '==', $this->name);
 
-      $this->add_disable_button();
+      $this->add_hidden_fields();
       return $this->registered_fields;
    }
 
@@ -230,6 +240,7 @@ abstract class BlockRenderer
 
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
+      $this->maybe_track_children();
       $this->context = $this->block_context($this->context);
       $this->add_block_classes();
 
@@ -246,6 +257,7 @@ abstract class BlockRenderer
          'classes'       => $this->classes,
          'inline_css'    => $this->css_variables_styles(),
          'notifications' => $this->notifications,
+         'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
       ];
 
       $this->context = array_merge($this->context, $args);
@@ -396,6 +408,35 @@ abstract class BlockRenderer
       $this->add_notification($message, 'warning');
    }
 
+
+
+   /**
+    * Adds notice to backend if the block is deprecated.
+    *
+    * Checks registered block array for 'lemon_deprecated'.
+    *
+    * @return void
+    */
+   private function maybe_track_children()
+   {
+      if (!isset($this->block['supports']['jsx']) || false === $this->block['supports']['jsx']) {
+         return false;
+      }
+      $children = [];
+      $innerblocks = $this->wp_block->parsed_block['innerBlocks'];
+      $attr = wp_list_pluck($innerblocks, 'attrs');
+
+
+      foreach ($attr as $block) {
+         if (isset($block['id'])) {
+            $children[] = $block['id'];
+         }
+      }
+
+      $this->children = $children;
+   }
+
+
    /**
     * Adds notice to backend if the block is deprecated.
     *
@@ -419,23 +460,24 @@ abstract class BlockRenderer
       $this->add_notification($message, 'warning');
    }
 
-   /**
-    * Add disable button to block. when the right attribute is set.
-    */
-   private function add_disable_button()
-   {
-      if (!isset($this->block['wp_lemon']['show_disable_button'])) {
-         return false;
-      }
 
-      $this->registered_fields
-         ->addTrueFalse('is_disabled', [
-            'label' => __('Disable block', 'bulldozer'),
-            'instructions' => __('You can disable the block if you need to temporarily hide its content. For example, an announcement block can be still kept inside the editor but will not be show until it\'s enabled again.', 'bulldozer'),
-            'ui' => 1,
-            'ui_on_text' => __('True', 'bulldozer'),
-            'ui_off_text' => __('False', 'bulldozer'),
-         ]);
+   /**
+    * Add blockrenderer specific fields.
+    *
+    * @return void
+    */
+   private function add_hidden_fields()
+   {
+      if (isset($this->block['wp_lemon']['show_disable_button'])) {
+         $this->registered_fields
+            ->addTrueFalse('is_disabled', [
+               'label' => __('Disable block', 'bulldozer'),
+               'instructions' => __('You can disable the block if you need to temporarily hide its content. For example, an announcement block can be still kept inside the editor but will not be show until it\'s enabled again.', 'bulldozer'),
+               'ui' => 1,
+               'ui_on_text' => __('True', 'bulldozer'),
+               'ui_off_text' => __('False', 'bulldozer'),
+            ]);
+      }
    }
 
    /**
