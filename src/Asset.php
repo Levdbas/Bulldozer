@@ -8,26 +8,40 @@ class Asset
    protected $path;
    protected $error;
    protected $key;
+   protected static $instance;
+   protected static $manifest = null;
 
-   public function __construct(string $key)
+   public static function get_key($key)
    {
-      $this->key = $key;
-      $manifest = get_stylesheet_directory() . '/dist/manifest.json';
 
-      if (!file_exists($manifest)) {
-         Bulldozer::frontend_error(__('Did you run Webpack for the first time?', 'bulldozer'), 'Manifest file not found');
-         Bulldozer::backend_error(__('Did you run Webpack for the first time?', 'bulldozer'), 'Manifest file not found');
-         return;
+      self::$instance = new self($key);
+
+      return self::$instance;
+   }
+
+   private function __construct($key)
+   {
+
+      if (null === self::$manifest) {
+
+         $manifest = get_stylesheet_directory() . '/dist/manifest.json';
+
+         if (!file_exists($manifest)) {
+            Bulldozer::frontend_error(__('Did you run Webpack for the first time?', 'bulldozer'), 'Manifest file not found');
+            Bulldozer::backend_error(__('Did you run Webpack for the first time?', 'bulldozer'), 'Manifest file not found');
+            return;
+         }
+
+         $manifest = file_get_contents($manifest);
+         self::$manifest = json_decode($manifest, true);
       }
+      $this->key = $key;
 
-      $manifest = file_get_contents($manifest);
-      $json = json_decode($manifest, true);
-
-      if (!isset($json[$key])) {
+      if (!isset(self::$manifest[$this->key])) {
          return $this->error = true;
       }
 
-      $this->path = $json[$key];
+      $this->path = self::$manifest[$this->key];
    }
 
    public function uri(): string
