@@ -226,16 +226,17 @@ abstract class BlockRenderer
     */
    public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
    {
-      $this->classes    = ['acf-block', $this->slug];
-      $this->fields     = get_fields();
-      $this->context    = Timber\Timber::get_context();
-      $this->attributes = $attributes;
-      $this->wp_block   = $wp_block;
-      $this->content    = $content;
-      $this->is_preview = $is_preview;
-      $this->post_id    = $post_id;
-      $this->name       = $attributes['name'];
-      $this->slug       = str_replace('acf/', '', $attributes['name']);
+      $this->notifications = []; // reset notifications
+      $this->classes       = ['acf-block', $this->slug];
+      $this->fields        = get_fields();
+      $this->context       = Timber\Timber::get_context();
+      $this->attributes    = $attributes;
+      $this->wp_block      = $wp_block;
+      $this->content       = $content;
+      $this->is_preview    = $is_preview;
+      $this->post_id       = $post_id;
+      $this->name          = $attributes['name'];
+      $this->slug          = str_replace('acf/', '', $attributes['name']);
 
 
       $this->maybe_add_deprecation_notice();
