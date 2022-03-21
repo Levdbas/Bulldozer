@@ -505,6 +505,10 @@ abstract class BlockRenderer
 
    private function generate_css()
    {
+      if (!$this->compiled_css) {
+         return;
+      }
+
       return '<style>' . $this->compiled_css . '</style>';
    }
 }
