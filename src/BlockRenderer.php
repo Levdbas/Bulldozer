@@ -4,7 +4,6 @@ namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
 
-use ParagonIE\Sodium\Core\Curve25519\Ge\P2;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Timber;
 
@@ -56,6 +55,11 @@ abstract class BlockRenderer
    protected bool $is_preview;
 
    /**
+    * Current block id
+    */
+   protected string $block_id;
+
+   /**
     * Current post id where the block belongs to.
     */
    protected $post_id;
@@ -103,7 +107,7 @@ abstract class BlockRenderer
     */
    protected bool $block_disabled = false;
 
-
+   protected string $compiled_css = '';
    /**
     * Tracks children blocks.
     *
@@ -235,6 +239,7 @@ abstract class BlockRenderer
       $this->content       = $content;
       $this->is_preview    = $is_preview;
       $this->post_id       = $post_id;
+      $this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
       $this->name          = $attributes['name'];
       $this->slug          = str_replace('acf/', '', $attributes['name']);
 
@@ -244,9 +249,10 @@ abstract class BlockRenderer
       $this->maybe_track_children();
       $this->context = $this->block_context($this->context);
       $this->add_block_classes();
+      $this->generate_css_variables();
 
       $args = [
-         'block_id'      => isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'],
+         'block_id'      => $this->block_id,
          'is_disabled'   => $this->block_disabled,
          'slug'          => $this->slug,
          'attributes'    => $this->attributes,
@@ -256,7 +262,7 @@ abstract class BlockRenderer
          'post_id'       => $this->post_id,
          'fields'        => $this->fields,
          'classes'       => $this->classes,
-         'inline_css'    => $this->css_variables_styles(),
+         'inline_css'    => $this->generate_css(),
          'notifications' => $this->notifications,
          'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
       ];
@@ -472,11 +478,11 @@ abstract class BlockRenderer
       if (isset($this->block['wp_lemon']['show_disable_button'])) {
          $this->registered_fields
             ->addTrueFalse('is_disabled', [
-               'label' => __('Disable block', 'bulldozer'),
+               'label'        => __('Disable block', 'bulldozer'),
                'instructions' => __('You can disable the block if you need to temporarily hide its content. For example, an announcement block can be still kept inside the editor but will not be show until it\'s enabled again.', 'bulldozer'),
-               'ui' => 1,
-               'ui_on_text' => __('True', 'bulldozer'),
-               'ui_off_text' => __('False', 'bulldozer'),
+               'ui'           => 1,
+               'ui_on_text'   => __('True', 'bulldozer'),
+               'ui_off_text'  => __('False', 'bulldozer'),
             ]);
       }
    }
@@ -484,7 +490,7 @@ abstract class BlockRenderer
    /**
     * Add style block to the block when css variables are set.
     */
-   private function css_variables_styles()
+   private function generate_css_variables()
    {
       $compiled_css = '';
       if (!empty($this->css_variables)) {
@@ -493,7 +499,12 @@ abstract class BlockRenderer
             $compiled_css .= $item['variable'] . ':' . $item['value'] . ';';
          }
          $compiled_css .= '}';
-         return '<style>' . $compiled_css . '</style>';
+         $this->compiled_css .= $compiled_css;
       }
+   }
+
+   private function generate_css()
+   {
+      return '<style>' . $this->compiled_css . '</style>';
    }
 }
