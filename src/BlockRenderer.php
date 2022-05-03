@@ -21,11 +21,6 @@ use Timber;
 abstract class BlockRenderer
 {
    /**
-    * Block property as passed to acf_register_block_type()
-    */
-   protected array $block;
-
-   /**
     * Going to hold the block context.
     *
     */
@@ -107,7 +102,12 @@ abstract class BlockRenderer
     */
    protected bool $block_disabled = false;
 
+
+   /**
+    * Compiled css that gets injected.
+    */
    protected string $compiled_css = '';
+
    /**
     * Tracks children blocks.
     *
@@ -151,7 +151,6 @@ abstract class BlockRenderer
    public function __construct()
    {
       add_action('acf/init', [$this, 'register_block']);
-      add_action('acf/init', [$this, 'register_fields_group']);
    }
 
    /**
@@ -164,28 +163,15 @@ abstract class BlockRenderer
     */
    public function register_block()
    {
-      $this->block   = $this->block_register();
-      $this->name    = 'acf/' .  $this->block['name'];
-      $this->slug    = $this->block['name'];
-      $this->block['render_callback'] = [$this, 'compile'];
+      $block   = $this->block_register();
+      $name    = 'acf/' .  $block['name'];
+      $slug    = $block['name'];
+      $block['render_callback'] = [$this, 'compile'];
 
-      acf_register_block_type($this->block);
-      $this->register_block_styles();
-   }
+      acf_register_block_type($block);
+      $this->register_block_styles($name);
 
-   /**
-    * Register fields to the block.
-    *
-    * We first set up the block, then use the abstract method add_fields() to add fields in the extended block.
-    * Then we register the fields.
-    *
-    * @method add_fields()
-    * @method setup_fields_group()
-    * @return void
-    */
-   public function register_fields_group()
-   {
-      $this->setup_fields_group();
+      $this->setup_fields_group($name, $slug);
       $this->add_fields();
       acf_add_local_field_group($this->registered_fields->build());
    }
@@ -197,12 +183,12 @@ abstract class BlockRenderer
     * We create the group & set the location.
     * @return FieldsBuilder
     */
-   private function setup_fields_group()
+   private function setup_fields_group($name, $slug)
    {
-      $this->registered_fields = new FieldsBuilder($this->slug);
+      $this->registered_fields = new FieldsBuilder($slug);
 
       $this->registered_fields
-         ->setLocation('block', '==', $this->name);
+         ->setLocation('block', '==', $name);
 
       $this->add_hidden_fields();
       return $this->registered_fields;
@@ -214,7 +200,7 @@ abstract class BlockRenderer
     *
     * @return void
     */
-   public function register_block_styles()
+   public function register_block_styles($name)
    {
    }
 
@@ -231,17 +217,18 @@ abstract class BlockRenderer
    public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
    {
       $this->notifications = []; // reset notifications
+      $this->name          = $attributes['name'];
+      $this->slug          = str_replace('acf/', '', $attributes['name']);
       $this->classes       = ['acf-block', $this->slug];
       $this->fields        = get_fields();
-      $this->context       = Timber\Timber::get_context();
+      $this->context       = Timber\Timber::context();
       $this->attributes    = $attributes;
       $this->wp_block      = $wp_block;
       $this->content       = $content;
       $this->is_preview    = $is_preview;
       $this->post_id       = $post_id;
       $this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
-      $this->name          = $attributes['name'];
-      $this->slug          = str_replace('acf/', '', $attributes['name']);
+
 
 
       $this->maybe_add_deprecation_notice();
@@ -356,15 +343,15 @@ abstract class BlockRenderer
    public function add_notification(string $message, string $type)
    {
       $types = [
-         'notice' => __('Notice', 'bulldozer'),
+         'notice'  => __('Notice', 'bulldozer'),
          'warning' => __('Warning', 'bulldozer'),
-         'error' => __('Error', 'bulldozer')
+         'error'   => __('Error', 'bulldozer')
       ];
 
       array_push($this->notifications, [
-         'title' => $this->attributes['title'] . ' ' . __('block', 'bulldozer'),
-         'message' => $message,
-         'type' => $type,
+         'title'     => $this->attributes['title'] . ' ' . __('block', 'bulldozer'),
+         'message'   => $message,
+         'type'      => $type,
          'type_name' => $types[$type],
       ]);
    }
@@ -407,10 +394,10 @@ abstract class BlockRenderer
     */
    private function maybe_add_deprecation_notice()
    {
-      if (!isset($this->block['wp_lemon']['deprecated'])) {
+      if (!isset($this->attributes['wp_lemon']['deprecated'])) {
          return false;
       }
-      $deprecation = $this->block['wp_lemon']['deprecated'];
+      $deprecation = $this->attributes['wp_lemon']['deprecated'];
       $message = sprintf(__('This block is deprecated since version %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
       $this->add_notification($message, 'warning');
    }
@@ -426,7 +413,7 @@ abstract class BlockRenderer
     */
    private function maybe_track_children()
    {
-      if (!isset($this->block['supports']['jsx']) || false === $this->block['supports']['jsx']) {
+      if (!isset($this->attributes['supports']['jsx']) || false === $this->attributes['supports']['jsx']) {
          return false;
       }
       $children = [];
@@ -453,7 +440,7 @@ abstract class BlockRenderer
     */
    private function maybe_disable_block()
    {
-      if (!isset($this->block['wp_lemon']['show_disable_button'])) {
+      if (!isset($this->attributes['wp_lemon']['show_disable_button'])) {
          return false;
       }
 
@@ -475,7 +462,7 @@ abstract class BlockRenderer
     */
    private function add_hidden_fields()
    {
-      if (isset($this->block['wp_lemon']['show_disable_button'])) {
+      if (isset($this->attributes['wp_lemon']['show_disable_button'])) {
          $this->registered_fields
             ->addTrueFalse('is_disabled', [
                'label'        => __('Disable block', 'bulldozer'),
