@@ -77,7 +77,7 @@ abstract class BlockRenderer
    /**
     * Field data retrieved by get_fields();
     */
-   protected $fields;
+   protected $fields  = [];
 
    /**
     * Fields registered to the block using AcfBuilder
@@ -216,11 +216,14 @@ abstract class BlockRenderer
     */
    public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
    {
-      $this->notifications = []; // reset notifications
+      $this->fields = [];
+      $this->context = [];
+      $this->notifications = [];
+
       $this->name          = $attributes['name'];
       $this->slug          = str_replace('acf/', '', $attributes['name']);
       $this->classes       = ['acf-block', $this->slug];
-      $this->fields        = get_fields();
+      $this->fields        = $fields = get_fields();
       $this->context       = Timber\Timber::context();
       $this->attributes    = $attributes;
       $this->wp_block      = $wp_block;
@@ -228,8 +231,6 @@ abstract class BlockRenderer
       $this->is_preview    = $is_preview;
       $this->post_id       = $post_id;
       $this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
-
-
 
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
@@ -247,7 +248,7 @@ abstract class BlockRenderer
          'content'       => $this->content,
          'is_preview'    => $this->is_preview,
          'post_id'       => $this->post_id,
-         'fields'        => $this->fields,
+         'fields'        => $fields,
          'classes'       => $this->classes,
          'inline_css'    => $this->generate_css(),
          'notifications' => $this->notifications,
