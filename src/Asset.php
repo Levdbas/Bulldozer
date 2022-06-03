@@ -11,6 +11,14 @@ class Asset
    protected static $instance;
    protected static $manifest = null;
 
+   public static function get_manifest()
+   {
+
+      self::$instance = new self();
+
+      return self::$manifest;
+   }
+
    public static function get_key($key)
    {
 
@@ -19,7 +27,7 @@ class Asset
       return self::$instance;
    }
 
-   private function __construct($key)
+   private function __construct($key = null)
    {
 
       if (null === self::$manifest) {
@@ -35,13 +43,16 @@ class Asset
          $manifest = file_get_contents($manifest);
          self::$manifest = json_decode($manifest, true);
       }
-      $this->key = $key;
 
-      if (!isset(self::$manifest[$this->key])) {
-         return $this->error = true;
+      if ($key) {
+         $this->key = $key;
+
+         if (!isset(self::$manifest[$this->key])) {
+            return $this->error = true;
+         }
+
+         $this->path = self::$manifest[$this->key];
       }
-
-      $this->path = self::$manifest[$this->key];
    }
 
    public function uri(): string

@@ -1,13 +1,12 @@
 {
 	"folders": [
 		{
-			"name": "wplemon2.local",
-			"path": "..\\..\\wplemon2.local"
+			"path": "../../sites/wplemon"
 		},
 		{
 			"name": "bulldozer",
 			"path": "."
-		}
+		},
 	],
 	"settings": {}
 }
