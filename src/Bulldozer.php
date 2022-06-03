@@ -10,7 +10,7 @@ class Bulldozer
    /**
     * Current Bulldozer version.
     */
-   const VERSION = '1.11.1';
+   const VERSION = '1.11.2';
 
    /**
     * Active theme object.
@@ -33,6 +33,7 @@ class Bulldozer
       self::$theme = esc_html($active_theme->get('Name'));
       add_action('after_setup_theme', [$this, 'load_textdomain']);
       $this->test_compatibility();
+      //CacheBuster::register();
    }
 
    public static function extend_roots_config()
