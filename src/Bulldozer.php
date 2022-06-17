@@ -10,7 +10,7 @@ class Bulldozer
    /**
     * Current Bulldozer version.
     */
-   const VERSION = '1.12.0';
+   const VERSION = '1.12.1';
 
    /**
     * Active theme object.
@@ -32,16 +32,11 @@ class Bulldozer
       $active_theme = wp_get_theme(get_template());
       self::$theme = esc_html($active_theme->get('Name'));
       add_action('after_setup_theme', [$this, 'load_textdomain']);
-      add_action('enqueue_block_editor_assets', [$this, 'add_editor_styles']);
       $this->test_compatibility();
       //CacheBuster::register();
    }
 
 
-   public function add_editor_styles()
-   {
-      wp_enqueue_style('bulldozer-css', dirname(__FILE__) . '/src/assets/style.css', [], self::VERSION);
-   }
 
    public static function extend_roots_config()
    {
