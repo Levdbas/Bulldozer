@@ -1,0 +1,22 @@
+.acf-edit-block {
+   position: absolute;
+   z-index: 3;
+   padding: 0 5px !important;
+   margin: 15px;
+   font-size: 12px !important;
+   opacity: 0;
+   transition: all 0.2s ease;
+ }
+ 
+ .acf-edit-block svg {
+   width: 15px;
+ }
+
+.acf-block-preview {
+   position: relative;
+ }
+
+ .acf-block-preview:hover > .acf-edit-block {
+   opacity: 1;
+   transform: translateY(0);
+ }

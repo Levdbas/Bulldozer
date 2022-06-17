@@ -230,7 +230,7 @@ abstract class BlockRenderer
       $this->content       = $content;
       $this->is_preview    = $is_preview;
       $this->post_id       = $post_id;
-      $this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
+      $this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : '';
 
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
@@ -272,8 +272,20 @@ abstract class BlockRenderer
       } elseif (locate_template("/resources/views/blocks/{$this->slug}/{$this->slug}.twig")) {
          $block_path = "{$this->slug}/{$this->slug}";
       } else {
+
+
+
          Bulldozer::frontend_error(__("Block {$this->slug}.twig not found.", 'wp-lemon'));
       }
+      if ($this->is_preview && !empty($this->registered_fields->getFields())) {
+         echo '<button class="components-button is-primary has-icon acf-edit-block">
+         <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M20.1 5.1L16.9 2 6.2 12.7l-1.3 4.4 4.5-1.3L20.1 5.1zM4 20.8h8v-1.5H4v1.5z"></path>
+         </svg>
+      ' . sprintf(__('Edit %1$s', 'wp-lemon'), $this->attributes['title']) . '
+      </button>';
+      }
+
       Timber\Timber::render("blocks/{$block_path}.twig", $this->context);
    }
 
