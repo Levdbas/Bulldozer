@@ -230,7 +230,7 @@ abstract class BlockRenderer
       $this->content       = $content;
       $this->is_preview    = $is_preview;
       $this->post_id       = $post_id;
-      $this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : '';
+      $this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
 
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
