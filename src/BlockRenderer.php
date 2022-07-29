@@ -234,7 +234,6 @@ abstract class BlockRenderer
 
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
-      $this->maybe_track_children();
       $this->context = $this->block_context($this->context);
       $this->add_block_classes();
       $this->generate_css_variables();
@@ -410,37 +409,10 @@ abstract class BlockRenderer
       if (!isset($this->attributes['wp_lemon']['deprecated'])) {
          return false;
       }
+
       $deprecation = $this->attributes['wp_lemon']['deprecated'];
       $message = sprintf(__('This block is deprecated since version %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
       $this->add_notification($message, 'warning');
-   }
-
-
-
-   /**
-    * Adds notice to backend if the block is deprecated.
-    *
-    * Checks registered block array for 'lemon_deprecated'.
-    *
-    * @return void
-    */
-   private function maybe_track_children()
-   {
-      if (!isset($this->attributes['supports']['jsx']) || false === $this->attributes['supports']['jsx']) {
-         return false;
-      }
-      $children = [];
-      $innerblocks = $this->wp_block->parsed_block['innerBlocks'];
-      $attr = wp_list_pluck($innerblocks, 'attrs');
-
-
-      foreach ($attr as $block) {
-         if (isset($block['id'])) {
-            $children[] = $block['id'];
-         }
-      }
-
-      $this->children = $children;
    }
 
 

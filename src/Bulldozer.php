@@ -10,7 +10,7 @@ class Bulldozer
    /**
     * Current Bulldozer version.
     */
-   const VERSION = '1.12.2';
+   const VERSION = '2.0.0';
 
    /**
     * Active theme object.
@@ -63,8 +63,8 @@ class Bulldozer
          return;
       }
 
-      if (version_compare(phpversion(), '7.1.0', '<') && !is_admin()) {
-         trigger_error('Bulldozer requires PHP 7.1.0 or greater. You have ' . phpversion(), E_USER_ERROR);
+      if (version_compare(phpversion(), '8.0.2', '<') && !is_admin()) {
+         trigger_error('Bulldozer requires PHP 8.0.2 or greater. You have ' . phpversion(), E_USER_ERROR);
       }
    }
 
