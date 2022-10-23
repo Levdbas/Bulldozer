@@ -310,9 +310,14 @@ abstract class BlockRenderer
          $this->classes[] = 'has-text-align-' . esc_attr($attributes['align_text']);
       }
 
-      if (isset($attributes['align_content']) && !empty($attributes['align_content'])) {
+      if (isset($attributes['supports']['align_content']) &&  'matrix' == $attributes['supports']['align_content'] && isset($attributes['align_content']) && !empty($attributes['align_content'])) {
          $alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
          $this->classes[] = 'has-custom-content-position is-position-' . $alignment;
+      }
+
+      if (isset($attributes['supports']['align_content']) &&  true === $attributes['supports']['align_content'] && isset($attributes['align_content']) && !empty($attributes['align_content'])) {
+         $alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
+         $this->classes[] = 'is-vertically-aligned-' . $alignment;
       }
 
       if (isset($attributes['backgroundColor']) && !empty($attributes['backgroundColor'])) {
