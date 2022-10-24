@@ -1,41 +1,46 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2021-06-05 13:12+0200\n"
-"PO-Revision-Date: 2021-06-05 13:23+0200\n"
+"POT-Creation-Date: 2022-10-24 16:13+0200\n"
+"PO-Revision-Date: 2022-10-24 16:13+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
-"X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;esc_html__\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Asset.php:18 Asset.php:19
+#: Asset.php:38 Asset.php:39
 msgid "Did you run Webpack for the first time?"
 msgstr "Heb je Webpack voor het eerst gedraaid?"
 
-#: BlockRenderer.php:321
+#: BlockRenderer.php:285
+#, php-format
+msgid "Edit %1$s"
+msgstr "%1$s bewerken"
+
+#: BlockRenderer.php:364
 msgid "Notice"
 msgstr "Melding"
 
-#: BlockRenderer.php:322
+#: BlockRenderer.php:365
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: BlockRenderer.php:323
+#: BlockRenderer.php:366
 msgid "Error"
 msgstr "Foutmelding"
 
-#: BlockRenderer.php:327
+#: BlockRenderer.php:370
 msgid "block"
 msgstr "blok"
 
-#: BlockRenderer.php:358
+#: BlockRenderer.php:420
 #, php-format
 msgid ""
 "This block is deprecated since version %1$s. Please replace this block in "
@@ -44,15 +49,15 @@ msgstr ""
 "Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
 "%2$s."
 
-#: BlockRenderer.php:381
+#: BlockRenderer.php:444
 msgid "This block is disabled and thus not visible on the frontend."
 msgstr "Dit blok is uitgeschakeld en dus niet zichtbaar op de frontend."
 
-#: BlockRenderer.php:393
+#: BlockRenderer.php:459
 msgid "Disable block"
 msgstr "Blok uitschakelen"
 
-#: BlockRenderer.php:394
+#: BlockRenderer.php:460
 msgid ""
 "You can disable the block if you need to temporarily hide its content. For "
 "example, an announcement block can be still kept inside the editor but will "
@@ -62,15 +67,15 @@ msgstr ""
 "aankondigingsblok kan bijvoorbeeld nog steeds in de editor worden bewaard, "
 "maar wordt pas weergegeven als het opnieuw is ingeschakeld."
 
-#: BlockRenderer.php:396
+#: BlockRenderer.php:462
 msgid "True"
 msgstr "Ja"
 
-#: BlockRenderer.php:397
+#: BlockRenderer.php:463
 msgid "False"
 msgstr "Nee"
 
-#: Bulldozer.php:49
+#: Bulldozer.php:52
 #, php-format
 msgid ""
 "Your theme %1$s requires at least Bulldozer %2$s. You have %3$s installed. "
@@ -81,17 +86,17 @@ msgstr ""
 "Werk bij/downgrade door het versienummer als volgt in te stellen in uw "
 "composer-bestand: highground/bulldozer\": \"%2$s\""
 
-#: Bulldozer.php:79 Bulldozer.php:89
+#: Bulldozer.php:82 Bulldozer.php:90
 msgid "&rsaquo; error"
 msgstr "&rsaquo; fout"
 
-#: Bulldozer.php:100 Bulldozer.php:101
+#: Bulldozer.php:101 Bulldozer.php:102
 msgid "Timber not activated. Make sure to composer require timber/timber"
 msgstr ""
 "Timber niet geactiveerd. Zorg ervoor dat timber/timber is toegevoegd aan uw "
 "dependencies"
 
-#: Site_Icons.php:74
+#: Site_Icons.php:135
 msgid "No icons found at /resources/favicons/"
 msgstr "Geen pictogrammen gevonden bij /resources/favicons/"
 

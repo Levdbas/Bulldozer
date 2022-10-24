@@ -172,6 +172,7 @@ abstract class BlockRenderer
       $this->register_block_styles($name);
 
       $this->setup_fields_group($name, $slug);
+      $this->add_hidden_fields($block);
       $this->add_fields();
       acf_add_local_field_group($this->registered_fields->build());
    }
@@ -190,7 +191,7 @@ abstract class BlockRenderer
       $this->registered_fields
          ->setLocation('block', '==', $name);
 
-      $this->add_hidden_fields();
+
       return $this->registered_fields;
    }
 
@@ -450,9 +451,9 @@ abstract class BlockRenderer
     *
     * @return void
     */
-   private function add_hidden_fields()
+   private function add_hidden_fields($block)
    {
-      if (isset($this->attributes['wp_lemon']['show_disable_button'])) {
+      if (isset($block['wp_lemon']['show_disable_button'])) {
          $this->registered_fields
             ->addTrueFalse('is_disabled', [
                'label'        => __('Disable block', 'bulldozer'),
