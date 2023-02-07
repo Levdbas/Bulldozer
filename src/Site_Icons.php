@@ -10,41 +10,41 @@ class Site_Icons
 {
 	/**
 	 * Name of the site
-	 * 
+	 *
 	 * Used in the web manifest file
 	 * Defaults to site name
 	 *
 	 * @var string
 	 */
-	public string $name             = '';
+	public string $name = '';
 
 	/**
 	 * Short name, used in the web manifest file.
-	 * 
+	 *
 	 * Defaults to site name but can be overwritten for a shorter name.
 	 *
 	 * @var string
 	 */
-	public string $short_name       = '';
+	public string $short_name = '';
 
 	/**
 	 * Background color, used in browsers like chrome.
-	 * 
+	 *
 	 * The background_color member defines a placeholder background color for the application page to display before its stylesheet is loaded. This value is used by the user agent to draw the background color of a shortcut when the manifest is available before the stylesheet has loaded.
-	 * 
+	 *
 	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/background_color
 	 * @var string
 	 */
 	public string $background_color = '#f7d600';
 
 	/**
-	 * The theme_color member is a string that defines the default theme color for the application. 
+	 * The theme_color member is a string that defines the default theme color for the application.
 	 * This sometimes affects how the OS displays the site (e.g., on Android's task switcher, the theme color surrounds the site).
-	 * 
+	 *
 	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/theme_color
 	 * @var string
 	 */
-	public string $theme_color      = '#f7d600';
+	public string $theme_color = '#f7d600';
 
 	/**
 	 * Can be one of:
@@ -67,7 +67,7 @@ class Site_Icons
 	 *
 	 * @var string
 	 */
-	public $orientation       = 'portrait';
+	public $orientation = 'portrait';
 
 	/**
 	 * Start url of the app
@@ -75,15 +75,15 @@ class Site_Icons
 	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/start_url
 	 * @var string
 	 */
-	public $start_url         = '';
+	public $start_url = '';
 
 	/**
 	 * Defaults to home url.
-	 * 
+	 *
 	 * @link  https://developer.mozilla.org/en-US/docs/Web/Manifest/scope
 	 * @var string
 	 */
-	public $scope             = '';
+	public $scope = '';
 
 	/**
 	 * Holder of the filename. We'll use this to generate the web manifest file. Defaults to 'manifest.json'.
@@ -93,23 +93,25 @@ class Site_Icons
 	 */
 	private string $manifest_filename = '';
 
+	public string $favicon_folder_name = '';
 	/**
 	 * Favicon path
-	 * 
+	 *
 	 * We'll first search the child theme for a favicon. If not found, we'll search the parent theme.
 	 *
 	 * @var string
 	 */
-	private $favicon_path      = '';
+	private $favicon_path = '';
 
-	function __construct()
+	public function __construct()
 	{
-		$this->name              = get_bloginfo('name');
-		$this->short_name        = get_bloginfo('name');
-		$this->start_url         = home_url();
-		$this->scope             = home_url();
-		$this->manifest_filename = $this->get_manifest_filename();
-		$this->favicon_path      = $this->get_favicon_path();
+		$this->name                = get_bloginfo('name');
+		$this->short_name          = get_bloginfo('name');
+		$this->start_url           = home_url();
+		$this->scope               = home_url();
+		$this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
+		$this->manifest_filename   = $this->get_manifest_filename();
+		$this->favicon_path        = $this->get_favicon_path();
 
 		add_action('parse_request', array($this, 'generate_manifest'));
 		add_action('init', array($this, 'add_rewrite_rules'));
@@ -127,12 +129,12 @@ class Site_Icons
 	 */
 	public function get_favicon_path()
 	{
-		if (file_exists(get_stylesheet_directory() . '/resources/favicons/android-chrome-512x512.png')) {
-			return get_stylesheet_directory_uri() . '/resources/favicons/';
-		} elseif (file_exists(get_template_directory() . '/resources/favicons/android-chrome-512x512.png')) {
-			return get_template_directory_uri() . '/resources/favicons/';
+		if (file_exists(get_stylesheet_directory() . '/resources/' . $this->favicon_folder_name . '/android-chrome-512x512.png')) {
+			return get_stylesheet_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
+		} elseif (file_exists(get_template_directory() . '/resources/' . $this->favicon_folder_name . '/android-chrome-512x512.png')) {
+			return get_template_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
 		} else {
-			Bulldozer::frontend_error(__('No icons found at /resources/favicons/', 'wp-lemon'));
+			Bulldozer::frontend_error(__('No icons found at /resources/' . $this->favicon_folder_name . '/', 'wp-lemon'));
 		}
 	}
 
@@ -188,7 +190,7 @@ class Site_Icons
 		 * Splash icon
 		 */
 		$icons_array[] = array(
-			'src'     => $this->favicon_path . 'android-chrome-512x512.png',
+			'src'   => $this->favicon_path . 'android-chrome-512x512.png',
 			'sizes' => '512x512',
 			'type'  => 'image/png',
 		);
@@ -249,12 +251,11 @@ class Site_Icons
 	 */
 	public function add_meta_to_head()
 	{
-		$tags  = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
+		$tags = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
 		$tags .= '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">' . PHP_EOL;
 		$tags .= '<meta name="theme-color" content="' . $this->theme_color . '">' . PHP_EOL;
 		echo $tags;
 	}
-
 
 	/**
 	 * Update the file paths so that WordPress knows where the new icons are.
