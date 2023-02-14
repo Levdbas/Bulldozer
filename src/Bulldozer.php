@@ -2,15 +2,15 @@
 
 namespace HighGround\Bulldozer;
 
-use Roots\WPConfig\Config;
 use function Env\env;
+use Roots\WPConfig\Config;
 
 class Bulldozer
 {
    /**
     * Current Bulldozer version.
     */
-   const VERSION = '2.2.0';
+   const VERSION = '3.0.0';
 
    /**
     * Active theme object.
@@ -30,13 +30,11 @@ class Bulldozer
       }
 
       $active_theme = wp_get_theme(get_template());
-      self::$theme = esc_html($active_theme->get('Name'));
+      self::$theme  = esc_html($active_theme->get('Name'));
       add_action('after_setup_theme', [$this, 'load_textdomain']);
       $this->test_compatibility();
       //CacheBuster::register();
    }
-
-
 
    public static function extend_roots_config()
    {
@@ -50,7 +48,7 @@ class Bulldozer
    {
       if (false == version_compare(self::VERSION, $required_version, $operator)) {
          $message = sprintf(__('Your theme %1$s requires at least Bulldozer %2$s. You have %3$s installed. Please update/downgrade by setting the version number like this in your composer file: highground/bulldozer": "%2$s"', 'bulldozer'), self::$theme, $required_version, self::VERSION);
-         add_action('after_setup_theme',  function () use ($message) {
+         add_action('after_setup_theme', function () use ($message) {
             self::backend_error($message);
             self::frontend_error($message);
          });
@@ -59,7 +57,7 @@ class Bulldozer
 
    private function test_compatibility()
    {
-      if (is_admin() || $_SERVER['PHP_SELF'] == '/wp-login.php') {
+      if (is_admin() || '/wp-login.php' == $_SERVER['PHP_SELF']) {
          return;
       }
 
@@ -75,29 +73,61 @@ class Bulldozer
 
    public static function frontend_error($message, $subtitle = '', $title = '')
    {
-      if (is_admin()) {
+      $script = explode('/', $_SERVER['SCRIPT_NAME']);
+      $script = end($script);
+
+      if (is_admin() || false !== stripos(wp_login_url(), $script)) {
          return;
       }
 
-      $title = $title ?: self::$theme . ' ' . __('&rsaquo; error', 'bulldozer');
+      $title   = $title ?: self::$theme . ' ' . __('&rsaquo; error', 'bulldozer');
       $message = "<h1>{$title}<br><small>{$subtitle}</small></h1><p>{$message}</p>";
 
       wp_die($message, $title);
    }
 
+   /**
+    * Add backend notification.
+
+    * @since 2.3.0
+    * @param string $title  Optional. Title of the notification.
+    * @param string $message Required. Message of the notification.
+    * @param string $type   Required. Type of the notification. Can be 'notice', 'warning' or 'error'.
+    * @return void          Place the notification in the admin_notices hook.
+    */
+   public static function backend_notification(string $message, string $type, string $title = '')
+   {
+      if (!in_array($type, ['notice', 'warning', 'error'])) {
+         return;
+      }
+      $result = '';
+      $types = [
+         'notice'  => __('Notice', 'bulldozer'),
+         'warning' => __('Warning', 'bulldozer'),
+         'error'   => __('Error', 'bulldozer'),
+      ];
+
+      $type_title = self::$theme . ' ' . __('&rsaquo; ', 'bulldozer') . $types[$type];
+
+      $result = "<div class='notice notice-{$type}'><h2>{$type_title}";
+      $result .= $title ? "<br><small>{$title}</small>" : '';
+      $result .= "</h2><p>{$message}</p></div>";
+
+      add_action('admin_notices', function () use ($result) {
+         echo $result;
+      });
+   }
+
+
    public static function backend_error($message, $subtitle = '', $title = '')
    {
-      $title = $title ?: self::$theme . ' ' . __('&rsaquo; error', 'bulldozer');
-      $message = "<div class='error'><h2>{$title}<br><small>{$subtitle}</small></h2><p>{$message}</p></div>";
-      add_action('admin_notices', function () use ($message) {
-         echo $message;
-      });
+      self::backend_notification($message, 'error', '', $subtitle);
    }
 
    public function initialize_timber()
    {
       if (!class_exists('Timber\Timber')) {
-         add_action('after_setup_theme',  function () {
+         add_action('after_setup_theme', function () {
             self::backend_error(__('Timber not activated. Make sure to composer require timber/timber', 'bulldozer'));
             self::frontend_error(__('Timber not activated. Make sure to composer require timber/timber', 'bulldozer'));
          });

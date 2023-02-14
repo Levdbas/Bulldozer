@@ -18,7 +18,7 @@ use Timber;
  * in the backend and finally checks first the parent theme and then the child theme to look for the twig partial.
  * This way you can overwrite the twig partial in the child theme.
  */
-abstract class BlockRenderer
+abstract class BlockRendererV1
 {
    /**
     * Going to hold the block context.
