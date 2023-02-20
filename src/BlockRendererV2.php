@@ -142,13 +142,16 @@ abstract class BlockRendererV2
     */
    public function __construct()
    {
-
       add_action('init', [$this, 'register_block']);
       add_filter('block_type_metadata', [$this, 'change_metadata']);
    }
 
    public function change_metadata($metadata)
    {
+      if (strpos($metadata['name'], 'acf/') === false) {
+         return $metadata;
+      }
+
       $metadata['acf']['renderCallback'] = [$this, 'compile'];
 
       return $metadata;
@@ -163,12 +166,12 @@ abstract class BlockRendererV2
     */
    public function register_block()
    {
-      $name = self::get_name();
-      $this->register_block_styles(self::get_name());
-      register_block_type(locate_template('/blocks/' . $name));
-
-      $this->setup_fields_group($name);
-      //$this->add_hidden_fields($block);
+      $block =  register_block_type(locate_template('/blocks/' . static::NAME));
+      $this->name = $block->name;
+      $this->register_block_styles($this->name);
+      $this->slug = str_replace('acf/', '',  $this->name);
+      $this->setup_fields_group($this->name);
+      $this->add_hidden_fields($block);
       $this->add_fields();
       acf_add_local_field_group($this->registered_fields->build());
    }
@@ -444,7 +447,7 @@ abstract class BlockRendererV2
     */
    private function add_hidden_fields($block)
    {
-      if (isset($block['wp_lemon']['show_disable_button'])) {
+      if (isset($block->wp_lemon['show_disable_button'])) {
          $this->registered_fields
             ->addTrueFalse('is_disabled', [
                'label'        => __('Disable block', 'bulldozer'),
@@ -479,10 +482,5 @@ abstract class BlockRendererV2
       }
 
       return '<style>' . $this->compiled_css . '</style>';
-   }
-
-   public static function get_name()
-   {
-      return static::NAME;
    }
 }
