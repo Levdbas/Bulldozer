@@ -224,7 +224,7 @@ abstract class BlockRendererV2
       $this->slug          = str_replace('acf/', '', $attributes['name']);
       $this->classes       = ['acf-block', $this->slug];
       $this->fields        = $fields = get_fields();
-      $this->context       = Timber\Timber::context();
+      $this->context       = Timber::get_context();
       $this->attributes    = $attributes;
       $this->wp_block      = $wp_block;
       $this->content       = $content;
