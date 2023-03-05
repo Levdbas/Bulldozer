@@ -115,7 +115,7 @@ abstract class BlockRendererV2
     */
    public array $children = [];
 
-   const NAME = '';
+   const NAME = null;
    /**
     * Register fields to the block.
     * 
@@ -148,7 +148,8 @@ abstract class BlockRendererV2
 
    public function change_metadata($metadata)
    {
-      if (strpos($metadata['name'], 'acf/') === false) {
+
+      if ($metadata['name'] !== 'acf/' . static::NAME) {
          return $metadata;
       }
 
@@ -166,7 +167,23 @@ abstract class BlockRendererV2
     */
    public function register_block()
    {
-      $block =  register_block_type(locate_template('/blocks/' . static::NAME));
+      if (static::NAME === null) {
+         throw new \Exception('CONST::NAME not set for ' . get_class($this));
+         return;
+      }
+
+      if (locate_template('build/' . static::NAME . '/block.json')) {
+         $block_location = locate_template('build/' . static::NAME . '/block.json');
+      } else {
+         $block_location = locate_template('blocks/' . static::NAME . '/block.json');
+      }
+
+      if (!$block_location) {
+         throw new \Exception('Block ' . static::NAME . ' not found in theme');
+         return;
+      }
+
+      $block =  register_block_type($block_location);
       $this->name = $block->name;
       $this->register_block_styles($this->name);
       $this->slug = str_replace('acf/', '',  $this->name);
@@ -224,7 +241,7 @@ abstract class BlockRendererV2
       $this->slug          = str_replace('acf/', '', $attributes['name']);
       $this->classes       = ['acf-block', $this->slug];
       $this->fields        = $fields = get_fields();
-      $this->context       = Timber::get_context();
+      $this->context       = Timber\Timber::context();
       $this->attributes    = $attributes;
       $this->wp_block      = $wp_block;
       $this->content       = $content;
@@ -234,6 +251,7 @@ abstract class BlockRendererV2
 
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
+
       $this->context = $this->block_context($this->context);
       $this->add_block_classes();
       $this->generate_css_variables();
@@ -266,8 +284,10 @@ abstract class BlockRendererV2
     */
    public function render()
    {
-      if (locate_template("/blocks/{$this->slug}/{$this->slug}.twig")) {
-         $block_path = "{$this->slug}/{$this->slug}";
+      if (locate_template("/build/{$this->slug}/{$this->slug}.twig")) {
+         $block_path = "/build/{$this->slug}/{$this->slug}";
+      } elseif (locate_template("/blocks/{$this->slug}/{$this->slug}.twig")) {
+         $block_path = "blocks/{$this->slug}/{$this->slug}";
       } else {
          Bulldozer::frontend_error(__("Block {$this->slug}.twig not found.", 'wp-lemon'));
       }
@@ -280,7 +300,7 @@ abstract class BlockRendererV2
       </button>';
       }
 
-      Timber\Timber::render("blocks/{$block_path}.twig", $this->context);
+      Timber\Timber::render("{$block_path}.twig", $this->context);
    }
 
    /**
