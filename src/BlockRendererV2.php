@@ -72,7 +72,7 @@ abstract class BlockRendererV2
    /**
     * Array of css variables to add to to the styles.
     */
-   public array $css_variables = [];
+   protected array $css_variables = [];
 
    /**
     * Field data retrieved by get_fields();
@@ -89,6 +89,11 @@ abstract class BlockRendererV2
     */
    protected array $classes = [];
 
+   /**
+    * Whether the block should always have a block id or not.
+    * Normally the block id is only added when the block has an anchor.
+    */
+   protected bool $always_add_block_id = false;
    /**
     * Array of notifications.
     * Notifications are added by compose_notification()
@@ -257,7 +262,7 @@ abstract class BlockRendererV2
       $this->generate_css_variables();
 
       $args = [
-         'block_id'      => $this->block_id,
+         'block_id'      => $this->maybe_add_block_id(),
          'is_disabled'   => $this->block_disabled,
          'slug'          => $this->slug,
          'attributes'    => $this->attributes,
@@ -302,6 +307,24 @@ abstract class BlockRendererV2
 
       Timber\Timber::render("{$block_path}.twig", $this->context);
    }
+
+
+   /**
+    * Add the block id to the block if has a anchor or if the block is always adding the id.
+    */
+   private function maybe_add_block_id()
+   {
+      if (isset($this->attributes['anchor'])) {
+         return $this->attributes['anchor'];
+      }
+
+      if (true == $this->always_add_block_id) {
+         return $this->attributes['id'];
+      }
+
+      return false;
+   }
+
 
    /**
     * Build the block html classes.
