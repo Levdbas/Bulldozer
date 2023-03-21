@@ -160,6 +160,12 @@ abstract class BlockRendererV2
 
       $metadata['acf']['renderCallback'] = [$this, 'compile'];
 
+      $variations = $this->register_block_variations();
+
+      if (false !== $variations) {
+         $metadata['variations'] = $variations;
+      }
+
       return $metadata;
    }
    /**
@@ -224,6 +230,18 @@ abstract class BlockRendererV2
     */
    public function register_block_styles($name)
    {
+      return false;
+   }
+
+
+   /**
+    * Empty function that can be overwritten by the blocks to register block variants.
+    *
+    * @return void
+    */
+   public function register_block_variations()
+   {
+      return false;
    }
 
    /**
