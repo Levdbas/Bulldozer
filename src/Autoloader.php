@@ -32,14 +32,14 @@ class Autoloader
          $this->dirs_to_load = $dirs_to_load;
       }
 
-      $this->base_dir = get_template_directory() . '/lib/';
+      $this->base_dir = get_template_directory() . '/lib';
       $this->load();
    }
 
    function child(array $dirs_to_load)
    {
       $this->dirs_to_load = $dirs_to_load;
-      $this->base_dir = get_stylesheet_directory() . '/library/';
+      $this->base_dir = get_stylesheet_directory() . '/library';
       $this->load();
    }
 
