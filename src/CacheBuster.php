@@ -1,66 +1,83 @@
 <?php
 
+/**
+ * Cachebuster class.
+ *
+ * @package HighGround\Bulldozer
+ */
+
 namespace HighGround\Bulldozer;
 
+/**
+ * Cachebuster class.
+ * Runs a cron job every hour to check if the manifest.json file has changed.
+ * If it has changed, it will purge the cache.
+ */
 class CacheBuster
 {
 
-   const CRON_NAME = 'bulldozer_cache_checker';
+	const CRON_NAME = 'bulldozer_cache_checker';
 
-   const TRANSIENT_NAME = 'bulldozer_cache_checker';
+	const TRANSIENT_NAME = 'bulldozer_cache_checker';
 
-   const TWO_HOUR_IN_SECONDS = 7200;
-   /**
-    * Handle the registration of the current class.
-    *
-    * @return void
-    */
-   public static function register()
-   {
-      $handler = new self();
-      add_action('init', [$handler, 'add_cron']);
-      add_action(self::CRON_NAME, [$handler, 'bulldozer_cache_buster']);
-   }
+	const TWO_HOUR_IN_SECONDS = 7200;
 
-
-   /**
-    * Add the cron job.
-    *
-    * @return void
-    */
-   public function add_cron()
-   {
-      if (!wp_next_scheduled(self::CRON_NAME)) {
-         wp_schedule_event(time(), 'hourly', self::CRON_NAME, $args = []);
-      }
-   }
-
-   public static function bulldozer_cache_buster()
-   {
-      $manifest = Asset::get_manifest();
-      $cached_manifest = get_transient(self::TRANSIENT_NAME);
-
-      if (!$manifest) {
-         return;
-      }
-
-      if (!$cached_manifest || $cached_manifest === $manifest) {
-         set_transient(self::TRANSIENT_NAME, $manifest, self::TWO_HOUR_IN_SECONDS);
-         return;
-      }
-
-      if (class_exists('DeliciousBrains\SpinupWp\Cache')) {
-         spinupwp()->cache->purge_page_cache();
-      }
+	/**
+	 * Handle the registration of the current class.
+	 *
+	 * @return void
+	 */
+	public static function register()
+	{
+		$handler = new self();
+		add_action('init', [$handler, 'add_cron']);
+		add_action(self::CRON_NAME, [$handler, 'bulldozer_cache_buster']);
+	}
 
 
-      if (function_exists('rocket_clean_domain')) {
-         rocket_clean_domain();
-      }
+	/**
+	 * Add the cron job.
+	 *
+	 * @return void
+	 */
+	public function add_cron()
+	{
+		if (!wp_next_scheduled(self::CRON_NAME)) {
+			wp_schedule_event(time(), 'hourly', self::CRON_NAME, $args = []);
+		}
+	}
 
-      // Preload cache.
-      if (function_exists('run_rocket_sitemap_preload')) {
-         run_rocket_sitemap_preload();
-      }
-   }
+	/**
+	 * Check if the manifest.json file has changed.
+	 * If it has changed, purge the cache.
+	 *
+	 * @return void
+	 */
+	public static function bulldozer_cache_buster()
+	{
+		$manifest = Asset::get_manifest();
+		$cached_manifest = get_transient(self::TRANSIENT_NAME);
+
+		if (!$manifest) {
+			return;
+		}
+
+		if (!$cached_manifest || $cached_manifest === $manifest) {
+			set_transient(self::TRANSIENT_NAME, $manifest, self::TWO_HOUR_IN_SECONDS);
+			return;
+		}
+
+		if (class_exists('DeliciousBrains\SpinupWp\Cache')) {
+			spinupwp()->cache->purge_page_cache();
+		}
+
+		if (function_exists('rocket_clean_domain')) {
+			rocket_clean_domain();
+		}
+
+		// Preload cache.
+		if (function_exists('run_rocket_sitemap_preload')) {
+			run_rocket_sitemap_preload();
+		}
+	}
 }

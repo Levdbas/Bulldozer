@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Site icons class.
+ *
+ * @package HighGround\Bulldozer
+ */
+
 namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
@@ -72,6 +78,7 @@ class Site_Icons
 	/**
 	 * Start url of the app
 	 * Defaults to home url.
+	 *
 	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/start_url
 	 * @var string
 	 */
@@ -113,10 +120,10 @@ class Site_Icons
 		$this->manifest_filename   = $this->get_manifest_filename();
 		$this->favicon_path        = $this->get_favicon_path();
 
-		add_action('parse_request', array($this, 'generate_manifest'));
-		add_action('init', array($this, 'add_rewrite_rules'));
-		add_action('wp_head', array($this, 'add_meta_to_head'), 0);
-		add_filter('get_site_icon_url', array($this, 'filter_favicon_path'), 10, 2);
+		add_action('parse_request', [$this, 'generate_manifest']);
+		add_action('init', [$this, 'add_rewrite_rules']);
+		add_action('wp_head', [$this, 'add_meta_to_head'], 0);
+		add_filter('get_site_icon_url', [$this, 'filter_favicon_path'], 10, 2);
 	}
 
 	/**
@@ -179,21 +186,21 @@ class Site_Icons
 		/**
 		 * default icon
 		 */
-		$icons_array[] = array(
+		$icons_array[] = [
 			'src'     => $this->favicon_path . 'android-chrome-192x192.png',
 			'sizes'   => '192x192',
 			'type'    => 'image/png',
 			'purpose' => 'any maskable',
-		);
+		];
 
 		/**
 		 * Splash icon
 		 */
-		$icons_array[] = array(
+		$icons_array[] = [
 			'src'   => $this->favicon_path . 'android-chrome-512x512.png',
 			'sizes' => '512x512',
 			'type'  => 'image/png',
-		);
+		];
 
 		return $icons_array;
 	}
@@ -207,7 +214,7 @@ class Site_Icons
 	 */
 	private function create_manifest()
 	{
-		$manifest = array();
+		$manifest = [];
 
 		$manifest['name']             = $this->name;
 		$manifest['short_name']       = $this->short_name;

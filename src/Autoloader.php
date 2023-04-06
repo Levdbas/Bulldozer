@@ -1,61 +1,124 @@
 <?php
 
+/**
+ * Autoloader class.
+ *
+ * @package HighGround\Bulldozer
+ */
+
 namespace HighGround\Bulldozer;
 
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Autoloader class that loads pre-defined or custom folders.
+ * Can be used to load from parent or child theme.
+ */
 class Autoloader
 {
+	/**
+	 * Base directory.
+	 *
+	 * @var string
+	 */
+	private $base_dir;
 
-   private $base_dir;
-   private $finder;
-   private $dirs_to_load = ['controllers', 'models', 'blocks'];
+	/**
+	 * Finder object.
+	 *
+	 * @var Finder
+	 */
+	private $finder;
 
-   function __construct()
-   {
-      /**
-       * Autoload lib folders.
-       * 
-       * We use this to load:
-       * 
-       * - models - WordPress posttypes, taxonomies and ACF blocks.
-       * - routes - Ajax/Timber routes
-       * - controllers - passes data to the twig $context
-       * - classes
-       */
-      $this->finder = new Finder;
-   }
+	/**
+	 * Array of directories to load.
+	 *
+	 * @var array
+	 */
+	private array $dirs_to_load = ['controllers', 'models', 'blocks'];
 
-   function parent($dirs_to_load = false)
-   {
-      if ($dirs_to_load) {
-         $this->dirs_to_load = $dirs_to_load;
-      }
 
-      $this->base_dir = get_template_directory() . '/lib';
-      $this->load();
-   }
+	/**
+	 * Autoload lib folders.
+	 *
+	 * We use this to load:
+	 *
+	 * - models - WordPress posttypes, taxonomies and ACF blocks.
+	 * - routes - Ajax/Timber routes
+	 * - controllers - passes data to the twig $context
+	 * - classes
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
 
-   function child(array $dirs_to_load)
-   {
-      $this->dirs_to_load = $dirs_to_load;
-      $this->base_dir = get_stylesheet_directory() . '/library';
-      $this->load();
-   }
+		$this->finder = new Finder();
+	}
 
-   function load()
-   {
-      foreach ($this->dirs_to_load as &$dir_to_load) {
-         $dir_to_load = $this->base_dir . '/' . $dir_to_load . '/';
-      }
+	/**
+	 * Loader for parent folder in lib directory.
+	 *
+	 * @api
+	 * @param array $dirs_to_load Array of directories to load.
+	 * @return void
+	 */
+	public function parent($dirs_to_load = false)
+	{
+		if ($dirs_to_load) {
+			$this->dirs_to_load = $dirs_to_load;
+		}
 
-      unset($dir_to_load);
-      $this->finder->files()
-         ->in($this->dirs_to_load)
-         ->name('*.php');
+		$this->base_dir = get_template_directory() . '/lib';
+		$this->load();
+	}
 
-      foreach ($this->finder as $file) {
-         require_once $file->getRealPath();
-      }
-   }
+	/**
+	 * Loader for child folder in library directory.
+	 *
+	 * @api
+	 * @param array $dirs_to_load Array of directories to load.
+	 * @return void
+	 */
+	public function child(array $dirs_to_load)
+	{
+		$this->dirs_to_load = $dirs_to_load;
+		$this->base_dir = get_stylesheet_directory() . '/library';
+		$this->load();
+	}
+
+	/**
+	 * Loader for child theme blocks.
+	 *
+	 * @since 3.3.0
+	 * @api
+	 * @return void
+	 */
+	public function child_blocks()
+	{
+		$this->dirs_to_load = ['blocks'];
+		$this->base_dir = get_stylesheet_directory();
+		$this->load();
+	}
+
+	/**
+	 * Load all files in the $dirs_to_load array.
+	 *
+	 * @return void
+	 */
+	private function load()
+	{
+		foreach ($this->dirs_to_load as &$dir_to_load) {
+			$dir_to_load = $this->base_dir . '/' . $dir_to_load . '/';
+		}
+
+		unset($dir_to_load);
+		$this->finder->files()
+			->in($this->dirs_to_load)
+			->name('*.php');
+
+		foreach ($this->finder as $file) {
+			require_once $file->getRealPath();
+		}
+	}
 }
