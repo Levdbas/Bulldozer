@@ -598,4 +598,40 @@ abstract class BlockRendererV2
 
 		return '<style>' . $this->compiled_css . '</style>';
 	}
+
+
+	/**
+	 * Generate inner blocks appender.
+	 *
+	 * @param array   $allowed_blocks Array with allowed blocks.
+	 * @param boolean $template Array with template.
+	 * @param boolean $classes String with classes.
+	 * @param boolean $orientation String with orientation.
+	 * @return string $inner_blocks the inner blocks appender.
+	 * @since 3.3.0
+	 */
+	public static function create_inner_blocks(array $allowed_blocks, $template = false, $classes = false, $orientation = false)
+	{
+		$allowed_blocks = esc_attr(wp_json_encode($allowed_blocks));
+
+		if ($template) {
+			$template = esc_attr(wp_json_encode($template));
+		}
+
+		if ($classes) {
+			$classes = esc_attr($classes);
+		}
+
+		if ($orientation) {
+			$orientation = esc_attr($orientation);
+		}
+
+		$inner_blocks = '<InnerBlocks';
+		$inner_blocks .= ' allowedBlocks=' . $allowed_blocks;
+		$inner_blocks .= $template ? ' template=' . $template : '';
+		$inner_blocks .= $classes ? ' class="' . $classes . '"' : '';
+		$inner_blocks .= $orientation ? ' orientation="' . $orientation . '"' : '';
+		$inner_blocks .= ' />';
+		return $inner_blocks;
+	}
 }
