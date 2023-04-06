@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * BlockrendererV2.php
+ *
+ * @package HighGround\Bulldozer
+ */
+
 namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
@@ -29,6 +35,8 @@ abstract class BlockRendererV2
 
 	/**
 	 * The rendered block attributes. Only visible on the frontend.
+	 *
+	 * @var WP_Block
 	 */
 	protected $wp_block;
 
@@ -48,6 +56,8 @@ abstract class BlockRendererV2
 
 	/**
 	 * Whether the block is showed on the frontend or backend. Backend returns true.
+	 *
+	 * @var bool
 	 */
 	protected bool $is_preview;
 

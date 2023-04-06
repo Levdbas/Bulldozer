@@ -100,7 +100,13 @@ class Site_Icons
 	 */
 	private string $manifest_filename = '';
 
+	/**
+	 * Folder name where the icons are stored.
+	 *
+	 * @var string
+	 */
 	public string $favicon_folder_name = '';
+
 	/**
 	 * Favicon path
 	 *
@@ -110,6 +116,12 @@ class Site_Icons
 	 */
 	private $favicon_path = '';
 
+
+	/**
+	 * Constructor
+	 *
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->name                = get_bloginfo('name');
@@ -129,10 +141,10 @@ class Site_Icons
 	/**
 	 * Sets parent of child theme as base path for the icons
 	 *
-	 * if /resources/favicons/icon-512x512.png exists in the child theme, we continue to look in that dir.
+	 * If /resources/favicons/icon-512x512.png exists in the child theme, we continue to look in that dir.
 	 * Else we fall back to the parent theme.
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function get_favicon_path()
 	{
@@ -141,7 +153,7 @@ class Site_Icons
 		} elseif (file_exists(get_template_directory() . '/resources/' . $this->favicon_folder_name . '/android-chrome-512x512.png')) {
 			return get_template_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
 		} else {
-			Bulldozer::frontend_error(__('No icons found at /resources/' . $this->favicon_folder_name . '/', 'wp-lemon'));
+			Bulldozer::frontend_error(sprintf(__('No icons found at /resources/%s/', 'bulldozer'), $this->favicon_folder_name));
 		}
 	}
 
@@ -179,13 +191,10 @@ class Site_Icons
 	/**
 	 * Adds the icon array.
 	 *
-	 * @return void
+	 * @return array $icons_array
 	 */
 	private function get_icons()
 	{
-		/**
-		 * default icon
-		 */
 		$icons_array[] = [
 			'src'     => $this->favicon_path . 'android-chrome-192x192.png',
 			'sizes'   => '192x192',
@@ -193,9 +202,6 @@ class Site_Icons
 			'purpose' => 'any maskable',
 		];
 
-		/**
-		 * Splash icon
-		 */
 		$icons_array[] = [
 			'src'   => $this->favicon_path . 'android-chrome-512x512.png',
 			'sizes' => '512x512',
@@ -210,7 +216,7 @@ class Site_Icons
 	 *
 	 * Creates manifest array from properties. This file is later transformed to json by generate_manifest().
 	 *
-	 * @return void
+	 * @return array $manifest Manifest array.
 	 */
 	private function create_manifest()
 	{
@@ -232,16 +238,16 @@ class Site_Icons
 	/**
 	 * Generates manifest and outputs it on the virtual path.
 	 *
-	 * @param object $query
+	 * @param WP $wp Current WordPress environment instance (passed by reference).
 	 * @return void
 	 */
-	public function generate_manifest($query)
+	public function generate_manifest($wp)
 	{
-		if (!property_exists($query, 'query_vars') || !is_array($query->query_vars)) {
+		if (!property_exists($wp, 'query_vars') || !is_array($wp->query_vars)) {
 			return;
 		}
 
-		$query_vars_as_string = http_build_query($query->query_vars);
+		$query_vars_as_string = http_build_query($wp->query_vars);
 		$manifest_filename    = $this->manifest_filename;
 
 		if (strpos($query_vars_as_string, $manifest_filename) !== false) {
@@ -261,15 +267,16 @@ class Site_Icons
 		$tags = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
 		$tags .= '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">' . PHP_EOL;
 		$tags .= '<meta name="theme-color" content="' . $this->theme_color . '">' . PHP_EOL;
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $tags;
 	}
 
 	/**
 	 * Update the file paths so that WordPress knows where the new icons are.
 	 *
-	 * @param string $url
-	 * @param string $size
-	 * @return void
+	 * @param string $url The URL of the icon.
+	 * @param string $size The size of the icon.
+	 * @return string|false
 	 */
 	public function filter_favicon_path($url, $size)
 	{

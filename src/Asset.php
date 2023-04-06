@@ -1,15 +1,62 @@
 <?php
 
+/**
+ * Asset class.
+ *
+ * @package HighGround\Bulldozer
+ */
+
 namespace HighGround\Bulldozer;
 
+/**
+ * Asset class
+ *
+ * This singleton class stores the manifest.json file and provides methods to retrieve the assets.
+ */
 class Asset
 {
-	protected $path;
-	protected $error;
-	protected $key;
+
+	/**
+	 * Path to the asset.
+	 *
+	 * @var string
+	 */
+	protected string $path;
+
+	/**
+	 * Error flag.
+	 *
+	 * @var bool
+	 */
+	protected bool $error;
+
+	/**
+	 * Key of the asset.
+	 *
+	 * @var string
+	 */
+	protected string $key;
+
+	/**
+	 * Instance of the class.
+	 *
+	 * @var object
+	 */
 	protected static $instance;
+
+	/**
+	 * Manifest file.
+	 *
+	 * @var array
+	 */
 	protected static $manifest = null;
 
+
+	/**
+	 * Get the manifest file.
+	 *
+	 * @return array
+	 */
 	public static function get_manifest()
 	{
 
@@ -18,6 +65,12 @@ class Asset
 		return self::$manifest;
 	}
 
+	/**
+	 * Get asset by key.
+	 *
+	 * @param string $key Key of the asset.
+	 * @return object
+	 */
 	public static function get_key($key)
 	{
 
@@ -26,6 +79,11 @@ class Asset
 		return self::$instance;
 	}
 
+	/**
+	 * Asset constructor.
+	 *
+	 * @param string $key Key of the asset.
+	 */
 	private function __construct($key = null)
 	{
 
@@ -47,13 +105,19 @@ class Asset
 			$this->key = $key;
 
 			if (!isset(self::$manifest[$this->key])) {
-				return $this->error = true;
+				$this->error = true;
+				return $this->error;
 			}
 
 			$this->path = self::$manifest[$this->key];
 		}
 	}
 
+	/**
+	 * Get the uri to the asset.
+	 *
+	 * @return string
+	 */
 	public function uri(): string
 	{
 		if ($this->error) {
@@ -63,11 +127,22 @@ class Asset
 		return get_stylesheet_directory_uri() . '/dist/' . $this->path;
 	}
 
+	/**
+	 * Get the path to the asset.
+	 *
+	 * @return string
+	 */
 	public function path(): string
 	{
 		return get_stylesheet_directory() . '/dist/' . $this->path;
 	}
 
+
+	/**
+	 * Check if the asset exists.
+	 *
+	 * @return bool
+	 */
 	public function exists(): bool
 	{
 		if ($this->error) {
@@ -77,6 +152,11 @@ class Asset
 		return file_exists($this->path());
 	}
 
+	/**
+	 * Get the contents of the asset.
+	 *
+	 * @return string|false
+	 */
 	public function contents(): string
 	{
 		if (!$this->exists()) {
@@ -87,6 +167,12 @@ class Asset
 	}
 
 
+	/**
+	 * Get the contents of the asset as JSON.
+	 *
+	 * @param bool $assoc Whether to return an associative array.
+	 * @return string|false
+	 */
 	public function json(bool $assoc = true)
 	{
 		if (!$this->contents()) {

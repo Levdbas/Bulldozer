@@ -11,6 +11,11 @@ namespace HighGround\Bulldozer;
 use function Env\env;
 use Roots\WPConfig\Config;
 
+/**
+ * Bulldozer main class.
+ *
+ * We use this class to load the theme functions and to check for compatibility.
+ */
 class Bulldozer
 {
 	/**
@@ -25,6 +30,9 @@ class Bulldozer
 	 */
 	private static $theme;
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct()
 	{
 		if (!defined('ABSPATH')) {
@@ -42,14 +50,26 @@ class Bulldozer
 		// CacheBuster::register();
 	}
 
+	/**
+	 * Extend Bedrock config.
+	 *
+	 * @return void
+	 */
 	public static function extend_roots_config()
 	{
 		Config::define('WP_MEMORY_LIMIT', '512M');
 		Config::define('WP_MAX_MEMORY_LIMIT', '512M');
-		Config::define('BE_MEDIA_FROM_PRODUCTION_URL', env('BE_MEDIA_FROM_PRODUCTION_URL') ?: false);
-		Config::define('CONTENT_LOCK', env('CONTENT_LOCK') ?: false);
+		Config::define('BE_MEDIA_FROM_PRODUCTION_URL', env('BE_MEDIA_FROM_PRODUCTION_URL') ? env('BE_MEDIA_FROM_PRODUCTION_URL') : false);
+		Config::define('CONTENT_LOCK', env('CONTENT_LOCK') ? env('CONTENT_LOCK') : false);
 	}
 
+	/**
+	 * Check if the installed version of Bulldozer is compatible with the theme.
+	 * If not, display a notice.
+	 *
+	 * @param string $required_version The required version of Bulldozer.
+	 * @param string $operator The operator to use for the version comparison.
+	 */
 	public function matches_required_version(string $required_version, string $operator = '>=')
 	{
 		if (false == version_compare(self::VERSION, $required_version, $operator)) {
@@ -64,24 +84,47 @@ class Bulldozer
 		}
 	}
 
+	/**
+	 * Check if the installed version of PHP is compatible with the theme.
+	 * If not, display a notice.
+	 */
 	private function test_compatibility()
 	{
-		if (is_admin() || '/wp-login.php' == $_SERVER['PHP_SELF']) {
+		// phpcs:ignore
+		$path = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
+
+		if (is_admin() || '/wp-login.php' == $path) {
 			return;
 		}
 
 		if (version_compare(phpversion(), '8.0.2', '<') && !is_admin()) {
+			// phpcs:ignore
 			trigger_error('Bulldozer requires PHP 8.0.2 or greater. You have ' . phpversion(), E_USER_ERROR);
 		}
 	}
 
+	/**
+	 * Load theme textdomain.
+	 *
+	 * @return  void
+	 */
 	public function load_textdomain()
 	{
 		load_theme_textdomain('bulldozer', dirname(__FILE__) . '/lang/');
 	}
 
+	/**
+	 * Display frontend error.
+	 *
+	 * @since 2.3.0
+	 * @param string $message Required. Message of the error.
+	 * @param string $subtitle Optional. Subtitle of the error.
+	 * @param string $title Optional. Title of the error.
+	 * @return mixed|void
+	 */
 	public static function frontend_error($message, $subtitle = '', $title = '')
 	{
+		// phpcs:ignore
 		$script = explode('/', $_SERVER['SCRIPT_NAME']);
 		$script = end($script);
 
@@ -89,20 +132,20 @@ class Bulldozer
 			return;
 		}
 
-		$title   = $title ?: self::$theme . ' ' . __('&rsaquo; error', 'bulldozer');
+		$title   = $title ? $title : self::$theme . ' ' . __('&rsaquo; error', 'bulldozer');
 		$message = "<h1>{$title}<br><small>{$subtitle}</small></h1><p>{$message}</p>";
 
-		wp_die($message, $title);
+		wp_die(wp_kses_post($message), esc_html($title));
 	}
 
 	/**
 	 * Add backend notification.
 	 *
 	 * @since 2.3.0
-	 * @param string $title  Optional. Title of the notification.
 	 * @param string $message Required. Message of the notification.
 	 * @param string $type   Required. Type of the notification. Can be 'notice', 'warning' or 'error'.
-	 * @return void          Place the notification in the admin_notices hook.
+	 * @param string $title  Optional. Title of the notification.
+	 * @return void|bool          Place the notification in the admin_notices hook.
 	 */
 	public static function backend_notification(string $message, string $type, string $title = '')
 	{
@@ -125,17 +168,33 @@ class Bulldozer
 		add_action(
 			'admin_notices',
 			function () use ($result) {
-				echo $result;
+				echo wp_kses_post($result);
 			}
 		);
 	}
 
 
+	/**
+	 * Display backend error.
+	 *
+	 * @since 2.3.0
+	 * @param string $message Required. Message of the error.
+	 * @param string $subtitle Optional. Subtitle of the error.
+	 * @param string $title Optional. Title of the error.
+	 * @return mixed|void
+	 */
 	public static function backend_error($message, $subtitle = '', $title = '')
 	{
 		self::backend_notification($message, 'error', '', $subtitle);
 	}
 
+	/**
+	 * Initialize Timber.
+	 *
+	 * If Timber is not installed, display a notice.
+	 *
+	 * @return void
+	 */
 	public function initialize_timber()
 	{
 		if (!class_exists('Timber\Timber')) {

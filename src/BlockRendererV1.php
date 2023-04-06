@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * BlockrendererV1.php
+ *
+ * @package HighGround\Bulldozer
+ */
+
 namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
@@ -22,66 +28,92 @@ abstract class BlockRendererV1
 {
 	/**
 	 * Going to hold the block context.
+	 *
+	 * @var array
 	 */
 	protected $context;
 
 	/**
 	 * The rendered block attributes. Only visible on the frontend.
+	 *
+	 * @var WP_Block
 	 */
 	protected $wp_block;
 
 	/**
 	 * Block attributes. Visible on both front- and backend.
+	 *
+	 * @var array
 	 */
 	protected $attributes;
 
 	/**
 	 * Block content.
+	 *
+	 * @var string
 	 */
 	protected $content;
 
 	/**
 	 * Whether the block is showed on the frontend or backend. Backend returns true.
+	 *
+	 * @var bool
 	 */
 	protected bool $is_preview;
 
 	/**
 	 * Current block id
+	 *
+	 * @var string
 	 */
 	protected string $block_id;
 
 	/**
 	 * Current post id where the block belongs to.
+	 *
+	 * @var int
 	 */
 	protected $post_id;
 
 	/**
 	 * Block name with acf/ prefix.
+	 *
+	 * @var string
 	 */
 	protected string $name;
 
 	/**
 	 * Block slug without acf/prefix
+	 *
+	 * @var string
 	 */
 	protected string $slug;
 
 	/**
 	 * Array of css variables to add to to the styles.
+	 *
+	 * @var array
 	 */
 	public array $css_variables = [];
 
 	/**
 	 * Field data retrieved by get_fields();
+	 *
+	 * @var array
 	 */
 	protected $fields  = [];
 
 	/**
 	 * Fields registered to the block using AcfBuilder
+	 *
+	 * @var FieldsBuilder
 	 */
 	public object $registered_fields;
 
 	/**
 	 * Array of classes that are appended to the wrapper element.
+	 *
+	 * @var array
 	 */
 	protected array $classes = [];
 
@@ -90,17 +122,22 @@ abstract class BlockRendererV1
 	 * Notifications are added by compose_notification()
 	 *
 	 * @method compose_notification()
+	 * @var array
 	 */
 	protected array $notifications = [];
 
 	/***
 	 * Boolean whether block is disabled or not.
+	 *
+	 * @var bool
 	 */
 	protected bool $block_disabled = false;
 
 
 	/**
 	 * Compiled css that gets injected.
+	 *
+	 * @var string
 	 */
 	protected string $compiled_css = '';
 
@@ -136,6 +173,7 @@ abstract class BlockRendererV1
 	 *
 	 * Use this function to pass the results of a query, add an asset or add modifier classes.
 	 *
+	 * @param array $context The context that is passed to the twig partial.
 	 * @return array
 	 */
 	abstract public function block_context($context): array;
@@ -176,10 +214,12 @@ abstract class BlockRendererV1
 
 
 	/**
-	 * Setup a new field group using AcfBuilder
+	 * Setup a new field group using AcfBuilder.
 	 *
 	 * We create the group & set the location.
 	 *
+	 * @param string $name The block name.
+	 * @param string $slug The block slug.
 	 * @return FieldsBuilder
 	 */
 	private function setup_fields_group($name, $slug)
@@ -187,7 +227,7 @@ abstract class BlockRendererV1
 		$this->registered_fields = new FieldsBuilder($slug);
 
 		$this->registered_fields
-		 ->setLocation('block', '==', $name);
+			->setLocation('block', '==', $name);
 
 		return $this->registered_fields;
 	}
@@ -196,6 +236,7 @@ abstract class BlockRendererV1
 	/**
 	 * Empty function that can be overwritten by the blocks to register block styles.
 	 *
+	 * @param string $name The block name.
 	 * @return void
 	 */
 	public function register_block_styles($name)
@@ -221,7 +262,7 @@ abstract class BlockRendererV1
 		$this->name          = $attributes['name'];
 		$this->slug          = str_replace('acf/', '', $attributes['name']);
 		$this->classes       = ['acf-block', $this->slug];
-		$this->fields        = $fields = get_fields();
+		$this->fields        = get_fields();
 		$this->context       = Timber::get_context();
 		$this->attributes    = $attributes;
 		$this->wp_block      = $wp_block;
@@ -245,7 +286,7 @@ abstract class BlockRendererV1
 			'content'       => $this->content,
 			'is_preview'    => $this->is_preview,
 			'post_id'       => $this->post_id,
-			'fields'        => $fields,
+			'fields'        => $this->fields,
 			'classes'       => $this->classes,
 			'inline_css'    => $this->generate_css(),
 			'notifications' => $this->notifications,
@@ -269,16 +310,7 @@ abstract class BlockRendererV1
 		} elseif (locate_template("/resources/views/blocks/{$this->slug}/{$this->slug}.twig")) {
 			$block_path = "{$this->slug}/{$this->slug}";
 		} else {
-
-			Bulldozer::frontend_error(__("Block {$this->slug}.twig not found.", 'wp-lemon'));
-		}
-		if ($this->is_preview && !empty($this->registered_fields->getFields())) {
-			echo '<button class="components-button is-primary has-icon acf-edit-block">
-         <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M20.1 5.1L16.9 2 6.2 12.7l-1.3 4.4 4.5-1.3L20.1 5.1zM4 20.8h8v-1.5H4v1.5z"></path>
-         </svg>
-      ' . sprintf(__('Edit %1$s', 'wp-lemon'), $this->attributes['title']) . '
-      </button>';
+			Bulldozer::frontend_error(sprintf(__('Block %s.twig not found.', 'bulldozer'), $this->slug));
 		}
 
 		Timber\Timber::render("blocks/{$block_path}.twig", $this->context);
@@ -337,8 +369,8 @@ abstract class BlockRendererV1
 	 * Compose a notification to be shown in the backend.
 	 *
 	 * @deprecated 1.8.0       Please use add_notification() instead.
-	 * @param string $message  The message, translatable
-	 * @param string $type     type of notification, can be notice, warning or error
+	 * @param string $message  The message, translatable.
+	 * @param string $type     type of notification, can be notice, warning or error.
 	 * @return void
 	 */
 	public function compose_notification(string $message, string $type)
@@ -350,8 +382,8 @@ abstract class BlockRendererV1
 	/**
 	 * Compose a notification to be shown in the backend.
 	 *
-	 * @param string $message  The message, translatable
-	 * @param string $type     type of notification, can be notice, warning or error
+	 * @param string $message  The message, translatable.
+	 * @param string $type     type of notification, can be notice, warning or error.
 	 * @return void
 	 */
 	public function add_notification(string $message, string $type)
@@ -407,7 +439,7 @@ abstract class BlockRendererV1
 	 *
 	 * Checks registered block array for 'lemon_deprecated'.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	private function maybe_add_deprecation_notice()
 	{
@@ -418,6 +450,7 @@ abstract class BlockRendererV1
 		$deprecation = $this->attributes['wp_lemon']['deprecated'];
 		$message = sprintf(__('This block is deprecated since version %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
 		$this->add_notification($message, 'warning');
+		return true;
 	}
 
 
@@ -426,7 +459,7 @@ abstract class BlockRendererV1
 	 *
 	 * Checks registered block array for 'lemon_deprecated'.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	private function maybe_disable_block()
 	{
@@ -434,7 +467,7 @@ abstract class BlockRendererV1
 			return false;
 		}
 
-		if (!isset($this->fields['is_disabled']) || $this->fields['is_disabled'] === false) {
+		if (!isset($this->fields['is_disabled']) || false === $this->fields['is_disabled']) {
 			return false;
 		}
 
@@ -442,28 +475,30 @@ abstract class BlockRendererV1
 
 		$message = __('This block is disabled and thus not visible on the frontend.', 'bulldozer');
 		$this->add_notification($message, 'warning');
+		return true;
 	}
 
 
 	/**
-	 * Add blockrenderer specific fields.
+	 * Add blockrenderer hidden fields.
 	 *
+	 * @param WP_Block_Type|false $block The block object.
 	 * @return void
 	 */
 	private function add_hidden_fields($block)
 	{
 		if (isset($block['wp_lemon']['show_disable_button'])) {
 			$this->registered_fields
-			->addTrueFalse(
-				'is_disabled',
-				[
-					'label'        => __('Disable block', 'bulldozer'),
-					'instructions' => __('You can disable the block if you need to temporarily hide its content. For example, an announcement block can be still kept inside the editor but will not be show until it\'s enabled again.', 'bulldozer'),
-					'ui'           => 1,
-					'ui_on_text'   => __('True', 'bulldozer'),
-					'ui_off_text'  => __('False', 'bulldozer'),
-				]
-			);
+				->addTrueFalse(
+					'is_disabled',
+					[
+						'label'        => __('Disable block', 'bulldozer'),
+						'instructions' => __('You can disable the block if you need to temporarily hide its content. For example, an announcement block can be still kept inside the editor but will not be show until it\'s enabled again.', 'bulldozer'),
+						'ui'           => 1,
+						'ui_on_text'   => __('True', 'bulldozer'),
+						'ui_off_text'  => __('False', 'bulldozer'),
+					]
+				);
 		}
 	}
 
@@ -483,6 +518,11 @@ abstract class BlockRendererV1
 		}
 	}
 
+	/**
+	 * Add style block to the block when css variables are set.
+	 *
+	 * @return void
+	 */
 	private function generate_css()
 	{
 		if (!$this->compiled_css) {
