@@ -28,7 +28,7 @@ class Asset
 	 *
 	 * @var bool
 	 */
-	protected bool $error;
+	protected bool $error = false;
 
 	/**
 	 * Key of the asset.
