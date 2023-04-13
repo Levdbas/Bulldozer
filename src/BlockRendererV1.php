@@ -30,6 +30,7 @@ use Timber;
 abstract class BlockRendererV1 extends AbstractBlockRenderer
 {
 
+	const BLOCK_VERSION = 1;
 
 	/**
 	 * Register a new ACF Block.

@@ -26,6 +26,9 @@ use Timber;
  */
 abstract class AbstractBlockRenderer
 {
+
+	const BLOCK_VERSION = null;
+
 	/**
 	 * Going to hold the block context.
 	 *
@@ -317,6 +320,7 @@ abstract class AbstractBlockRenderer
 		$attributes = $this->attributes;
 		$fields = $this->fields;
 
+
 		if (isset($attributes['className']) && !empty($attributes['className'])) {
 			$this->classes[] = esc_attr($attributes['className']);
 		}
@@ -325,34 +329,49 @@ abstract class AbstractBlockRenderer
 			$this->classes[] = 'align' . esc_attr($attributes['align']);
 		}
 
-		if (isset($attributes['align_text']) && !empty($attributes['align_text'])) {
-			$this->classes[] = 'has-text-align-' . esc_attr($attributes['align_text']);
+		if (isset($attributes['backgroundColor']) && !empty($attributes['backgroundColor'])) {
+			$this->classes[] = 'has-background';
+			$this->classes[] = 'has-' . esc_attr($attributes['backgroundColor']) . '-background-color';
 		}
 
-		if (isset($attributes['supports']['align_content']) && 'matrix' == $attributes['supports']['align_content'] && isset($attributes['align_content']) && !empty($attributes['align_content'])) {
+		if (isset($attributes['textColor']) && !empty($attributes['textColor'])) {
+			$this->classes[] = 'has-text-color';
+			$this->classes[] = 'has-' . esc_attr($attributes['textColor']) . '-color';
+		}
+
+		if (isset($attributes['supports']['align_content']) && 'matrix' == $attributes['supports']['align_content'] && !empty($attributes['align_content'])) {
 			$alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
-			$this->classes[] = 'has-custom-content-position is-position-' . $alignment;
+			$this->classes[] = 'has-custom-content-position';
+			$this->classes[] = 'is-position-' . $alignment;
 		}
 
-		if (isset($attributes['supports']['align_content']) && true === $attributes['supports']['align_content'] && isset($attributes['align_content']) && !empty($attributes['align_content'])) {
+		if (isset($attributes['supports']['align_content']) && true === $attributes['supports']['align_content'] && !empty($attributes['align_content'])) {
 			$alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
 			$this->classes[] = 'is-vertically-aligned-' . $alignment;
 		}
 
-		if (isset($attributes['backgroundColor']) && !empty($attributes['backgroundColor'])) {
-			$this->classes[] = 'has-background has-' . esc_attr($attributes['backgroundColor']) . '-background-color';
-		}
-
-		if (isset($attributes['textColor']) && !empty($attributes['textColor'])) {
-			$this->classes[] = 'has-text-color has-' . esc_attr($attributes['textColor']) . '-color';
-		}
-
 		if (isset($attributes['gradient']) && !empty($attributes['gradient'])) {
-			$this->classes[] = 'has-background-gradient has-' . esc_attr($attributes['gradient']) . '-gradient-background';
+			$this->classes[] = 'has-background-gradient';
+			$this->classes[] = 'has-' . esc_attr($attributes['gradient']) . '-gradient-background';
+		}
+		if (isset($attributes['supports']['alignContent']) && 'matrix' == $attributes['supports']['alignContent'] && !empty($attributes['alignContent'])) {
+			$alignment = str_replace(' ', '-', esc_attr($attributes['alignContent']));
+			$this->classes[] = 'has-custom-content-position';
+			$this->classes[] = 'is-position-' . $alignment;
+		}
+
+		if (isset($attributes['supports']['alignContent']) && true === $attributes['supports']['alignContent'] && !empty($attributes['alignContent'])) {
+			$alignment = str_replace(' ', '-', esc_attr($attributes['alignContent']));
+			$this->classes[] = 'is-vertically-aligned-' . $alignment;
+		}
+
+		if (isset($attributes['align_text']) && !empty($attributes['align_text'])) {
+			$this->classes[] = 'has-text-align-' . esc_attr($attributes['align_text']);
 		}
 
 		if (isset($fields['image_dim']) && !empty($fields['image_dim'])) {
-			$this->classes[] = 'has-background-dim has-background-dim-' . esc_attr($fields['image_dim']);
+			$this->classes[] = 'has-background-dim';
+			$this->classes[] = 'has-background-dim-' . esc_attr($fields['image_dim']);
 		}
 	}
 

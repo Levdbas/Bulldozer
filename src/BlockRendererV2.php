@@ -12,7 +12,7 @@ require_once 'helpers.php';
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Timber;
-
+use WP_Block_Supports;
 
 /**
  * V2 version of the block renderer.
@@ -31,6 +31,10 @@ use Timber;
  */
 abstract class BlockRendererV2 extends AbstractBlockRenderer
 {
+	const BLOCK_VERSION = 2;
+
+	const NAME = null;
+
 	/**
 	 * Whether the block should always have a block id or not.
 	 * Normally the block id is only added when the block has an anchor.
@@ -38,8 +42,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * @var bool
 	 */
 	protected bool $always_add_block_id = false;
-
-	const NAME = null;
 
 	/**
 	 * Passes the register method to acf.
@@ -113,6 +115,8 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			$metadata['icon'] = $icon;
 		}
 
+		$metadata['attributes']['customClassName']['default'] = static::NAME;
+
 		return $metadata;
 	}
 	/**
@@ -176,7 +180,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		$this->name          = $attributes['name'];
 		$this->slug          = str_replace('acf/', '', $attributes['name']);
-		$this->classes       = ['acf-block', $this->slug];
+		$this->classes       = ['acf-block'];
 		$this->fields        = get_fields();
 		$this->context       = Timber\Timber::context();
 		$this->attributes    = $attributes;
@@ -193,8 +197,16 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->add_block_classes();
 		$this->generate_css_variables();
 
+		$attributes = WP_Block_Supports::get_instance()->apply_block_supports();
+		$current_classes = explode(' ', $attributes['class']);
+		$this->classes = array_diff($this->classes, $current_classes);
+
+		$wrapper = get_block_wrapper_attributes([
+			'class' => implode(' ', $this->classes),
+			'id'    => $this->maybe_add_block_id(),
+		]);
+
 		$args = [
-			'block_id'      => $this->maybe_add_block_id(),
 			'is_disabled'   => $this->block_disabled,
 			'slug'          => $this->slug,
 			'attributes'    => $this->attributes,
@@ -207,6 +219,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			'inline_css'    => $this->generate_css(),
 			'notifications' => $this->notifications,
 			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
+			'wrapper'		 => $wrapper,
 		];
 
 		$this->context = array_merge($this->context, $args);
