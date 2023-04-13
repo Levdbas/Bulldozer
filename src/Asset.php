@@ -21,7 +21,7 @@ class Asset
 	 *
 	 * @var string
 	 */
-	protected string $path;
+	protected string|null $path = null;
 
 	/**
 	 * Error flag.
@@ -101,16 +101,19 @@ class Asset
 			self::$manifest = json_decode($manifest, true);
 		}
 
-		if ($key) {
-			$this->key = $key;
-
-			if (!isset(self::$manifest[$this->key])) {
-				$this->error = true;
-				return $this->error;
-			}
-
-			$this->path = self::$manifest[$this->key];
+		if (!$key) {
+			$this->error = true;
+			return $this->error;
 		}
+
+		$this->key = $key;
+
+		if (!isset(self::$manifest[$this->key])) {
+			$this->error = true;
+			return $this->error;
+		}
+
+		$this->path = self::$manifest[$this->key];
 	}
 
 	/**
