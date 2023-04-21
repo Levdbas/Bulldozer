@@ -115,8 +115,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			$metadata['icon'] = $icon;
 		}
 
-		$metadata['attributes']['customClassName']['default'] = static::NAME;
-
 		return $metadata;
 	}
 	/**

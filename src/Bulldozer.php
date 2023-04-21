@@ -47,6 +47,7 @@ class Bulldozer
 		self::$theme  = esc_html($active_theme->get('Name'));
 		add_action('after_setup_theme', [$this, 'load_textdomain']);
 		$this->test_compatibility();
+		add_action('enqueue_block_editor_assets', [$this, 'add_editor_assets']);
 		// CacheBuster::register();
 	}
 
@@ -208,5 +209,13 @@ class Bulldozer
 		}
 
 		new \Timber\Timber();
+	}
+
+
+	public function add_editor_assets()
+	{
+		$data = file_get_contents(__DIR__ . '/assets/acf-blocks.js');
+
+		$result = wp_add_inline_script('wp-blocks', $data);
 	}
 }

@@ -469,8 +469,8 @@ abstract class AbstractBlockRenderer
 		}
 
 		$inner_blocks = '<InnerBlocks';
-		$inner_blocks .= ' allowedBlocks=' . $allowed_blocks;
-		$inner_blocks .= $template ? ' template=' . $template : '';
+		$inner_blocks .= ' allowedBlocks="' . $allowed_blocks . '"';
+		$inner_blocks .= $template ? ' template="' . $template . '"' : '';
 		$inner_blocks .= $classes ? ' class="' . $classes . '"' : '';
 		$inner_blocks .= $orientation ? ' orientation="' . $orientation . '"' : '';
 		$inner_blocks .= ' />';
