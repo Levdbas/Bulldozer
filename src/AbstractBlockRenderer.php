@@ -319,10 +319,12 @@ abstract class AbstractBlockRenderer
 	{
 		$attributes = $this->attributes;
 		$fields = $this->fields;
-
+		$this->classes[] = $this->slug;
 
 		if (isset($attributes['className']) && !empty($attributes['className'])) {
-			$this->classes[] = esc_attr($attributes['className']);
+			$classes = esc_attr($attributes['className']);
+			$classes = explode(' ', $attributes['className']);
+			$this->classes = array_merge($this->classes, $classes);
 		}
 
 		if (isset($attributes['align']) && !empty($attributes['align'])) {
