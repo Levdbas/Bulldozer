@@ -39,7 +39,7 @@ abstract class AbstractBlockRenderer
 	/**
 	 * The rendered block attributes. Only visible on the frontend.
 	 *
-	 * @var WP_Block
+	 * @var \WP_Block
 	 */
 	protected $wp_block;
 
@@ -253,7 +253,7 @@ abstract class AbstractBlockRenderer
 	/**
 	 * Add blockrenderer hidden fields.
 	 *
-	 * @param WP_Block_Type|false $block The block object.
+	 * @param \WP_Block_Type|false $block The block object.
 	 * @return void
 	 */
 	protected function add_hidden_fields($block)

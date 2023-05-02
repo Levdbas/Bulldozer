@@ -102,6 +102,18 @@ class Bulldozer
 			// phpcs:ignore
 			trigger_error('Bulldozer requires PHP 8.0.2 or greater. You have ' . phpversion(), E_USER_ERROR);
 		}
+
+		// check if ACF is installed
+		if (!class_exists('ACF')) {
+			$message = sprintf(__('Your theme %1$s requires the plugin %2$s. Please install it.', 'bulldozer'), self::$theme, 'Advanced Custom Fields');
+			add_action(
+				'after_setup_theme',
+				function () use ($message) {
+					self::backend_error($message);
+					self::frontend_error($message);
+				}
+			);
+		}
 	}
 
 	/**

@@ -142,7 +142,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 *
 	 * @see https://www.advancedcustomfields.com/blog/acf-5-9-introducing-block-variations/
 	 *
-	 * @return void|false
+	 * @return array|false
 	 */
 	public function add_block_variations()
 	{
