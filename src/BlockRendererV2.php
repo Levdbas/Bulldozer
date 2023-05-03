@@ -52,6 +52,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	{
 		add_action('init', [$this, 'register_block']);
 		add_filter('block_type_metadata', [$this, 'change_metadata']);
+		add_action('enqueue_block_assets', [$this, 'alter_enqueue_block_assets']);
 	}
 
 	/**
@@ -89,6 +90,32 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->add_fields();
 		acf_add_local_field_group($this->registered_fields->build());
 	}
+
+
+	/**
+	 * This method is called to first dequeue the default acf block styles and then enqueue the block styles on render_block.
+	 *
+	 * @return void
+	 */
+	public function alter_enqueue_block_assets()
+	{
+		$name = $this->name;
+		$name = str_replace('/', '-', $this->name);
+		wp_dequeue_style($name . '-style');
+
+		/* 		add_filter(
+			'render_block',
+			function ($html, $block) use ($name) {
+				if ($block['blockName'] === $name) {
+					wp_enqueue_style($name . '-style');
+				}
+				return $html;
+			},
+			10,
+			2
+		); */
+	}
+
 
 	/**
 	 * Update the block metadata.
@@ -197,10 +224,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		$attributes = WP_Block_Supports::get_instance()->apply_block_supports();
 		$current_classes = explode(' ', $attributes['class']);
-		$this->classes = array_diff($this->classes, $current_classes);
+		$this->classes = array_merge($this->classes, $current_classes);
+
+		$unique_classes = array_diff($this->classes, $current_classes);
 
 		$wrapper = get_block_wrapper_attributes([
-			'class' => implode(' ', $this->classes),
+			'class' => implode(' ', $unique_classes),
 			'id'    => $this->maybe_add_block_id(),
 		]);
 
