@@ -101,6 +101,11 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	{
 		$name = $this->name;
 		$name = str_replace('/', '-', $this->name);
+
+		if (is_admin()) {
+			return;
+		}
+
 		wp_dequeue_style($name . '-style');
 
 		/* 		add_filter(
