@@ -356,7 +356,8 @@ abstract class AbstractBlockRenderer
 			$this->classes[] = 'has-background-gradient';
 			$this->classes[] = 'has-' . esc_attr($attributes['gradient']) . '-gradient-background';
 		}
-		if (isset($attributes['supports']['alignContent']) && 'matrix' == $attributes['supports']['alignContent'] && !empty($attributes['alignContent'])) {
+
+		if (isset($attributes['supports']['alignContent']) && 'matrix' == $attributes['supports']['alignContent'] && !empty($attributes['alignContent']) && 'top left' !== $attributes['alignContent']) {
 			$alignment = str_replace(' ', '-', esc_attr($attributes['alignContent']));
 			$this->classes[] = 'has-custom-content-position';
 			$this->classes[] = 'is-position-' . $alignment;
@@ -367,7 +368,7 @@ abstract class AbstractBlockRenderer
 			$this->classes[] = 'is-vertically-aligned-' . $alignment;
 		}
 
-		if (isset($attributes['align_text']) && !empty($attributes['align_text'])) {
+		if (isset($attributes['align_text']) && !empty($attributes['align_text'] && 'left' !== $attributes['align_text'])) {
 			$this->classes[] = 'has-text-align-' . esc_attr($attributes['align_text']);
 		}
 

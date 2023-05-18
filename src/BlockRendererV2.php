@@ -44,6 +44,13 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	protected bool $always_add_block_id = false;
 
 	/**
+	 * Additonal classes that should be added to the block only in the backend.
+	 *
+	 * @var array
+	 */
+	protected array $backend_classes = [];
+
+	/**
 	 * Passes the register method to acf.
 	 *
 	 * @return void
@@ -231,14 +238,21 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$current_classes = explode(' ', $attributes['class']);
 		$this->classes = array_merge($this->classes, $current_classes);
 
-		$unique_classes = array_diff($this->classes, $current_classes);
+		$this->classes = array_filter($this->classes, function ($class) {
+			return !preg_match('/^wp-block-acf/', $class);
+		});
 
-		$wrapper = get_block_wrapper_attributes([
-			'class' => implode(' ', $unique_classes),
-			'id'    => $this->maybe_add_block_id(),
-		]);
+		if ($this->is_preview) {
+			$this->classes = array_merge($this->classes, $this->backend_classes);
+		}
+
+		// add $this->slug  as class at the start
+		array_unshift($this->classes, $this->slug);
+
+		$this->classes = array_unique($this->classes);
 
 		$args = [
+			'block_id'      => $this->maybe_add_block_id(),
 			'is_disabled'   => $this->block_disabled,
 			'slug'          => $this->slug,
 			'attributes'    => $this->attributes,
@@ -251,7 +265,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			'inline_css'    => $this->generate_css(),
 			'notifications' => $this->notifications,
 			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
-			'wrapper'		 => $wrapper,
 		];
 
 		$this->context = array_merge($this->context, $args);
