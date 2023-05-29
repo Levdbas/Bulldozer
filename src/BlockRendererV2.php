@@ -280,9 +280,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	public function render()
 	{
 		$slug = $this->slug;
-		if (locate_template("/build/{$slug}/{$slug}.twig")) {
-			$block_path = "/build/{$slug}/{$slug}";
-		} elseif (locate_template("/blocks/{$slug}/{$slug}.twig")) {
+		if (locate_template("/blocks/{$slug}/{$slug}.twig")) {
 			$block_path = "blocks/{$slug}/{$slug}";
 		} else {
 			Bulldozer::frontend_error(sprintf(__('Block %s.twig not found.', 'bulldozer'), $slug));
