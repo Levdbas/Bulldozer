@@ -174,7 +174,7 @@ class Asset
 	 * Get the contents of the asset as JSON.
 	 *
 	 * @param bool $assoc Whether to return an associative array.
-	 * @return string|false
+	 * @return array|false
 	 */
 	public function json(bool $assoc = true)
 	{
