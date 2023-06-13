@@ -321,6 +321,8 @@ abstract class AbstractBlockRenderer
 		$fields = $this->fields;
 		$this->classes[] = $this->slug;
 
+		$this->classes = array_unique($this->classes);
+
 		if (isset($attributes['className']) && !empty($attributes['className'])) {
 			$classes = esc_attr($attributes['className']);
 			$classes = explode(' ', $attributes['className']);

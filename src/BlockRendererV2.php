@@ -51,6 +51,11 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	protected array $backend_classes = [];
 
 	/**
+	 * Location of the block.
+	 */
+	private string $block_location = '';
+
+	/**
 	 * Passes the register method to acf.
 	 *
 	 * @return void
@@ -79,20 +84,24 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			return;
 		}
 
-		if (locate_template('blocks/' . static::NAME . '/block.json')) {
-			$block_location = locate_template('blocks/' . static::NAME . '/block.json');
-		}
+		$class_info = new \ReflectionClass($this);
 
-		if (!$block_location) {
+
+		// get dir from file path 
+		$this->block_location = dirname($class_info->getFileName());
+		$json_file = $this->block_location . '/block.json';
+
+		$block = register_block_type($json_file);
+
+		if (false === $block) {
 			throw new \Exception('Block ' . static::NAME . ' not found in theme');
 			return;
 		}
 
-		$block = register_block_type($block_location);
 		$this->name = $block->name;
 		$this->register_block_styles($this->name);
 		$this->slug = str_replace('acf/', '', $this->name);
-		$this->setup_fields_group($this->name);
+		$this->setup_fields_group($this->name, $this->slug);
 		$this->add_hidden_fields($block);
 		$this->add_fields();
 		acf_add_local_field_group($this->registered_fields->build());
@@ -162,11 +171,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * We create the group & set the location.
 	 *
 	 * @param string $name The block name.
+	 * @param string $slug The block slug.
 	 * @return FieldsBuilder
 	 */
-	private function setup_fields_group($name)
+	private function setup_fields_group($name, $slug)
 	{
-		$this->registered_fields = new FieldsBuilder($name);
+		$this->registered_fields = new FieldsBuilder($slug);
 
 		$this->registered_fields
 			->setLocation('block', '==', $name);
@@ -280,13 +290,14 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	public function render()
 	{
 		$slug = $this->slug;
-		if (locate_template("/blocks/{$slug}/{$slug}.twig")) {
-			$block_path = "blocks/{$slug}/{$slug}";
-		} else {
-			Bulldozer::frontend_error(sprintf(__('Block %s.twig not found.', 'bulldozer'), $slug));
+
+		$twig_file = $this->block_location . "/{$slug}.twig";
+		if (!file_exists($twig_file)) {
+			Bulldozer::frontend_error(sprintf(__('Block %s not found.', 'bulldozer'), $twig_file));
+			return;
 		}
 
-		Timber\Timber::render("{$block_path}.twig", $this->context);
+		Timber\Timber::render($twig_file, $this->context);
 	}
 
 
