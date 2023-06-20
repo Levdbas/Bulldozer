@@ -296,8 +296,9 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			Bulldozer::frontend_error(sprintf(__('Block %s not found.', 'bulldozer'), $twig_file));
 			return;
 		}
+		// if file is ins
 
-		Timber\Timber::render($twig_file, $this->context);
+		Timber\Timber::render('blocks/' . "{$slug}/{$slug}.twig", $this->context);
 	}
 
 
