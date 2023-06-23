@@ -11,8 +11,8 @@ namespace HighGround\Bulldozer;
 require_once 'helpers.php';
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use Timber;
 use WP_Block_Supports;
+use Timber\Timber;
 
 /**
  * V2 version of the block renderer.
@@ -86,10 +86,9 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		$class_info = new \ReflectionClass($this);
 
-
-		// get dir from file path 
-		$this->block_location = dirname($class_info->getFileName());
-		$json_file = $this->block_location . '/block.json';
+		// get dir from file path
+		$this->block_location = plugin_dir_path($class_info->getFileName());
+		$json_file            = $this->block_location . '/block.json';
 
 		$block = register_block_type($json_file);
 
@@ -107,7 +106,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		acf_add_local_field_group($this->registered_fields->build());
 	}
 
-
 	/**
 	 * This method is called to first dequeue the default acf block styles and then enqueue the block styles on render_block.
 	 *
@@ -124,19 +122,18 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		wp_dequeue_style($name . '-style');
 
-		/* 		add_filter(
-			'render_block',
-			function ($html, $block) use ($name) {
-				if ($block['blockName'] === $name) {
-					wp_enqueue_style($name . '-style');
-				}
-				return $html;
-			},
-			10,
-			2
-		); */
+		/*         add_filter(
+    'render_block',
+    function ($html, $block) use ($name) {
+    if ($block['blockName'] === $name) {
+    wp_enqueue_style($name . '-style');
+    }
+    return $html;
+    },
+    10,
+    2
+    ); */
 	}
-
 
 	/**
 	 * Update the block metadata.
@@ -153,7 +150,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$metadata['acf']['renderCallback'] = [$this, 'compile'];
 
 		$variations = $this->add_block_variations();
-		$icon = $this->add_icon();
+		$icon       = $this->add_icon();
 
 		if (false !== $variations) {
 			$metadata['variations'] = $variations;
@@ -184,8 +181,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		return $this->registered_fields;
 	}
 
-
-
 	/**
 	 * Register the block variants.
 	 *
@@ -198,13 +193,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		return false;
 	}
 
-
 	/**
 	 * Empty function that can be overwritten by the blocks to add a custom icon.
 	 *
 	 * @return string|false
 	 */
-	public function add_icon(): string|false
+	public function add_icon(): string | false
 	{
 		return false;
 	}
@@ -221,21 +215,21 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 */
 	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
 	{
-		$this->fields = [];
-		$this->context = [];
+		$this->fields        = [];
+		$this->context       = [];
 		$this->notifications = [];
 
-		$this->name          = $attributes['name'];
-		$this->slug          = str_replace('acf/', '', $attributes['name']);
-		$this->classes       = ['acf-block'];
-		$this->fields        = get_fields();
-		$this->context       = Timber\Timber::context();
-		$this->attributes    = $attributes;
-		$this->wp_block      = $wp_block;
-		$this->content       = $content;
-		$this->is_preview    = $is_preview;
-		$this->post_id       = $post_id;
-		$this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
+		$this->name       = $attributes['name'];
+		$this->slug       = str_replace('acf/', '', $attributes['name']);
+		$this->classes    = ['acf-block'];
+		$this->fields     = get_fields();
+		$this->context    = Timber::context();
+		$this->attributes = $attributes;
+		$this->wp_block   = $wp_block;
+		$this->content    = $content;
+		$this->is_preview = $is_preview;
+		$this->post_id    = $post_id;
+		$this->block_id   = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
 
 		$this->maybe_add_deprecation_notice();
 		$this->maybe_disable_block();
@@ -245,8 +239,11 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->generate_css_variables();
 
 		$attributes = WP_Block_Supports::get_instance()->apply_block_supports();
-		$current_classes = explode(' ', $attributes['class']);
-		$this->classes = array_merge($this->classes, $current_classes);
+
+		if (isset($attributes['className'])) {
+			$current_classes = explode(' ', $attributes['class']);
+			$this->classes   = array_merge($this->classes, $current_classes);
+		}
 
 		$this->classes = array_filter($this->classes, function ($class) {
 			return !preg_match('/^wp-block-acf/', $class);
@@ -282,25 +279,43 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->render();
 	}
 
+	private static function normalize_path(string $path)
+	{
+		$normalized = str_replace('\\', '/', $path);
+		$normalized = preg_replace('/.*\/web\/app/', '', $normalized);
+		$normalized = trailingslashit($normalized);
+		return $normalized;
+	}
+
 	/**
 	 * Renders the block.
-	 *
+	 * @throws \Exception If the block template is not found.
 	 * @return void
 	 */
 	public function render()
 	{
-		$slug = $this->slug;
+		$twig_file_path   = "blocks/{$this->slug}/{$this->slug}.twig";
+		$twig_file_origin = null;
 
-		$twig_file = $this->block_location . "/{$slug}.twig";
-		if (!file_exists($twig_file)) {
-			Bulldozer::frontend_error(sprintf(__('Block %s not found.', 'bulldozer'), $twig_file));
+		$template_test_location   = self::normalize_path(TEMPLATEPATH);
+		$stylesheet_test_location = self::normalize_path(STYLESHEETPATH);
+		$block_test_location      = self::normalize_path($this->block_location);
+
+		if (strpos($block_test_location, $template_test_location) !== false) {
+			$twig_file_origin = $template_test_location . $twig_file_path;
+			$test_location    = TEMPLATEPATH . '/' . $twig_file_path;
+		} elseif (strpos($block_test_location, $stylesheet_test_location) !== false) {
+			$twig_file_origin = $stylesheet_test_location . $twig_file_path;
+			$test_location    = STYLESHEETPATH . '/' . $twig_file_path;
+		}
+
+		if (!file_exists($test_location)) {
+			throw new \Exception(sprintf(__('Block %s not found.', 'bulldozer'), $twig_file_origin));
 			return;
 		}
-		// if file is ins
 
-		Timber\Timber::render('blocks/' . "{$slug}/{$slug}.twig", $this->context);
+		Timber::render($twig_file_path, $this->context);
 	}
-
 
 	/**
 	 * Add the block id to the block if has a anchor or if the block is always adding the id.
