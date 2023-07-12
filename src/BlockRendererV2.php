@@ -84,6 +84,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			return;
 		}
 
+		if (!function_exists('acf_add_local_field_group')) {
+			throw new \Exception('ACF not activated');
+			return;
+		}
+
+
 		$class_info = new \ReflectionClass($this);
 
 		// get dir from file path
