@@ -454,10 +454,11 @@ abstract class AbstractBlockRenderer
 	 * @param boolean $template Array with template.
 	 * @param boolean $classes String with classes.
 	 * @param boolean $orientation String with orientation.
+	 * @param boolean|string $templatelock true or one of 'all' or 'insert'. True defaults to 'all'.
 	 * @return string $inner_blocks the inner blocks appender.
 	 * @since 3.3.0
 	 */
-	public static function create_inner_blocks(array $allowed_blocks, $template = false, $classes = false, $orientation = false)
+	public static function create_inner_blocks(array $allowed_blocks, $template = false, $classes = false, $orientation = false, $templatelock = false)
 	{
 		$allowed_blocks = esc_attr(wp_json_encode($allowed_blocks));
 
@@ -473,11 +474,23 @@ abstract class AbstractBlockRenderer
 			$orientation = esc_attr($orientation);
 		}
 
+		if ($templatelock) {
+			// if bool true, set to string 'all'
+			if (is_bool($templatelock)) {
+				$templatelock = 'all';
+			}
+
+			$templatelock = esc_attr($orientation);
+		}
+
 		$inner_blocks = '<InnerBlocks';
 		$inner_blocks .= ' allowedBlocks="' . $allowed_blocks . '"';
 		$inner_blocks .= $template ? ' template="' . $template . '"' : '';
 		$inner_blocks .= $classes ? ' class="' . $classes . '"' : '';
 		$inner_blocks .= $orientation ? ' orientation="' . $orientation . '"' : '';
+		$inner_blocks .= $templatelock ? ' templateLock="' . $templatelock . '"' : '';
+
+
 		$inner_blocks .= ' />';
 		return $inner_blocks;
 	}
