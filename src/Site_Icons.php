@@ -22,7 +22,7 @@ class Site_Icons
 	 *
 	 * @var string
 	 */
-	public string $name = '';
+	private string $name = '';
 
 	/**
 	 * Short name, used in the web manifest file.
@@ -31,7 +31,7 @@ class Site_Icons
 	 *
 	 * @var string
 	 */
-	public string $short_name = '';
+	private string $short_name = '';
 
 	/**
 	 * Background color, used in browsers like chrome.
@@ -41,7 +41,7 @@ class Site_Icons
 	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/background_color
 	 * @var string
 	 */
-	public string $background_color = '#f7d600';
+	private string $background_color = '#f7d600';
 
 	/**
 	 * The theme_color member is a string that defines the default theme color for the application.
@@ -50,7 +50,7 @@ class Site_Icons
 	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/theme_color
 	 * @var string
 	 */
-	public string $theme_color = '#f7d600';
+	private string $theme_color = '#f7d600';
 
 	/**
 	 * Can be one of:
@@ -62,7 +62,7 @@ class Site_Icons
 	 *
 	 * @var string
 	 */
-	public $display = 'standalone';
+	private string $display = 'standalone';
 
 	/**
 	 * Can be one of:
@@ -73,7 +73,7 @@ class Site_Icons
 	 *
 	 * @var string
 	 */
-	public $orientation = 'portrait';
+	private string $orientation = 'portrait';
 
 	/**
 	 * Start url of the app
@@ -82,7 +82,7 @@ class Site_Icons
 	 * @link https://developer.mozilla.org/en-US/docs/Web/Manifest/start_url
 	 * @var string
 	 */
-	public $start_url = '';
+	private string $start_url = '';
 
 	/**
 	 * Defaults to home url.
@@ -90,7 +90,18 @@ class Site_Icons
 	 * @link  https://developer.mozilla.org/en-US/docs/Web/Manifest/scope
 	 * @var string
 	 */
-	public $scope = '';
+	private $scope = '';
+
+	private static array $attributes = [
+		'name'             => false,
+		'short_name'       => false,
+		'background_color' => false,
+		'theme_color'      => false,
+		'display'          => false,
+		'orientation'      => false,
+		'start_url'        => false,
+		'scope'            => false,
+	];
 
 	/**
 	 * Holder of the filename. We'll use this to generate the web manifest file. Defaults to 'manifest.json'.
@@ -98,14 +109,14 @@ class Site_Icons
 	 *
 	 * @var string
 	 */
-	private string $manifest_filename = '';
+	public string $manifest_filename = '';
 
 	/**
 	 * Folder name where the icons are stored.
 	 *
 	 * @var string
 	 */
-	public string $favicon_folder_name = '';
+	private string $favicon_folder_name = '';
 
 	/**
 	 * Favicon path
@@ -116,7 +127,6 @@ class Site_Icons
 	 */
 	private $favicon_path = '';
 
-
 	/**
 	 * Constructor
 	 *
@@ -124,10 +134,18 @@ class Site_Icons
 	 */
 	public function __construct()
 	{
-		$this->name                = get_bloginfo('name');
-		$this->short_name          = get_bloginfo('name');
-		$this->start_url           = home_url();
-		$this->scope               = home_url();
+
+		self::$attributes = [
+			'name'             => $this->name,
+			'short_name'       => $this->short_name,
+			'background_color' => $this->background_color,
+			'theme_color'      => $this->theme_color,
+			'display'          => $this->display,
+			'orientation'      => $this->orientation,
+			'start_url'        => $this->start_url,
+			'scope'            => $this->scope,
+		];
+
 		$this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
 		$this->manifest_filename   = $this->get_manifest_filename();
 		$this->favicon_path        = $this->get_favicon_path();
@@ -222,15 +240,15 @@ class Site_Icons
 	{
 		$manifest = [];
 
-		$manifest['name']             = $this->name;
-		$manifest['short_name']       = $this->short_name;
+		$manifest['name']             = self::$attributes['name'];
+		$manifest['short_name']       = self::$attributes['short_name'];
 		$manifest['icons']            = $this->get_icons();
-		$manifest['background_color'] = $this->background_color;
-		$manifest['theme_color']      = $this->theme_color;
-		$manifest['display']          = $this->display;
-		$manifest['orientation']      = $this->orientation;
-		$manifest['start_url']        = $this->start_url;
-		$manifest['scope']            = $this->scope;
+		$manifest['background_color'] = self::$attributes['background_color'];
+		$manifest['theme_color']      = self::$attributes['theme_color'];
+		$manifest['display']          = self::$attributes['display'];
+		$manifest['orientation']      = self::$attributes['orientation'];
+		$manifest['start_url']        = self::$attributes['start_url'];
+		$manifest['scope']            = self::$attributes['scope'];
 
 		return $manifest;
 	}
@@ -266,7 +284,7 @@ class Site_Icons
 	{
 		$tags = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
 		$tags .= '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">' . PHP_EOL;
-		$tags .= '<meta name="theme-color" content="' . $this->theme_color . '">' . PHP_EOL;
+		$tags .= '<meta name="theme-color" content="' . self::$attributes['theme_color'] . '">' . PHP_EOL;
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $tags;
 	}
@@ -300,5 +318,27 @@ class Site_Icons
 		}
 
 		return $this->favicon_path . $filename;
+	}
+
+	public function __set($name, $value)
+	{
+
+		if (!array_key_exists($name, self::$attributes)) {
+			return;
+		}
+
+		self::$attributes[$name] = $value;
+	}
+
+	/**
+	 * Get attribute
+	 * 
+	 * @api get_attribute
+	 * @param string $attribute Attribute name
+	 * @return string
+	 */
+	public static function get_attribute(string $attribute): string
+	{
+		return self::$attributes[$attribute];
 	}
 }
