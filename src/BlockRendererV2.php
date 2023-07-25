@@ -85,7 +85,9 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		}
 
 		if (!function_exists('acf_add_local_field_group')) {
-			throw new \Exception('ACF not activated');
+			$message = _x('ACF not activated.', 'Error explaination', 'wp-lemon');
+			Bulldozer::frontend_error($message);
+			Bulldozer::backend_notification($message, 'error');
 			return;
 		}
 

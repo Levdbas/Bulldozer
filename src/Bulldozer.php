@@ -21,7 +21,7 @@ class Bulldozer
 	/**
 	 * Current Bulldozer version.
 	 */
-	const VERSION = '3.7.4';
+	const VERSION = '3.7.5';
 
 	/**
 	 * Active theme object.
@@ -30,6 +30,8 @@ class Bulldozer
 	 */
 	private static $theme;
 
+
+	private static array $backend_messages = [];
 	/**
 	 * Constructor.
 	 */
@@ -162,6 +164,12 @@ class Bulldozer
 	 */
 	public static function backend_notification(string $message, string $type, string $title = '')
 	{
+		if (in_array($message, self::$backend_messages)) {
+			return;
+		}
+
+		self::$backend_messages[] = $message;
+
 		if (!in_array($type, ['notice', 'warning', 'error'])) {
 			return;
 		}
