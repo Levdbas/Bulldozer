@@ -21,7 +21,7 @@ class Bulldozer
 	/**
 	 * Current Bulldozer version.
 	 */
-	const VERSION = '3.8.0';
+	const VERSION = '3.8.1';
 
 	/**
 	 * Active theme object.
@@ -143,7 +143,11 @@ class Bulldozer
 		$script = explode('/', $_SERVER['SCRIPT_NAME']);
 		$script = end($script);
 
-		if (is_admin() || false !== stripos(wp_login_url(), $script)) {
+		if (is_admin() || wp_doing_ajax() || wp_doing_cron() || wp_is_json_request()) {
+			return;
+		}
+
+		if (false !== stripos(wp_login_url(), $script)) {
 			return;
 		}
 
