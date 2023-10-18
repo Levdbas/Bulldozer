@@ -43,6 +43,14 @@ abstract class AbstractBlockRenderer
 	 */
 	protected $wp_block;
 
+
+	/**
+	 * Block attributes. Visible on both front- and backend.
+	 *
+	 * @var array
+	 */
+	protected static string $title;
+
 	/**
 	 * Block attributes. Visible on both front- and backend.
 	 *
@@ -127,7 +135,7 @@ abstract class AbstractBlockRenderer
 	 * @method compose_notification()
 	 * @var array
 	 */
-	protected array $notifications = [];
+	protected static array $notifications = [];
 
 	/***
 	 * Boolean whether block is disabled or not.
@@ -402,7 +410,7 @@ abstract class AbstractBlockRenderer
 	 * @param string $type     type of notification, can be notice, warning or error.
 	 * @return void
 	 */
-	public function add_notification(string $message, string $type)
+	public static function add_notification(string $message, string $type)
 	{
 		$types = [
 			'notice'  => __('Notice', 'bulldozer'),
@@ -411,9 +419,9 @@ abstract class AbstractBlockRenderer
 		];
 
 		array_push(
-			$this->notifications,
+			self::$notifications,
 			[
-				'title'     => $this->attributes['title'] . ' ' . __('block', 'bulldozer'),
+				'title'     => self::$title . ' ' . __('block', 'bulldozer'),
 				'message'   => $message,
 				'type'      => $type,
 				'type_name' => $types[$type],

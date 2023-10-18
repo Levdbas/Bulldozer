@@ -54,6 +54,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		$block   = $this->block_register();
 		$name    = 'acf/' . $block['name'];
 		$slug    = $block['name'];
+		self::$title = $block['title'];
 		$block['render_callback'] = [$this, 'compile'];
 
 		acf_register_block_type($block);
@@ -97,9 +98,9 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 	 */
 	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
 	{
-		$this->fields = [];
-		$this->context = [];
-		$this->notifications = [];
+		$this->fields        = [];
+		$this->context       = [];
+		self::$notifications = [];
 
 		$this->name          = $attributes['name'];
 		$this->slug          = str_replace('acf/', '', $attributes['name']);
@@ -131,7 +132,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 			'fields'        => $this->fields,
 			'classes'       => $this->classes,
 			'inline_css'    => $this->generate_css(),
-			'notifications' => $this->notifications,
+			'notifications' => self::$notifications,
 			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
 		];
 

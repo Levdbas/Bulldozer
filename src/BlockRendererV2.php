@@ -104,7 +104,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			throw new \Exception('Block ' . static::NAME . ' not found in theme');
 			return;
 		}
-
+		self::$title = $block->title;
 		$this->name = $block->name;
 		$this->register_block_styles($this->name);
 		$this->slug = str_replace('acf/', '', $this->name);
@@ -225,7 +225,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	{
 		$this->fields        = [];
 		$this->context       = [];
-		$this->notifications = [];
+		self::$notifications = [];
 
 		$this->name       = $attributes['name'];
 		$this->slug       = str_replace('acf/', '', $attributes['name']);
@@ -278,7 +278,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			'fields'        => $this->fields,
 			'classes'       => $this->classes,
 			'inline_css'    => $this->generate_css(),
-			'notifications' => $this->notifications,
+			'notifications' => self::$notifications,
 			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
 		];
 
