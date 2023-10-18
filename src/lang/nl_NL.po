@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2022-10-24 16:13+0200\n"
-"PO-Revision-Date: 2022-10-24 16:13+0200\n"
+"POT-Creation-Date: 2023-09-18 11:42+0200\n"
+"PO-Revision-Date: 2023-09-18 11:44+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -10,37 +10,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.3.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;esc_html__\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Asset.php:38 Asset.php:39
-msgid "Did you run Webpack for the first time?"
-msgstr "Heb je Webpack voor het eerst gedraaid?"
-
-#: BlockRenderer.php:285
-#, php-format
-msgid "Edit %1$s"
-msgstr "%1$s bewerken"
-
-#: BlockRenderer.php:364
-msgid "Notice"
-msgstr "Melding"
-
-#: BlockRenderer.php:365
-msgid "Warning"
-msgstr "Waarschuwing"
-
-#: BlockRenderer.php:366
-msgid "Error"
-msgstr "Foutmelding"
-
-#: BlockRenderer.php:370
-msgid "block"
-msgstr "blok"
-
-#: BlockRenderer.php:420
+#: AbstractBlockRenderer.php:224
 #, php-format
 msgid ""
 "This block is deprecated since version %1$s. Please replace this block in "
@@ -49,15 +24,15 @@ msgstr ""
 "Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
 "%2$s."
 
-#: BlockRenderer.php:444
+#: AbstractBlockRenderer.php:248
 msgid "This block is disabled and thus not visible on the frontend."
 msgstr "Dit blok is uitgeschakeld en dus niet zichtbaar op de frontend."
 
-#: BlockRenderer.php:459
+#: AbstractBlockRenderer.php:266
 msgid "Disable block"
 msgstr "Blok uitschakelen"
 
-#: BlockRenderer.php:460
+#: AbstractBlockRenderer.php:267
 msgid ""
 "You can disable the block if you need to temporarily hide its content. For "
 "example, an announcement block can be still kept inside the editor but will "
@@ -67,15 +42,45 @@ msgstr ""
 "aankondigingsblok kan bijvoorbeeld nog steeds in de editor worden bewaard, "
 "maar wordt pas weergegeven als het opnieuw is ingeschakeld."
 
-#: BlockRenderer.php:462
+#: AbstractBlockRenderer.php:269
 msgid "True"
 msgstr "Ja"
 
-#: BlockRenderer.php:463
+#: AbstractBlockRenderer.php:270
 msgid "False"
 msgstr "Nee"
 
-#: Bulldozer.php:52
+#: AbstractBlockRenderer.php:408 Bulldozer.php:182
+msgid "Notice"
+msgstr "Melding"
+
+#: AbstractBlockRenderer.php:409 Bulldozer.php:183
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: AbstractBlockRenderer.php:410 Bulldozer.php:184
+msgid "Error"
+msgstr "Foutmelding"
+
+#: AbstractBlockRenderer.php:416
+msgid "block"
+msgstr "blok"
+
+#: Asset.php:95 Asset.php:96
+msgid "Did you run Webpack for the first time?"
+msgstr "Heb je Webpack voor het eerst gedraaid?"
+
+#: BlockRendererV1.php:155
+#, php-format
+msgid "Block %s.twig not found."
+msgstr "Blok %s.twig niet gevonden."
+
+#: BlockRendererV2.php:321
+#, php-format
+msgid "Block %s not found."
+msgstr "Blok %s niet gevonden."
+
+#: Bulldozer.php:79
 #, php-format
 msgid ""
 "Your theme %1$s requires at least Bulldozer %2$s. You have %3$s installed. "
@@ -86,19 +91,34 @@ msgstr ""
 "Werk bij/downgrade door het versienummer als volgt in te stellen in uw "
 "composer-bestand: highground/bulldozer\": \"%2$s\""
 
-#: Bulldozer.php:82 Bulldozer.php:90
+#: Bulldozer.php:110
+#, php-format
+msgid "Your theme %1$s requires the plugin %2$s. Please install it."
+msgstr ""
+"Voor jouw thema %1$s is de plug-in %2$s vereist. Installeer het alstublieft."
+
+#: Bulldozer.php:154
 msgid "&rsaquo; error"
 msgstr "&rsaquo; fout"
 
-#: Bulldozer.php:101 Bulldozer.php:102
+#: Bulldozer.php:187
+msgid "&rsaquo; "
+msgstr "&rsaquo; "
+
+#: Bulldozer.php:229 Bulldozer.php:230
 msgid "Timber not activated. Make sure to composer require timber/timber"
 msgstr ""
 "Timber niet geactiveerd. Zorg ervoor dat timber/timber is toegevoegd aan uw "
 "dependencies"
 
-#: Site_Icons.php:135
-msgid "No icons found at /resources/favicons/"
-msgstr "Geen pictogrammen gevonden bij /resources/favicons/"
+#: Site_Icons.php:174
+#, php-format
+msgid "No icons found at /resources/%s/"
+msgstr "Geen icons gevonden bij /resources/%s/"
+
+#, php-format
+#~ msgid "Edit %1$s"
+#~ msgstr "%1$s bewerken"
 
 #~ msgid "Block disabled?"
 #~ msgstr "Blok uitschakelen?"

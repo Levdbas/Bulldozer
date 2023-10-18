@@ -115,7 +115,8 @@ class Autoloader
 		unset($dir_to_load);
 		$this->finder->files()
 			->in($this->dirs_to_load)
-			->name('*.php');
+			->name('*.php')
+			->sortByName();
 
 		foreach ($this->finder as $file) {
 			require_once $file->getRealPath();
