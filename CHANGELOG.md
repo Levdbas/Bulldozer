@@ -1,6 +1,20 @@
 # Changelog
 
+## 3.8.3:
 
+_Release Date - 18 october 2023_
+
+-   ✨ **Enhanced**
+    -   AbstractBlockRenderer::add_notification can now be used as a static method.
+
+## 3.8.2:
+
+_Release Date - 18 september 2023_
+
+-   ✨ **Enhanced**
+    -   Autoloader now loads in a more predicatble order.
+    -   Language update
+    
 ## 3.8.1:
 
 _Release Date - 31 july 2023_
