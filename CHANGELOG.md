@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.0:
+
+_Release Date - 18 october 2023_
+
+-   💡 **Newly added**
+    -   Added support for Timber 2.0
 ## 3.8.3:
 
 _Release Date - 18 october 2023_

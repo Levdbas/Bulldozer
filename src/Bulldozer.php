@@ -10,6 +10,7 @@ namespace HighGround\Bulldozer;
 
 use function Env\env;
 use Roots\WPConfig\Config;
+use Timber\Timber;
 
 /**
  * Bulldozer main class.
@@ -21,7 +22,7 @@ class Bulldozer
 	/**
 	 * Current Bulldozer version.
 	 */
-	const VERSION = '3.8.2';
+	const VERSION = '3.9.0';
 
 	/**
 	 * Active theme object.
@@ -232,7 +233,15 @@ class Bulldozer
 			);
 		}
 
-		new \Timber\Timber();
+
+
+		// if version starts with 2
+		if (version_compare(Timber::$version, '2', '<')) {
+			new Timber();
+			Timber::$cache = true;
+		} else {
+			Timber::init();
+		}
 	}
 
 
@@ -240,6 +249,6 @@ class Bulldozer
 	{
 		$data = file_get_contents(__DIR__ . '/assets/acf-blocks.js');
 
-		$result = wp_add_inline_script('wp-blocks', $data);
+		wp_add_inline_script('wp-blocks', $data);
 	}
 }
