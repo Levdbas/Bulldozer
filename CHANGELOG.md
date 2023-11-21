@@ -1,12 +1,13 @@
 # Changelog
-## 4.0.0:
 
-_Release Date - 18 october 2023_
+## 4.1.0:
+
+_Release Date - 21 november 2023_
 
 -   💡 **Newly added**
     -   BlockRendererV2.php now has new api method register_requirements which can be utilized by blocks to register additional requirements before registering.
 -   ✨ **Enhanced**
-    -   Documented methods.
+    -   Documented and linted the codebase.
 ## 4.0.0:
 
 _Release Date - 18 october 2023_
