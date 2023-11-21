@@ -92,6 +92,11 @@ class Site_Icons
 	 */
 	private $scope = '';
 
+	/**
+	 * Array of attributes for the manifest file.
+	 *
+	 * @var array
+	 */
 	private static array $attributes = [
 		'name'             => false,
 		'short_name'       => false,
@@ -320,6 +325,12 @@ class Site_Icons
 		return $this->favicon_path . $filename;
 	}
 
+	/**
+	 * Magic method for setting attributes.
+	 *
+	 * @param string $name Name of the attribute.
+	 * @param string $value Value of the attribute.
+	 */
 	public function __set($name, $value)
 	{
 
@@ -334,7 +345,7 @@ class Site_Icons
 	 * Get attribute
 	 *
 	 * @api get_attribute
-	 * @param string $attribute Attribute name
+	 * @param string $attribute Attribute name.
 	 * @return string
 	 */
 	public static function get_attribute(string $attribute): string

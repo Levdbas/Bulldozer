@@ -52,6 +52,8 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 	/**
 	 * Location of the block.
+	 *
+	 * @var string
 	 */
 	private string $block_location = '';
 
@@ -85,12 +87,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	public function register_block(): void
 	{
 		if (static::NAME === null) {
-			throw new \Exception('CONST::NAME not set for ' . get_class($this));
+			throw new \Exception(esc_html('CONST::NAME not set for ' . get_class($this)));
 			return;
 		}
 
 		if (!function_exists('acf_add_local_field_group')) {
-			$message = _x('ACF not activated.', 'Error explaination', 'wp-lemon');
+			$message = _x('ACF not activated.', 'Error explaination', 'bulldozer');
 			Bulldozer::frontend_error($message);
 			Bulldozer::backend_notification($message, 'error');
 			return;
@@ -105,7 +107,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$block = register_block_type($json_file);
 
 		if (false === $block) {
-			throw new \Exception('Block ' . static::NAME . ' not found in theme');
+			throw new \Exception(esc_html('Block ' . static::NAME . ' not found in theme'));
 			return;
 		}
 		self::$title = $block->title;
@@ -300,6 +302,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->render();
 	}
 
+	/**
+	 * Funnction to create normalized paths that can be used to compare paths.
+	 *
+	 * @param string $path The path to normalize.
+	 * @return string $normalized The normalized path.
+	 */
 	private static function normalize_path(string $path)
 	{
 		$normalized = str_replace('\\', '/', $path);
