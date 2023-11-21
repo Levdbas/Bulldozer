@@ -62,6 +62,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 */
 	public function __construct()
 	{
+		if (false == $this->register_requirements()) {
+			return;
+		}
+
 		add_action('init', [$this, 'register_block']);
 		add_filter('block_type_metadata', [$this, 'change_metadata']);
 		add_action('enqueue_block_assets', [$this, 'alter_enqueue_block_assets']);
@@ -170,6 +174,21 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		return $metadata;
 	}
+
+
+	/**
+	 * Whether the block meets the requirements and should be registered.
+	 * This method can be overwritten by the block to add requirements
+	 * on a per block basis.
+	 *
+	 * @return boolean
+	 */
+	public function register_requirements(): bool
+	{
+		return true;
+	}
+
+
 	/**
 	 * Setup a new field group using AcfBuilder.
 	 *
