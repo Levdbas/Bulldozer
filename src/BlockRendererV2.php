@@ -79,6 +79,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * In addition to registering the block it will also register the block styles, setup the fields group and add the hidden fields.
 	 *
 	 * @throws \Exception If the block name is not set or the block is not found in the theme and if the block.json file is not found.
+	 * @internal 
 	 * @return void
 	 */
 	public function register_block(): void
@@ -120,7 +121,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 	/**
 	 * This method is called to first dequeue the default acf block styles and then enqueue the block styles on render_block.
-	 *
+	 * @internal description
 	 * @return void
 	 */
 	public function alter_enqueue_block_assets()
@@ -133,18 +134,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		}
 
 		wp_dequeue_style($name . '-style');
-
-		/*         add_filter(
-    'render_block',
-    function ($html, $block) use ($name) {
-    if ($block['blockName'] === $name) {
-    wp_enqueue_style($name . '-style');
-    }
-    return $html;
-    },
-    10,
-    2
-    ); */
 	}
 
 	/**
@@ -177,19 +166,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 
 	/**
-	 * Whether the block meets the requirements and should be registered.
-	 * This method can be overwritten by the block to add requirements
-	 * on a per block basis.
-	 *
-	 * @return boolean
-	 */
-	public function register_requirements(): bool
-	{
-		return true;
-	}
-
-
-	/**
 	 * Setup a new field group using AcfBuilder.
 	 *
 	 * We create the group & set the location.
@@ -209,10 +185,24 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	}
 
 	/**
+	 * Whether the block meets the requirements and should be registered.
+	 * This method can be overwritten by the block to add requirements
+	 * on a per block basis.
+	 * 
+	 * @api
+	 * @return boolean
+	 */
+	public function register_requirements(): bool
+	{
+		return true;
+	}
+
+
+	/**
 	 * Register the block variants.
 	 *
 	 * @see https://www.advancedcustomfields.com/blog/acf-5-9-introducing-block-variations/
-	 *
+	 * @api
 	 * @return array|false
 	 */
 	public function add_block_variations()
@@ -222,7 +212,8 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 	/**
 	 * Empty function that can be overwritten by the blocks to add a custom icon.
-	 *
+	 * 
+	 * @api
 	 * @return string|false
 	 */
 	public function add_icon(): string | false
@@ -317,9 +308,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	/**
 	 * Renders the block.
 	 * @throws \Exception If the block template is not found.
+	 * @internal Locates the block template and renders it.
 	 * @return void
 	 */
-	public function render()
+	private function render()
 	{
 		$twig_file_path   = "blocks/{$this->slug}/{$this->slug}.twig";
 		$twig_file_origin = null;
