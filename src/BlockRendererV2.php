@@ -305,16 +305,19 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$twig_file_path   = "blocks/{$this->slug}/{$this->slug}.twig";
 		$twig_file_origin = null;
 
-		$template_test_location   = self::normalize_path(TEMPLATEPATH);
-		$stylesheet_test_location = self::normalize_path(STYLESHEETPATH);
+		$template_path = get_template_directory();
+		$stylesheet_path = get_stylesheet_directory();
+
+		$template_test_location   = self::normalize_path($template_path);
+		$stylesheet_test_location = self::normalize_path($stylesheet_path);
 		$block_test_location      = self::normalize_path($this->block_location);
 
 		if (strpos($block_test_location, $template_test_location) !== false) {
 			$twig_file_origin = $template_test_location . $twig_file_path;
-			$test_location    = TEMPLATEPATH . '/' . $twig_file_path;
+			$test_location    = $template_path . '/' . $twig_file_path;
 		} elseif (strpos($block_test_location, $stylesheet_test_location) !== false) {
 			$twig_file_origin = $stylesheet_test_location . $twig_file_path;
-			$test_location    = STYLESHEETPATH . '/' . $twig_file_path;
+			$test_location    = $stylesheet_path . '/' . $twig_file_path;
 		}
 
 		if (!file_exists($test_location)) {
