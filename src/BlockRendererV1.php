@@ -55,7 +55,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		$name    = 'acf/' . $block['name'];
 		$slug    = $block['name'];
 		self::$title = $block['title'];
-		$block['render_callback'] = [$this, 'compile'];
+		$block['render_callback'] = [ $this, 'compile' ];
 
 		acf_register_block_type($block);
 		$this->register_block_styles($name);
@@ -76,7 +76,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 	 * @param string $slug The block slug.
 	 * @return FieldsBuilder
 	 */
-	private function setup_fields_group($name, $slug)
+	private function setup_fields_group($name, $slug )
 	{
 		$this->registered_fields = new FieldsBuilder($slug);
 
@@ -96,7 +96,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 	 * @param    WP_Block $wp_block The block instance (since WP 5.5).
 	 * @return   void
 	 */
-	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
+	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null )
 	{
 		$this->fields        = [];
 		$this->context       = [];
@@ -104,7 +104,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 
 		$this->name          = $attributes['name'];
 		$this->slug          = str_replace('acf/', '', $attributes['name']);
-		$this->classes       = ['acf-block', $this->slug];
+		$this->classes       = [ 'acf-block', $this->slug ];
 		$this->fields        = get_fields();
 		$this->context       = Timber::get_context();
 		$this->attributes    = $attributes;

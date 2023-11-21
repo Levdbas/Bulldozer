@@ -38,6 +38,8 @@
    <exclude-pattern>*/resources/*</exclude-pattern>
 	<exclude-pattern>*/sbi/*</exclude-pattern>
 	<exclude-pattern>*/dist/*</exclude-pattern>
+	<exclude-pattern>*/blocks/*</exclude-pattern>
+	<exclude-pattern>*/docs/*</exclude-pattern>
 	<!--
 	#############################################################################
 	USE THE WordPress-Coding-Standards RULESET
@@ -66,6 +68,10 @@
 		<exclude name="WordPress.WP.EnqueuedResourceParameters.NoExplicitVersion"/>
 		<exclude name="WordPress.WP.EnqueuedResourceParameters.MissingVersion"/>
 		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax.Found"/>
+		<exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose"/>
+		<exclude name="NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceBeforeArrayCloserSingleLine"/>
+		<exclude name="NormalizedArrays.Arrays.ArrayBraceSpacing.SpaceAfterArrayOpenerSingleLine"/>
 	</rule>
 	<rule ref="WordPress-Core" />
 	<rule ref="WordPress-Docs" />
@@ -98,7 +104,7 @@
 	<!-- Set the minimum supported WP version. This is used by several sniffs.
 		 The minimum version set here should be in line with the minimum WP version
 		 as set in the "Requires at least" tag in the readme.txt file. -->
-	<config name="minimum_supported_wp_version" value="5.6"/>
+	<config name="minimum_supported_wp_version" value="6.1"/>
 
 	<rule ref="WordPress.Arrays.MultipleStatementAlignment">
 		<properties>
@@ -120,7 +126,7 @@
 	#############################################################################
 	-->
 
-	<config name="testVersion" value="7.4-99.0"/>
+	<config name="testVersion" value="8.0-99.0"/>
 	<rule ref="PHPCompatibility" />
 	<rule ref="PEAR.Functions.FunctionCallSignature">
 		<properties>

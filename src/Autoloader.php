@@ -35,7 +35,7 @@ class Autoloader
 	 *
 	 * @var array
 	 */
-	private array $dirs_to_load = ['controllers', 'models', 'blocks'];
+	private array $dirs_to_load = [ 'controllers', 'models', 'blocks' ];
 
 
 	/**
@@ -63,7 +63,7 @@ class Autoloader
 	 * @param array $dirs_to_load Array of directories to load.
 	 * @return void
 	 */
-	public function parent($dirs_to_load = false)
+	public function parent($dirs_to_load = false )
 	{
 		if ($dirs_to_load) {
 			$this->dirs_to_load = $dirs_to_load;
@@ -80,7 +80,7 @@ class Autoloader
 	 * @param array $dirs_to_load Array of directories to load.
 	 * @return void
 	 */
-	public function child(array $dirs_to_load)
+	public function child(array $dirs_to_load )
 	{
 		$this->dirs_to_load = $dirs_to_load;
 		$this->base_dir = get_stylesheet_directory() . '/library';
@@ -96,7 +96,7 @@ class Autoloader
 	 */
 	public function child_blocks()
 	{
-		$this->dirs_to_load = ['blocks'];
+		$this->dirs_to_load = [ 'blocks' ];
 		$this->base_dir = get_stylesheet_directory();
 		$this->load();
 	}

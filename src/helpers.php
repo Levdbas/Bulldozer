@@ -22,7 +22,7 @@ use HighGround\Bulldozer\Asset;
  * @param string $key array key name in the manifest file.
  * @return Asset
  */
-function asset($key)
+function asset($key )
 {
 	return Asset::get_key($key);
 }

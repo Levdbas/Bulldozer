@@ -19,9 +19,9 @@ class Asset
 	/**
 	 * Path to the asset.
 	 *
-	 * @var string
+	 * @var string|null  Path to the asset.
 	 */
-	protected string|null $path = null;
+	public string|null $path = null;
 
 	/**
 	 * Error flag.
@@ -33,7 +33,7 @@ class Asset
 	/**
 	 * Key of the asset.
 	 *
-	 * @var string
+	 * @var string $key Key of the asset.
 	 */
 	protected string $key;
 
@@ -71,7 +71,7 @@ class Asset
 	 * @param string $key Key of the asset.
 	 * @return object
 	 */
-	public static function get_key($key)
+	public static function get_key($key )
 	{
 
 		self::$instance = new self($key);
@@ -84,7 +84,7 @@ class Asset
 	 *
 	 * @param string $key Key of the asset.
 	 */
-	private function __construct($key = null)
+	private function __construct($key = null )
 	{
 
 		if (null === self::$manifest) {
@@ -176,7 +176,7 @@ class Asset
 	 * @param bool $assoc Whether to return an associative array.
 	 * @return array|false
 	 */
-	public function json(bool $assoc = true)
+	public function json(bool $assoc = true )
 	{
 		if (!$this->contents()) {
 			return false;

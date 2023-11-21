@@ -30,8 +30,8 @@ class CacheBuster
 	public static function register()
 	{
 		$handler = new self();
-		add_action('init', [$handler, 'add_cron']);
-		add_action(self::CRON_NAME, [$handler, 'bulldozer_cache_buster']);
+		add_action('init', [ $handler, 'add_cron' ]);
+		add_action(self::CRON_NAME, [ $handler, 'bulldozer_cache_buster' ]);
 	}
 
 

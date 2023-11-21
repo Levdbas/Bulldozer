@@ -332,7 +332,7 @@ class Site_Icons
 
 	/**
 	 * Get attribute
-	 * 
+	 *
 	 * @api get_attribute
 	 * @param string $attribute Attribute name
 	 * @return string

@@ -458,10 +458,10 @@ abstract class AbstractBlockRenderer
 	/**
 	 * Generate inner blocks appender.
 	 *
-	 * @param array   $allowed_blocks Array with allowed blocks.
-	 * @param boolean $template Array with template.
-	 * @param boolean $classes String with classes.
-	 * @param boolean $orientation String with orientation.
+	 * @param array          $allowed_blocks Array with allowed blocks.
+	 * @param boolean        $template Array with template.
+	 * @param boolean        $classes String with classes.
+	 * @param boolean        $orientation String with orientation.
 	 * @param boolean|string $templatelock true or one of 'all' or 'insert'. True defaults to 'all'.
 	 * @return string $inner_blocks the inner blocks appender.
 	 * @since 3.3.0
@@ -497,7 +497,6 @@ abstract class AbstractBlockRenderer
 		$inner_blocks .= $classes ? ' class="' . $classes . '"' : '';
 		$inner_blocks .= $orientation ? ' orientation="' . $orientation . '"' : '';
 		$inner_blocks .= $templatelock ? ' templateLock="' . $templatelock . '"' : '';
-
 
 		$inner_blocks .= ' />';
 		return $inner_blocks;

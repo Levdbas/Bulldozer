@@ -79,7 +79,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * In addition to registering the block it will also register the block styles, setup the fields group and add the hidden fields.
 	 *
 	 * @throws \Exception If the block name is not set or the block is not found in the theme and if the block.json file is not found.
-	 * @internal 
+	 * @internal
 	 * @return void
 	 */
 	public function register_block(): void
@@ -95,7 +95,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			Bulldozer::backend_notification($message, 'error');
 			return;
 		}
-
 
 		$class_info = new \ReflectionClass($this);
 
@@ -121,6 +120,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 	/**
 	 * This method is called to first dequeue the default acf block styles and then enqueue the block styles on render_block.
+	 *
 	 * @internal description
 	 * @return void
 	 */
@@ -188,7 +188,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * Whether the block meets the requirements and should be registered.
 	 * This method can be overwritten by the block to add requirements
 	 * on a per block basis.
-	 * 
+	 *
 	 * @api
 	 * @return boolean
 	 */
@@ -212,11 +212,11 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 	/**
 	 * Empty function that can be overwritten by the blocks to add a custom icon.
-	 * 
+	 *
 	 * @api
 	 * @return string|false
 	 */
-	public function add_icon(): string | false
+	public function add_icon(): string|false
 	{
 		return false;
 	}
@@ -263,9 +263,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			$this->classes   = array_merge($this->classes, $current_classes);
 		}
 
-		$this->classes = array_filter($this->classes, function ($class) {
-			return !preg_match('/^wp-block-acf/', $class);
-		});
+		$this->classes = array_filter(
+			$this->classes,
+			function ($class) {
+				return !preg_match('/^wp-block-acf/', $class);
+			}
+		);
 
 		if ($this->is_preview) {
 			$this->classes = array_merge($this->classes, $this->backend_classes);
@@ -307,6 +310,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 	/**
 	 * Renders the block.
+	 *
 	 * @throws \Exception If the block template is not found.
 	 * @internal Locates the block template and renders it.
 	 * @return void
