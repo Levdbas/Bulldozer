@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.1:
+
+_Release Date - 1 december 2023_
+
+-   🐛 **Bugs Fixed**
+    -   Fixed PHP Warning:  Trying to access array offset on value of type null
 ## 4.1.0:
 
 _Release Date - 21 november 2023_

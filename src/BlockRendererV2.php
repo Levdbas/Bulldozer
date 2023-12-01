@@ -258,6 +258,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->add_block_classes();
 		$this->generate_css_variables();
 
+		/**
+		 * This is a hack to make sure that the block supports are applied.
+		 * 
+		 * @link https://github.com/woocommerce/woocommerce-blocks-hydration-experiments/blob/acf16e70a89a7baf968ef26d7c4d8a0479a62db5/src/BlockTypesController.php#L186
+		 */
+		\WP_Block_Supports::$block_to_render['blockName'] =  $attributes['name'];
 		$attributes = WP_Block_Supports::get_instance()->apply_block_supports();
 
 		if (isset($attributes['className'])) {
