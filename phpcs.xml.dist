@@ -132,8 +132,6 @@
 		<properties>
 			<property name="requiredSpacesAfterOpen" value="0"/>
 			<property name="requiredSpacesBeforeClose" value="0"/>
-			<property name="NoSpaceAfterOpenParenthesis" value="0"/>
-			<property name="NoSpaceBeforeCloseParenthesis" value="0"/>
 		</properties>
 	</rule>
 </ruleset>

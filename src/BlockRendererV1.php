@@ -13,9 +13,6 @@ require_once 'helpers.php';
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Timber;
 
-
-
-
 /**
  * V1 version of the block renderer.
  *
@@ -51,10 +48,10 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 	 */
 	public function register_block(): void
 	{
-		$block   = $this->block_register();
-		$name    = 'acf/' . $block['name'];
-		$slug    = $block['name'];
-		self::$title = $block['title'];
+		$block                    = $this->block_register();
+		$name                     = 'acf/' . $block['name'];
+		$slug                     = $block['name'];
+		self::$title              = $block['title'];
 		$block['render_callback'] = [$this, 'compile'];
 
 		acf_register_block_type($block);
@@ -65,7 +62,6 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		$this->add_fields();
 		acf_add_local_field_group($this->registered_fields->build());
 	}
-
 
 	/**
 	 * Setup a new field group using AcfBuilder.
@@ -102,17 +98,17 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		$this->context       = [];
 		self::$notifications = [];
 
-		$this->name          = $attributes['name'];
-		$this->slug          = str_replace('acf/', '', $attributes['name']);
-		$this->classes       = ['acf-block', $this->slug];
-		$this->fields        = get_fields();
-		$this->context       = Timber::context();
-		$this->attributes    = $attributes;
-		$this->wp_block      = $wp_block;
-		$this->content       = $content;
-		$this->is_preview    = $is_preview;
-		$this->post_id       = $post_id;
-		$this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
+		$this->name       = $attributes['name'];
+		$this->slug       = str_replace('acf/', '', $attributes['name']);
+		$this->classes    = ['acf-block', $this->slug];
+		$this->fields     = get_fields();
+		$this->context    = Timber::context();
+		$this->attributes = $attributes;
+		$this->wp_block   = $wp_block;
+		$this->content    = $content;
+		$this->is_preview = $is_preview;
+		$this->post_id    = $post_id;
+		$this->block_id   = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
 
 		$this->maybe_add_deprecation_notice();
 		$this->maybe_disable_block();
@@ -121,19 +117,20 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		$this->generate_css_variables();
 
 		$args = [
-			'block_id'      => $this->block_id,
-			'is_disabled'   => $this->block_disabled,
-			'slug'          => $this->slug,
-			'attributes'    => $this->attributes,
-			'wp_block'      => $this->wp_block,
-			'content'       => $this->content,
-			'is_preview'    => $this->is_preview,
-			'post_id'       => $this->post_id,
-			'fields'        => $this->fields,
-			'classes'       => $this->classes,
-			'inline_css'    => $this->generate_css(),
-			'notifications' => self::$notifications,
-			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
+			'block_id'           => $this->block_id,
+			'is_disabled'        => $this->block_disabled,
+			'slug'               => $this->slug,
+			'attributes'         => $this->attributes,
+			'wp_block'           => $this->wp_block,
+			'content'            => $this->content,
+			'is_preview'         => $this->is_preview,
+			'post_id'            => $this->post_id,
+			'fields'             => $this->fields,
+			'classes'            => $this->classes,
+			'inline_css'         => $this->generate_css(),
+			'notifications'      => self::$notifications,
+			'parent_id'          => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
+			'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
 		];
 
 		$this->context = array_merge($this->context, $args);

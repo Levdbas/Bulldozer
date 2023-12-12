@@ -12,7 +12,7 @@ require_once 'helpers.php';
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Timber;
-
+use WP_Block_Supports;
 
 /**
  * Base class to register a new block.
@@ -129,6 +129,13 @@ abstract class AbstractBlockRenderer
 	protected array $classes = [];
 
 	/**
+	 * Additonal classes that should be added to the block only in the backend.
+	 *
+	 * @var array
+	 */
+	protected array $backend_classes = [];
+
+	/**
 	 * Array of notifications.
 	 * Notifications are added by compose_notification()
 	 *
@@ -233,6 +240,69 @@ abstract class AbstractBlockRenderer
 		$this->add_notification($message, 'warning');
 		return true;
 	}
+
+
+	/**
+	 * Method to retrieve the block wrapper attributes.
+	 *
+	 * This method is a copy of the get_block_wrapper_attributes() method from WordPress with the exception
+	 * that we filter out some specific classes
+	 *
+	 * @since 4.2.0
+	 * @link https://developer.wordpress.org/reference/functions/get_block_wrapper_attributes/
+	 * @param array    $classes Array of classes to add to the block.
+	 * @param string[] $extra_attributes Array of extra attributes to render on the block wrapper.
+	 * @return string String of HTML attributes.
+	 */
+	protected function get_block_wrapper_attributes(array $classes, array $extra_attributes = []): string
+	{
+		$new_attributes = WP_Block_Supports::get_instance()->apply_block_supports();
+
+		if (empty($new_attributes) && empty($extra_attributes)) {
+			return '';
+		}
+
+		// This is hardcoded on purpose.
+		// We only support a fixed list of attributes.
+		$attributes          = [
+			'class' => implode(' ', $classes),
+		];
+		$attributes_to_merge = ['style', 'id'];
+
+		foreach ($attributes_to_merge as $attribute_name) {
+			if (empty($new_attributes[$attribute_name]) && empty($extra_attributes[$attribute_name])) {
+				continue;
+			}
+
+			if (empty($new_attributes[$attribute_name])) {
+				$attributes[$attribute_name] = $extra_attributes[$attribute_name];
+				continue;
+			}
+
+			if (empty($extra_attributes[$attribute_name])) {
+				$attributes[$attribute_name] = $new_attributes[$attribute_name];
+				continue;
+			}
+
+			$attributes[$attribute_name] = $extra_attributes[$attribute_name] . ' ' . $new_attributes[$attribute_name];
+		}
+
+		foreach ($extra_attributes as $attribute_name => $value) {
+			$attributes[$attribute_name] = $value;
+		}
+
+		if (empty($attributes)) {
+			return '';
+		}
+
+		$normalized_attributes = [];
+		foreach ($attributes as $key => $value) {
+			$normalized_attributes[] = $key . '="' . esc_attr($value) . '"';
+		}
+
+		return implode(' ', $normalized_attributes);
+	}
+
 
 	/**
 	 * Adds notice to backend if the block is deprecated.
@@ -341,11 +411,6 @@ abstract class AbstractBlockRenderer
 			$this->classes[] = 'align' . esc_attr($attributes['align']);
 		}
 
-		if (isset($attributes['backgroundColor']) && !empty($attributes['backgroundColor'])) {
-			$this->classes[] = 'has-background';
-			$this->classes[] = 'has-' . esc_attr($attributes['backgroundColor']) . '-background-color';
-		}
-
 		if (isset($attributes['textColor']) && !empty($attributes['textColor'])) {
 			$this->classes[] = 'has-text-color';
 			$this->classes[] = 'has-' . esc_attr($attributes['textColor']) . '-color';
@@ -386,6 +451,35 @@ abstract class AbstractBlockRenderer
 			$this->classes[] = 'has-background-dim';
 			$this->classes[] = 'has-background-dim-' . esc_attr($fields['image_dim']);
 		}
+
+		/**
+		 * This is a hack to make sure that the block supports are applied.
+		 *
+		 * @link https://github.com/woocommerce/woocommerce-blocks-hydration-experiments/blob/acf16e70a89a7baf968ef26d7c4d8a0479a62db5/src/BlockTypesController.php#L186
+		 */
+		\WP_Block_Supports::$block_to_render['blockName'] = $attributes['name'];
+		$attributes                                       = WP_Block_Supports::get_instance()->apply_block_supports();
+
+		if (isset($attributes['className'])) {
+			$current_classes = explode(' ', $attributes['class']);
+			$this->classes   = array_merge($this->classes, $current_classes);
+		}
+
+		$this->classes = array_filter(
+			$this->classes,
+			function ($class) {
+				return !preg_match('/^wp-block-acf/', $class);
+			}
+		);
+
+		if ($this->is_preview) {
+			$this->classes = array_merge($this->classes, $this->backend_classes);
+		}
+
+		// add $this->slug  as class at the start
+		array_unshift($this->classes, $this->slug);
+
+		$this->classes = array_unique($this->classes);
 	}
 
 	/**

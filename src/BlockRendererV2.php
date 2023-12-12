@@ -11,8 +11,8 @@ namespace HighGround\Bulldozer;
 require_once 'helpers.php';
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use WP_Block_Supports;
 use Timber\Timber;
+use WP_Block_Supports;
 
 /**
  * V2 version of the block renderer.
@@ -42,13 +42,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * @var bool
 	 */
 	protected bool $always_add_block_id = false;
-
-	/**
-	 * Additonal classes that should be added to the block only in the backend.
-	 *
-	 * @var array
-	 */
-	protected array $backend_classes = [];
 
 	/**
 	 * Location of the block.
@@ -111,7 +104,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			return;
 		}
 		self::$title = $block->title;
-		$this->name = $block->name;
+		$this->name  = $block->name;
 		$this->register_block_styles($this->name);
 		$this->slug = str_replace('acf/', '', $this->name);
 		$this->setup_fields_group($this->name, $this->slug);
@@ -166,7 +159,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		return $metadata;
 	}
 
-
 	/**
 	 * Setup a new field group using AcfBuilder.
 	 *
@@ -198,7 +190,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	{
 		return true;
 	}
-
 
 	/**
 	 * Register the block variants.
@@ -258,49 +249,21 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->add_block_classes();
 		$this->generate_css_variables();
 
-		/**
-		 * This is a hack to make sure that the block supports are applied.
-		 * 
-		 * @link https://github.com/woocommerce/woocommerce-blocks-hydration-experiments/blob/acf16e70a89a7baf968ef26d7c4d8a0479a62db5/src/BlockTypesController.php#L186
-		 */
-		\WP_Block_Supports::$block_to_render['blockName'] =  $attributes['name'];
-		$attributes = WP_Block_Supports::get_instance()->apply_block_supports();
-
-		if (isset($attributes['className'])) {
-			$current_classes = explode(' ', $attributes['class']);
-			$this->classes   = array_merge($this->classes, $current_classes);
-		}
-
-		$this->classes = array_filter(
-			$this->classes,
-			function ($class) {
-				return !preg_match('/^wp-block-acf/', $class);
-			}
-		);
-
-		if ($this->is_preview) {
-			$this->classes = array_merge($this->classes, $this->backend_classes);
-		}
-
-		// add $this->slug  as class at the start
-		array_unshift($this->classes, $this->slug);
-
-		$this->classes = array_unique($this->classes);
-
 		$args = [
-			'block_id'      => $this->maybe_add_block_id(),
-			'is_disabled'   => $this->block_disabled,
-			'slug'          => $this->slug,
-			'attributes'    => $this->attributes,
-			'wp_block'      => $this->wp_block,
-			'content'       => $this->content,
-			'is_preview'    => $this->is_preview,
-			'post_id'       => $this->post_id,
-			'fields'        => $this->fields,
-			'classes'       => $this->classes,
-			'inline_css'    => $this->generate_css(),
-			'notifications' => self::$notifications,
-			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
+			'block_id'           => $this->maybe_add_block_id(),
+			'is_disabled'        => $this->block_disabled,
+			'slug'               => $this->slug,
+			'attributes'         => $this->attributes,
+			'wp_block'           => $this->wp_block,
+			'content'            => $this->content,
+			'is_preview'         => $this->is_preview,
+			'post_id'            => $this->post_id,
+			'fields'             => $this->fields,
+			'classes'            => $this->classes,
+			'inline_css'         => $this->generate_css(),
+			'notifications'      => self::$notifications,
+			'parent_id'          => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
+			'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
 		];
 
 		$this->context = array_merge($this->context, $args);
@@ -334,7 +297,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$twig_file_path   = "blocks/{$this->slug}/{$this->slug}.twig";
 		$twig_file_origin = null;
 
-		$template_path = get_template_directory();
+		$template_path   = get_template_directory();
 		$stylesheet_path = get_stylesheet_directory();
 
 		$template_test_location   = self::normalize_path($template_path);
