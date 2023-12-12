@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.1.2:
+
+_Release Date - 12 december 2023_
+
+-   🐛 **Bugs Fixed**
+    -   Update Timber::get_context() to Timber::context() to prevent deprecation warning. in blockrenderer v1.
+
 ## 4.1.1:
 
 _Release Date - 1 december 2023_
