@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.2.0:
+
+_Release Date - 20 december 2023_
+-   💡 **Newly added**
+    -   New experimental feature: `BlockRendererV2::get_block_wrapper_attributes()` which builds the block wrapper attributes.
+-   🐛 **Bugs Fixed**
+    -   Fix block name in backend block notices.
 ## 4.1.2:
 
 _Release Date - 12 december 2023_

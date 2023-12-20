@@ -222,6 +222,26 @@ abstract class AbstractBlockRenderer
 	}
 
 
+
+	/**
+	 * Setup a new field group using AcfBuilder.
+	 *
+	 * We create the group & set the location.
+	 *
+	 * @param string $name The block name.
+	 * @param string $slug The block slug.
+	 * @return FieldsBuilder
+	 */
+	protected function setup_fields_group($name, $slug)
+	{
+		$this->registered_fields = new FieldsBuilder($slug);
+
+		$this->registered_fields
+			->setLocation('block', '==', $name);
+
+		return $this->registered_fields;
+	}
+
 	/**
 	 * Adds notice to backend if the block is deprecated.
 	 *

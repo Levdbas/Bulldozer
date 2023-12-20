@@ -103,10 +103,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			throw new \Exception(esc_html('Block ' . static::NAME . ' not found in theme'));
 			return;
 		}
-		self::$title = $block->title;
 		$this->name  = $block->name;
-		$this->register_block_styles($this->name);
 		$this->slug = str_replace('acf/', '', $this->name);
+
+		$this->register_block_styles($this->name);
 		$this->setup_fields_group($this->name, $this->slug);
 		$this->add_hidden_fields($block);
 		$this->add_fields();
@@ -159,24 +159,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		return $metadata;
 	}
 
-	/**
-	 * Setup a new field group using AcfBuilder.
-	 *
-	 * We create the group & set the location.
-	 *
-	 * @param string $name The block name.
-	 * @param string $slug The block slug.
-	 * @return FieldsBuilder
-	 */
-	private function setup_fields_group($name, $slug)
-	{
-		$this->registered_fields = new FieldsBuilder($slug);
 
-		$this->registered_fields
-			->setLocation('block', '==', $name);
-
-		return $this->registered_fields;
-	}
 
 	/**
 	 * Whether the block meets the requirements and should be registered.
@@ -229,7 +212,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->fields        = [];
 		$this->context       = [];
 		self::$notifications = [];
-
+		self::$title      = $attributes['title'];
 		$this->name       = $attributes['name'];
 		$this->slug       = str_replace('acf/', '', $attributes['name']);
 		$this->classes    = ['acf-block'];
@@ -237,7 +220,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->context    = Timber::context();
 		$this->attributes = $attributes;
 		$this->wp_block   = $wp_block;
-		$this->content    = $content;
 		$this->is_preview = $is_preview;
 		$this->post_id    = $post_id;
 		$this->block_id   = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
@@ -254,8 +236,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			'is_disabled'        => $this->block_disabled,
 			'slug'               => $this->slug,
 			'attributes'         => $this->attributes,
-			'wp_block'           => $this->wp_block,
-			'content'            => $this->content,
 			'is_preview'         => $this->is_preview,
 			'post_id'            => $this->post_id,
 			'fields'             => $this->fields,

@@ -51,7 +51,6 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		$block                    = $this->block_register();
 		$name                     = 'acf/' . $block['name'];
 		$slug                     = $block['name'];
-		self::$title              = $block['title'];
 		$block['render_callback'] = [$this, 'compile'];
 
 		acf_register_block_type($block);
@@ -63,24 +62,6 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		acf_add_local_field_group($this->registered_fields->build());
 	}
 
-	/**
-	 * Setup a new field group using AcfBuilder.
-	 *
-	 * We create the group & set the location.
-	 *
-	 * @param string $name The block name.
-	 * @param string $slug The block slug.
-	 * @return FieldsBuilder
-	 */
-	private function setup_fields_group($name, $slug)
-	{
-		$this->registered_fields = new FieldsBuilder($slug);
-
-		$this->registered_fields
-			->setLocation('block', '==', $name);
-
-		return $this->registered_fields;
-	}
 
 	/**
 	 * Compile the block
@@ -98,6 +79,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		$this->context       = [];
 		self::$notifications = [];
 
+		self::$title      = $attributes['title'];
 		$this->name       = $attributes['name'];
 		$this->slug       = str_replace('acf/', '', $attributes['name']);
 		$this->classes    = ['acf-block', $this->slug];
@@ -121,8 +103,6 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 			'is_disabled'        => $this->block_disabled,
 			'slug'               => $this->slug,
 			'attributes'         => $this->attributes,
-			'wp_block'           => $this->wp_block,
-			'content'            => $this->content,
 			'is_preview'         => $this->is_preview,
 			'post_id'            => $this->post_id,
 			'fields'             => $this->fields,
