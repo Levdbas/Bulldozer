@@ -431,6 +431,11 @@ abstract class AbstractBlockRenderer
 			$this->classes[] = 'align' . esc_attr($attributes['align']);
 		}
 
+		if (isset($attributes['backgroundColor']) && !empty($attributes['backgroundColor'])) {
+			$this->classes[] = 'has-background';
+			$this->classes[] = 'has-' . esc_attr($attributes['backgroundColor']) . '-background-color';
+		}
+
 		if (isset($attributes['textColor']) && !empty($attributes['textColor'])) {
 			$this->classes[] = 'has-text-color';
 			$this->classes[] = 'has-' . esc_attr($attributes['textColor']) . '-color';

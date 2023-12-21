@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.1:
+
+_Release Date - 21 december 2023_
+-   🐛 **Bugs Fixed**
+    -   Fix missing background color
 ## 4.2.0:
 
 _Release Date - 20 december 2023_
