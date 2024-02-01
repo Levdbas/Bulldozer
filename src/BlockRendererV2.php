@@ -293,7 +293,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		}
 
 		if (!file_exists($test_location)) {
-			throw new \Exception(sprintf(__('Block %s not found.', 'bulldozer'), $twig_file_origin));
+			throw new \Exception(sprintf(__('Block %s not found.', 'bulldozer'), esc_attr($twig_file_origin)));
 			return;
 		}
 
