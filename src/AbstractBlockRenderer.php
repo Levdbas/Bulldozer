@@ -119,7 +119,7 @@ abstract class AbstractBlockRenderer
 	 *
 	 * @var FieldsBuilder
 	 */
-	public object $registered_fields;
+	public FieldsBuilder $registered_fields;
 
 	/**
 	 * Array of classes that are appended to the wrapper element.
@@ -176,7 +176,7 @@ abstract class AbstractBlockRenderer
 	 * @link https://github.com/StoutLogic/acf-builder
 	 * @return FieldsBuilder
 	 */
-	abstract public function add_fields(): object;
+	abstract public function add_fields(): FieldsBuilder;
 
 	/**
 	 * Add extra block context.
