@@ -176,7 +176,7 @@ abstract class AbstractBlockRenderer
 	 * @link https://github.com/StoutLogic/acf-builder
 	 * @return FieldsBuilder
 	 */
-	abstract public function add_fields(): FieldsBuilder;
+	abstract public function add_fields(): object;
 
 	/**
 	 * Add extra block context.

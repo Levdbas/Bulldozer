@@ -1,8 +1,15 @@
 # Changelog
 
+## 4.3.1:
+
+_Release Date - 01 February 2024_
+-   🐛 **Bugs Fixed**
+    -   Set stricter version of Finder
+    -   Loosen return type for compat with older blocks 
+
 ## 4.3.0:
 
-_Release Date - 21 december 2023_
+_Release Date - 01 February 2024_
 -   🐛 **Bugs Fixed**
     -   Allow older versions of Finder to allow for PHP8.0 for some edge cases
     -   Escape twig file name in notification.
