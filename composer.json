@@ -15,7 +15,7 @@
   "require": {
     "php": ">=8.0.2",
     "composer/installers": 	"^1.0 || ^2.0",
-    "symfony/finder": "^6.0",
+    "symfony/finder": "^6.0.8 || ^6.4",
     "stoutlogic/acf-builder": "^1.11"
   },
   "autoload": {
@@ -27,7 +27,6 @@
     ]
   },
   "require-dev": {
-    "php": ">=8.0",
     "wp-coding-standards/wpcs": "^3",
     "dealerdirect/phpcodesniffer-composer-installer": "^1",
     "phpunit/phpunit": "^10",

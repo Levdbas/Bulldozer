@@ -1,10 +1,19 @@
 # Changelog
 
+## 4.3.0:
+
+_Release Date - 21 december 2023_
+-   🐛 **Bugs Fixed**
+    -   Allow older versions of Finder to allow for PHP8.0 for some edge cases
+    -   Escape twig file name in notification.
+-   ✨ **Enhanced**
+    -   Properly type return type of fieldbuilder
+    
 ## 4.2.1:
 
 _Release Date - 21 december 2023_
 -   🐛 **Bugs Fixed**
-    -   Fix missing background color
+    -   Fix missing background color class
 ## 4.2.0:
 
 _Release Date - 20 december 2023_
