@@ -577,7 +577,7 @@ abstract class AbstractBlockRenderer
 	/**
 	 * Generate inner blocks appender.
 	 *
-	 * @param array          $allowed_blocks Array with allowed blocks.
+	 * @param array|false    $allowed_blocks Array with allowed blocks or false.
 	 * @param boolean        $template Array with template.
 	 * @param boolean        $classes String with classes.
 	 * @param boolean        $orientation String with orientation.
@@ -585,9 +585,11 @@ abstract class AbstractBlockRenderer
 	 * @return string $inner_blocks the inner blocks appender.
 	 * @since 3.3.0
 	 */
-	public static function create_inner_blocks(array $allowed_blocks, $template = false, $classes = false, $orientation = false, $templatelock = false)
+	public static function create_inner_blocks(array|false $allowed_blocks, $template = false, $classes = false, $orientation = false, $templatelock = false)
 	{
-		$allowed_blocks = esc_attr(wp_json_encode($allowed_blocks));
+		if ($allowed_blocks) {
+			$allowed_blocks = esc_attr(wp_json_encode($allowed_blocks));
+		}
 
 		if ($template) {
 			$template = esc_attr(wp_json_encode($template));
@@ -611,7 +613,7 @@ abstract class AbstractBlockRenderer
 		}
 
 		$inner_blocks = '<InnerBlocks';
-		$inner_blocks .= ' allowedBlocks="' . $allowed_blocks . '"';
+		$inner_blocks .= $allowed_blocks ? ' allowedBlocks="' . $allowed_blocks . '"' : '';
 		$inner_blocks .= $template ? ' template="' . $template . '"' : '';
 		$inner_blocks .= $classes ? ' class="' . $classes . '"' : '';
 		$inner_blocks .= $orientation ? ' orientation="' . $orientation . '"' : '';
