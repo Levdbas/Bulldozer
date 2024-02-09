@@ -147,6 +147,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		$variations = $this->add_block_variations();
 		$icon       = $this->add_icon();
+		$hide		   = $this->hide_from_inserter();
 
 		if (false !== $variations) {
 			$metadata['variations'] = $variations;
@@ -154,6 +155,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		if (false !== $icon) {
 			$metadata['icon'] = $icon;
+		}
+
+		if (true === $hide) {
+			$metadata['supports']['inserter'] = false;
 		}
 
 		return $metadata;
@@ -196,6 +201,19 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	{
 		return false;
 	}
+
+
+	/**
+	 * Empty function that can be overwritten by the blocks to add custom logic to hide the block from the inserter.
+	 *
+	 * @api
+	 * @return bool
+	 */
+	public function hide_from_inserter(): bool
+	{
+		return false;
+	}
+
 
 	/**
 	 * Compile the block
