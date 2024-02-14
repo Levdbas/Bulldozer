@@ -577,15 +577,15 @@ abstract class AbstractBlockRenderer
 	/**
 	 * Generate inner blocks appender.
 	 *
-	 * @param array|false    $allowed_blocks Array with allowed blocks or false.
-	 * @param boolean        $template Array with template.
-	 * @param boolean        $classes String with classes.
-	 * @param boolean        $orientation String with orientation.
-	 * @param boolean|string $templatelock true or one of 'all' or 'insert'. True defaults to 'all'.
-	 * @return string $inner_blocks the inner blocks appender.
+	 * @param array|false  $allowed_blocks Array with allowed blocks or false.
+	 * @param array|false  $template Array with template.
+	 * @param string|false $classes String with classes.
+	 * @param string|false $orientation String with orientation.
+	 * @param string|bool  $templatelock true or one of 'all' or 'insert'. True defaults to 'all'.
+	 * @return string        $inner_blocks the inner blocks appender.
 	 * @since 3.3.0
 	 */
-	public static function create_inner_blocks(array|false $allowed_blocks, $template = false, $classes = false, $orientation = false, $templatelock = false)
+	public static function create_inner_blocks(array|false $allowed_blocks, array|false $template = false, string|false $classes = false, string|false $orientation = false, string|bool $templatelock = false)
 	{
 		if ($allowed_blocks) {
 			$allowed_blocks = esc_attr(wp_json_encode($allowed_blocks));

@@ -147,7 +147,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		$variations = $this->add_block_variations();
 		$icon       = $this->add_icon();
-		$hide		   = $this->hide_from_inserter();
+		$hide       = $this->hide_from_inserter();
 
 		if (false !== $variations) {
 			$metadata['variations'] = $variations;
@@ -311,7 +311,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		}
 
 		if (!file_exists($test_location)) {
-			throw new \Exception(sprintf(__('Block %s not found.', 'bulldozer'), esc_attr($twig_file_origin)));
+			throw new \Exception(sprintf(esc_attr__('Block %s not found.', 'bulldozer'), esc_attr($twig_file_origin)));
 			return;
 		}
 
