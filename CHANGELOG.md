@@ -2,10 +2,11 @@
 
 ## 4.4.0:
 
-_Release Date - 01 February 2024_
--   🐛 **Bugs Fixed**
-    -   Set stricter version of Finder
-    -   Loosen return type for compat with older blocks
+_Release Date - 14 February 2024_
+-   💡 **Newly added**
+    -   New hide_from_inserter method in BlockRendererV2 to hide blocks from the inserter.
+ -   🐛 **Bugs Fixed**
+    -   Better typings for create_inner_blocks method.
     
 ## 4.3.1:
 
