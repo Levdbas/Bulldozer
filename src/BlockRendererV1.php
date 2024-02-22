@@ -62,6 +62,24 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 		acf_add_local_field_group($this->registered_fields->build());
 	}
 
+	/**
+	 * Adds notice to backend if the block is deprecated.
+	 *
+	 * Checks registered block array for 'lemon_deprecated'.
+	 *
+	 * @return bool
+	 */
+	protected function maybe_add_deprecation_notice()
+	{
+		if (!isset($this->attributes['wp_lemon']['deprecated'])) {
+			return false;
+		}
+
+		$deprecation = $this->attributes['wp_lemon']['deprecated'];
+		$message = sprintf(__('This block is deprecated since version %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
+		$this->add_notification($message, 'warning');
+		return true;
+	}
 
 	/**
 	 * Compile the block

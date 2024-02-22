@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2023-09-18 11:42+0200\n"
-"PO-Revision-Date: 2023-09-18 11:44+0200\n"
+"POT-Creation-Date: 2024-02-22 08:07+0100\n"
+"PO-Revision-Date: 2024-02-22 08:07+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -10,29 +10,28 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;esc_html__\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: AbstractBlockRenderer.php:224
+#: AbstractBlockRenderer.php:253
 #, php-format
 msgid ""
-"This block is deprecated since version %1$s. Please replace this block in "
-"favor of %2$s."
-msgstr ""
-"Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
+"This block is deprecated since %1$s. Please replace this block in favor of "
 "%2$s."
+msgstr ""
+"Dit blok is verouderd sinds %1$s. Vervang dit blok ten gunste van %2$s."
 
-#: AbstractBlockRenderer.php:248
+#: AbstractBlockRenderer.php:339
 msgid "This block is disabled and thus not visible on the frontend."
 msgstr "Dit blok is uitgeschakeld en dus niet zichtbaar op de frontend."
 
-#: AbstractBlockRenderer.php:266
+#: AbstractBlockRenderer.php:357
 msgid "Disable block"
 msgstr "Blok uitschakelen"
 
-#: AbstractBlockRenderer.php:267
+#: AbstractBlockRenderer.php:358
 msgid ""
 "You can disable the block if you need to temporarily hide its content. For "
 "example, an announcement block can be still kept inside the editor but will "
@@ -42,27 +41,27 @@ msgstr ""
 "aankondigingsblok kan bijvoorbeeld nog steeds in de editor worden bewaard, "
 "maar wordt pas weergegeven als het opnieuw is ingeschakeld."
 
-#: AbstractBlockRenderer.php:269
+#: AbstractBlockRenderer.php:360
 msgid "True"
 msgstr "Ja"
 
-#: AbstractBlockRenderer.php:270
+#: AbstractBlockRenderer.php:361
 msgid "False"
 msgstr "Nee"
 
-#: AbstractBlockRenderer.php:408 Bulldozer.php:182
+#: AbstractBlockRenderer.php:528 Bulldozer.php:190
 msgid "Notice"
 msgstr "Melding"
 
-#: AbstractBlockRenderer.php:409 Bulldozer.php:183
+#: AbstractBlockRenderer.php:529 Bulldozer.php:191
 msgid "Warning"
 msgstr "Waarschuwing"
 
-#: AbstractBlockRenderer.php:410 Bulldozer.php:184
+#: AbstractBlockRenderer.php:530 Bulldozer.php:192
 msgid "Error"
 msgstr "Foutmelding"
 
-#: AbstractBlockRenderer.php:416
+#: AbstractBlockRenderer.php:536
 msgid "block"
 msgstr "blok"
 
@@ -70,17 +69,21 @@ msgstr "blok"
 msgid "Did you run Webpack for the first time?"
 msgstr "Heb je Webpack voor het eerst gedraaid?"
 
-#: BlockRendererV1.php:155
+#: BlockRendererV1.php:79
+#, php-format
+msgid ""
+"This block is deprecated since version %1$s. Please replace this block in "
+"favor of %2$s."
+msgstr ""
+"Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
+"%2$s."
+
+#: BlockRendererV1.php:151
 #, php-format
 msgid "Block %s.twig not found."
 msgstr "Blok %s.twig niet gevonden."
 
-#: BlockRendererV2.php:321
-#, php-format
-msgid "Block %s not found."
-msgstr "Blok %s niet gevonden."
-
-#: Bulldozer.php:79
+#: Bulldozer.php:87
 #, php-format
 msgid ""
 "Your theme %1$s requires at least Bulldozer %2$s. You have %3$s installed. "
@@ -91,30 +94,34 @@ msgstr ""
 "Werk bij/downgrade door het versienummer als volgt in te stellen in uw "
 "composer-bestand: highground/bulldozer\": \"%2$s\""
 
-#: Bulldozer.php:110
+#: Bulldozer.php:118
 #, php-format
 msgid "Your theme %1$s requires the plugin %2$s. Please install it."
 msgstr ""
 "Voor jouw thema %1$s is de plug-in %2$s vereist. Installeer het alstublieft."
 
-#: Bulldozer.php:154
+#: Bulldozer.php:162
 msgid "&rsaquo; error"
 msgstr "&rsaquo; fout"
 
-#: Bulldozer.php:187
+#: Bulldozer.php:195
 msgid "&rsaquo; "
 msgstr "&rsaquo; "
 
-#: Bulldozer.php:229 Bulldozer.php:230
+#: Bulldozer.php:237 Bulldozer.php:238
 msgid "Timber not activated. Make sure to composer require timber/timber"
 msgstr ""
 "Timber niet geactiveerd. Zorg ervoor dat timber/timber is toegevoegd aan uw "
 "dependencies"
 
-#: Site_Icons.php:174
+#: Site_Icons.php:179
 #, php-format
 msgid "No icons found at /resources/%s/"
 msgstr "Geen icons gevonden bij /resources/%s/"
+
+#, php-format
+#~ msgid "Block %s not found."
+#~ msgstr "Blok %s niet gevonden."
 
 #, php-format
 #~ msgid "Edit %1$s"

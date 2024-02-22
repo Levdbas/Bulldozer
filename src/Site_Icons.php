@@ -245,7 +245,7 @@ class Site_Icons
 	{
 		$manifest = [];
 
-		$manifest['name']             = self::$attributes['name'];
+		$manifest['name']             = self::$attributes['name'] ?? get_bloginfo('name');
 		$manifest['short_name']       = self::$attributes['short_name'];
 		$manifest['icons']            = $this->get_icons();
 		$manifest['background_color'] = self::$attributes['background_color'];

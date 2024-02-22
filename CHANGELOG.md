@@ -2,6 +2,13 @@
 
 ## 4.4.0:
 
+_Release Date - 22 February 2024_
+ -   🐛 **Bugs Fixed**
+    -   Fixed deprecation method in BlockRendererV2
+    -   Fixed name not being set in the manifest by default.
+
+## 4.4.0:
+
 _Release Date - 14 February 2024_
 -   💡 **Newly added**
     -   New hide_from_inserter method in BlockRendererV2 to hide blocks from the inserter.
