@@ -381,6 +381,7 @@ abstract class AbstractBlockRenderer
 	 */
 	protected function generate_css_variables()
 	{
+		$this->compiled_css = '';
 
 		if (empty($this->css_variables)) {
 			return;
@@ -415,7 +416,8 @@ abstract class AbstractBlockRenderer
 			}
 			$compiled_css .= '}';
 		}
-
+		unset($grouped_css_variables);
+		$this->css_variables = [];
 		$this->compiled_css .= $compiled_css;
 	}
 
