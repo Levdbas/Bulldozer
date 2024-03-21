@@ -11,7 +11,6 @@ namespace HighGround\Bulldozer;
 require_once 'helpers.php';
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use Timber;
 use WP_Block_Supports;
 
 /**
@@ -42,7 +41,6 @@ abstract class AbstractBlockRenderer
 	 * @var \WP_Block
 	 */
 	protected $wp_block;
-
 
 	/**
 	 * Block attributes. Visible on both front- and backend.
@@ -112,7 +110,7 @@ abstract class AbstractBlockRenderer
 	 *
 	 * @var array
 	 */
-	protected $fields  = [];
+	protected $fields = [];
 
 	/**
 	 * Fields registered to the block using AcfBuilder
@@ -151,7 +149,6 @@ abstract class AbstractBlockRenderer
 	 */
 	protected bool $block_disabled = false;
 
-
 	/**
 	 * Compiled css that gets injected.
 	 *
@@ -165,8 +162,6 @@ abstract class AbstractBlockRenderer
 	 * @var array
 	 */
 	public array $children = [];
-
-
 
 	/**
 	 * Register fields to the block.
@@ -188,7 +183,6 @@ abstract class AbstractBlockRenderer
 	 */
 	abstract public function block_context($context): array;
 
-
 	/**
 	 * Handles the block registration on init.
 	 *
@@ -197,8 +191,6 @@ abstract class AbstractBlockRenderer
 	 * @return void
 	 */
 	abstract public function register_block(): void;
-
-
 
 	/**
 	 * Empty function that can be overwritten by the blocks to register block styles.
@@ -220,8 +212,6 @@ abstract class AbstractBlockRenderer
 	{
 		add_action('acf/init', [$this, 'register_block']);
 	}
-
-
 
 	/**
 	 * Setup a new field group using AcfBuilder.
@@ -250,7 +240,7 @@ abstract class AbstractBlockRenderer
 		}
 
 		$deprecation = $this->attributes['deprecated'];
-		$message = sprintf(__('This block is deprecated since %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
+		$message     = sprintf(__('This block is deprecated since %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
 		$this->add_notification($message, 'warning');
 		return true;
 	}
@@ -277,7 +267,7 @@ abstract class AbstractBlockRenderer
 
 		// This is hardcoded on purpose.
 		// We only support a fixed list of attributes.
-		$attributes          = [
+		$attributes = [
 			'class' => implode(' ', $classes),
 		];
 		$attributes_to_merge = ['style', 'id'];
@@ -315,7 +305,6 @@ abstract class AbstractBlockRenderer
 
 		return implode(' ', $normalized_attributes);
 	}
-
 
 	/**
 	 * Adds notice to backend if the block is deprecated.
@@ -364,20 +353,23 @@ abstract class AbstractBlockRenderer
 		}
 	}
 
-
 	/**
 	 * Add css variable with the value based on an acf field.
 	 *
 	 * @since 1.8.0
 	 * @param string $field_name     acf field name.
 	 * @param string $css_var_name   The css variable without the -- prefix.
+	 * @param string|false $selector The css selector where the css variable should be applied.
+	 * 
+	 * @return void
 	 */
-	public function add_css_var(string $field_name, string $css_var_name)
+	public function add_css_var(string $field_name, string $css_var_name, string|false $selector = false)
 	{
 		if (!empty($this->fields[$field_name])) {
 			$this->css_variables[] = [
 				'variable' => '--' . $css_var_name,
-				'value' => $this->fields[$field_name],
+				'value'    => $this->fields[$field_name],
+				'selector' => $selector,
 			];
 		}
 	}
@@ -389,17 +381,43 @@ abstract class AbstractBlockRenderer
 	 */
 	protected function generate_css_variables()
 	{
+
+		if (empty($this->css_variables)) {
+			return;
+		}
+
+		$base_selector = '#' . $this->attributes['id'];
+		// loop throught the css variables and group them by selector
+		$grouped_css_variables = [
+			'default' => [],
+		];
+
+		foreach ($this->css_variables as $item) {
+			if (empty($item['selector'])) {
+				$grouped_css_variables['default'][] = $item;
+			} else {
+				$grouped_css_variables[$item['selector']][] = $item;
+			}
+		}
+
 		$compiled_css = '';
-		if (!empty($this->css_variables)) {
-			$compiled_css .= '#' . $this->attributes['id'] . '{';
-			foreach ($this->css_variables as $item) {
+
+		foreach ($grouped_css_variables as $selector => $css_variables) {
+
+			if (empty($css_variables)) {
+				continue;
+			}
+
+			$comiled_selector = 'default' === $selector ? $base_selector : $base_selector . ' ' . $selector;
+			$compiled_css .= $comiled_selector . '{';
+			foreach ($css_variables as $item) {
 				$compiled_css .= $item['variable'] . ':' . $item['value'] . ';';
 			}
 			$compiled_css .= '}';
-			$this->compiled_css .= $compiled_css;
 		}
-	}
 
+		$this->compiled_css .= $compiled_css;
+	}
 
 	/**
 	 * Build the block html classes.
@@ -408,15 +426,15 @@ abstract class AbstractBlockRenderer
 	 */
 	protected function add_block_classes()
 	{
-		$attributes = $this->attributes;
-		$fields = $this->fields;
+		$attributes      = $this->attributes;
+		$fields          = $this->fields;
 		$this->classes[] = $this->slug;
 
 		$this->classes = array_unique($this->classes);
 
 		if (isset($attributes['className']) && !empty($attributes['className'])) {
-			$classes = esc_attr($attributes['className']);
-			$classes = explode(' ', $attributes['className']);
+			$classes       = esc_attr($attributes['className']);
+			$classes       = explode(' ', $attributes['className']);
 			$this->classes = array_merge($this->classes, $classes);
 		}
 
@@ -435,13 +453,13 @@ abstract class AbstractBlockRenderer
 		}
 
 		if (isset($attributes['supports']['align_content']) && 'matrix' == $attributes['supports']['align_content'] && !empty($attributes['align_content'])) {
-			$alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
+			$alignment       = str_replace(' ', '-', esc_attr($attributes['align_content']));
 			$this->classes[] = 'has-custom-content-position';
 			$this->classes[] = 'is-position-' . $alignment;
 		}
 
 		if (isset($attributes['supports']['align_content']) && true === $attributes['supports']['align_content'] && !empty($attributes['align_content'])) {
-			$alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
+			$alignment       = str_replace(' ', '-', esc_attr($attributes['align_content']));
 			$this->classes[] = 'is-vertically-aligned-' . $alignment;
 		}
 
@@ -451,13 +469,13 @@ abstract class AbstractBlockRenderer
 		}
 
 		if (isset($attributes['supports']['alignContent']) && 'matrix' == $attributes['supports']['alignContent'] && !empty($attributes['alignContent']) && 'top left' !== $attributes['alignContent']) {
-			$alignment = str_replace(' ', '-', esc_attr($attributes['alignContent']));
+			$alignment       = str_replace(' ', '-', esc_attr($attributes['alignContent']));
 			$this->classes[] = 'has-custom-content-position';
 			$this->classes[] = 'is-position-' . $alignment;
 		}
 
 		if (isset($attributes['supports']['alignContent']) && true === $attributes['supports']['alignContent'] && !empty($attributes['alignContent'])) {
-			$alignment = str_replace(' ', '-', esc_attr($attributes['alignContent']));
+			$alignment       = str_replace(' ', '-', esc_attr($attributes['alignContent']));
 			$this->classes[] = 'is-vertically-aligned-' . $alignment;
 		}
 
@@ -513,8 +531,6 @@ abstract class AbstractBlockRenderer
 		$this->add_notification($message, $type);
 	}
 
-
-
 	/**
 	 * Compose a notification to be shown in the backend.
 	 *
@@ -566,7 +582,6 @@ abstract class AbstractBlockRenderer
 		return '<style>' . $this->compiled_css . '</style>';
 	}
 
-
 	/**
 	 * Generate inner blocks appender.
 	 *
@@ -578,7 +593,7 @@ abstract class AbstractBlockRenderer
 	 * @return string        $inner_blocks the inner blocks appender.
 	 * @since 3.3.0
 	 */
-	public static function create_inner_blocks(array|false $allowed_blocks, array|false $template = false, string|false $classes = false, string|false $orientation = false, string|bool $templatelock = false)
+	public static function create_inner_blocks(array | false $allowed_blocks, array | false $template = false, string | false $classes = false, string | false $orientation = false, string | bool $templatelock = false)
 	{
 		if ($allowed_blocks) {
 			$allowed_blocks = esc_attr(wp_json_encode($allowed_blocks));

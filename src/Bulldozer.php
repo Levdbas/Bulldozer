@@ -23,7 +23,7 @@ class Bulldozer
 	/**
 	 * Current Bulldozer version.
 	 */
-	const VERSION = '4.4.1';
+	const VERSION = '4.5.0';
 
 	/**
 	 * Active theme object.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.5.0:
+
+_Release Date - 22 February 2024_
+-   💡 **Newly added**
+    -   HighGround\Bulldozer\AbstractBlockRenderer::add_css_var now takes a third parameter to set the child selector.
 ## 4.4.0:
 
 _Release Date - 22 February 2024_
