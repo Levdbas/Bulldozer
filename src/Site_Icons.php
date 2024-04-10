@@ -134,11 +134,13 @@ class Site_Icons
 
 	/**
 	 * Constructor
-	 *
+	 * @var bool $installable Whether the app is installable or not.
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(bool $installable = true)
 	{
+
+		$this->name       = get_bloginfo('name');
 
 		self::$attributes = [
 			'name'             => $this->name,
@@ -150,6 +152,11 @@ class Site_Icons
 			'start_url'        => $this->start_url,
 			'scope'            => $this->scope,
 		];
+
+		if (false === $installable) {
+			unset(self::$attributes['display']);
+			unset(self::$attributes['start_url']);
+		}
 
 		$this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
 		$this->manifest_filename   = $this->get_manifest_filename();
