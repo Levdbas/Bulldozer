@@ -63,6 +63,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		add_action('init', [$this, 'register_block']);
 		add_filter('block_type_metadata', [$this, 'change_metadata']);
+		add_filter('block_type_metadata_settings', [$this, 'block_type_metadata_settings'], 10, 2);
 		add_action('enqueue_block_assets', [$this, 'alter_enqueue_block_assets']);
 	}
 
@@ -163,6 +164,19 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
 		return $metadata;
 	}
+
+	/**
+	 * Add block type metadata settings.
+	 *
+	 * @param array $settings The block settings.
+	 * @return array
+	 */
+	public function block_type_metadata_settings($settings, $metadata)
+	{
+		$settings['version'] = $metadata['version'] ?? '1.0.0';
+		return $settings;
+	}
+
 
 
 
