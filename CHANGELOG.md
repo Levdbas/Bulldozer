@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.5.4:
+
+_Release Date - 03 May 2024_
+-   💡 **Newly added**
+    -   HighGround\BlockRendererV2 now adds block version from the metadata to the block attributes.
 ## 4.5.3:
 
 _Release Date - 10 April 2024_
