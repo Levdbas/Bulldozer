@@ -21,7 +21,7 @@ use WP_Block_Supports;
  *
  * Registration of the block is done by register_block() that locates the block.json file and registers the block with WordPress
  * .
- * In adition to AbstractBlockRenderer this extended class adds the following:
+ * In addition to AbstractBlockRenderer this extended class adds the following:
  *
  * - change_metadata: This method is called by the acf filter block_type_metadata.
  * - add_block_variations: This method is called by the change_metadata method.
@@ -86,7 +86,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		}
 
 		if (!function_exists('acf_add_local_field_group')) {
-			$message = _x('ACF not activated.', 'Error explaination', 'bulldozer');
+			$message = _x('ACF not activated.', 'Error explanation', 'bulldozer');
 			Bulldozer::frontend_error($message);
 			Bulldozer::backend_notification($message, 'error');
 			return;

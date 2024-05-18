@@ -127,7 +127,7 @@ abstract class AbstractBlockRenderer
 	protected array $classes = [];
 
 	/**
-	 * Additonal classes that should be added to the block only in the backend.
+	 * Additional classes that should be added to the block only in the backend.
 	 *
 	 * @var array
 	 */
@@ -386,7 +386,7 @@ abstract class AbstractBlockRenderer
 		}
 
 		$base_selector = '#' . $this->attributes['id'];
-		// loop throught the css variables and group them by selector
+		// loop through the css variables and group them by selector
 		$grouped_css_variables = [
 			'default' => [],
 		];
@@ -407,8 +407,8 @@ abstract class AbstractBlockRenderer
 				continue;
 			}
 
-			$comiled_selector = 'default' === $selector ? $base_selector : $base_selector . ' ' . $selector;
-			$compiled_css .= $comiled_selector . '{';
+			$compiled_selector = 'default' === $selector ? $base_selector : $base_selector . ' ' . $selector;
+			$compiled_css .= $compiled_selector . '{';
 			foreach ($css_variables as $item) {
 				$compiled_css .= $item['variable'] . ':' . $item['value'] . ';';
 			}

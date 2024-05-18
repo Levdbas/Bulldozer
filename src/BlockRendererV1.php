@@ -18,7 +18,7 @@ use Timber;
  *
  * {@inheritDoc}
  *
- * In adition to AbstractBlockRenderer this extended class adds the following:
+ * In addition to AbstractBlockRenderer this extended class adds the following:
  *
  * - block_register: This abstract method must be implemented by the extended class.
  *
