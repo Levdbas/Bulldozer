@@ -588,7 +588,7 @@ abstract class AbstractBlockRenderer
 	 * @param array|false  $allowed_blocks Array with allowed blocks or false.
 	 * @param array|false  $template Array with template.
 	 * @param string|false $classes String with classes.
-	 * @param string|false $orientation String with orientation.
+	 * @param string|false $orientation String with orientation, can be 'horizontal' or 'vertical'.
 	 * @param string|bool  $templatelock true or one of 'all' or 'insert'. True defaults to 'all'.
 	 * @return string        $inner_blocks the inner blocks appender.
 	 * @since 3.3.0
