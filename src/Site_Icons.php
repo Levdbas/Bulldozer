@@ -134,7 +134,7 @@ class Site_Icons
 
 	/**
 	 * Constructor
-	 * @var bool $installable Whether the app is installable or not.
+	 * @param bool $installable Whether the app is installable or not.
 	 * @return void
 	 */
 	public function __construct(bool $installable = true)
@@ -268,7 +268,7 @@ class Site_Icons
 	/**
 	 * Generates manifest and outputs it on the virtual path.
 	 *
-	 * @param WP $wp Current WordPress environment instance (passed by reference).
+	 * @param \WP $wp Current WordPress environment instance (passed by reference).
 	 * @return void
 	 */
 	public function generate_manifest($wp)

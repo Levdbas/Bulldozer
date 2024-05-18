@@ -28,7 +28,7 @@ class Bulldozer
 	/**
 	 * Active theme object.
 	 *
-	 * @var WP_Theme
+	 * @var \WP_Theme
 	 */
 	private static $theme;
 
@@ -218,7 +218,7 @@ class Bulldozer
 	 */
 	public static function backend_error($message, $subtitle = '', $title = '')
 	{
-		self::backend_notification($message, 'error', '', $subtitle);
+		self::backend_notification($message, 'error', $subtitle);
 	}
 
 	/**

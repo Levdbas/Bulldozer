@@ -160,7 +160,7 @@ class Asset
 	 *
 	 * @return string|false
 	 */
-	public function contents(): string
+	public function contents(): string|false
 	{
 		if (!$this->exists()) {
 			return false;

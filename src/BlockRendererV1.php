@@ -11,7 +11,7 @@ namespace HighGround\Bulldozer;
 require_once 'helpers.php';
 
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use Timber;
+use Timber\Timber;
 
 /**
  * V1 version of the block renderer.
@@ -88,7 +88,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 	 * @param    string   $content The block content.
 	 * @param    bool     $is_preview Whether or not the block is being rendered for editing preview.
 	 * @param    int      $post_id The current post being edited or viewed.
-	 * @param    WP_Block $wp_block The block instance (since WP 5.5).
+	 * @param    \WP_Block $wp_block The block instance (since WP 5.5).
 	 * @return   void
 	 */
 	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
@@ -149,8 +149,9 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 			$block_path = "{$this->slug}/{$this->slug}";
 		} else {
 			Bulldozer::frontend_error(sprintf(__('Block %s.twig not found.', 'bulldozer'), $this->slug));
+			return;
 		}
 
-		Timber\Timber::render("blocks/{$block_path}.twig", $this->context);
+		Timber::render("blocks/{$block_path}.twig", $this->context);
 	}
 }

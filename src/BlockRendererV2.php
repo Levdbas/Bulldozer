@@ -236,7 +236,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * @param    string   $content The block content.
 	 * @param    bool     $is_preview Whether or not the block is being rendered for editing preview.
 	 * @param    int      $post_id The current post being edited or viewed.
-	 * @param    WP_Block $wp_block The block instance (since WP 5.5).
+	 * @param    \WP_Block $wp_block The block instance (since WP 5.5).
 	 * @return   void
 	 */
 	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
@@ -308,7 +308,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	{
 		$twig_file_path   = "blocks/{$this->slug}/{$this->slug}.twig";
 		$twig_file_origin = null;
-
+		$test_location   = null;
 		$template_path   = get_template_directory();
 		$stylesheet_path = get_stylesheet_directory();
 
@@ -324,7 +324,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			$test_location    = $stylesheet_path . '/' . $twig_file_path;
 		}
 
-		if (!file_exists($test_location)) {
+		if (null === $test_location || !file_exists($test_location)) {
 			throw new \Exception(sprintf(esc_attr__('Block %s not found.', 'bulldozer'), esc_attr($twig_file_origin)));
 			return;
 		}

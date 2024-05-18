@@ -60,7 +60,7 @@ class Autoloader
 	 * Loader for parent folder in lib directory.
 	 *
 	 * @api
-	 * @param array $dirs_to_load Array of directories to load.
+	 * @param array|false $dirs_to_load Array of directories to load.
 	 * @return void
 	 */
 	public function parent($dirs_to_load = false )

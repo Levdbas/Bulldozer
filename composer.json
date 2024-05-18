@@ -16,7 +16,8 @@
     "php": ">=8.0.2",
     "composer/installers": 	"^1.0 || ^2.0",
     "symfony/finder": "6.0.19 || ^6.4",
-    "stoutlogic/acf-builder": "^1.11"
+    "stoutlogic/acf-builder": "^1.12",
+    "timber/timber": "^2.2"
   },
   "autoload": {
     "psr-4": {
@@ -26,14 +27,35 @@
       "src/helpers.php"
     ]
   },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": [
+        "wpackagist-plugin/*",
+        "wpackagist-theme/*"
+      ]
+    }
+  ],
   "require-dev": {
     "wp-coding-standards/wpcs": "^3",
     "dealerdirect/phpcodesniffer-composer-installer": "^1",
-    "phpunit/phpunit": "^10",
+    "phpunit/phpunit": "^9.0",
+    "php-stubs/acf-pro-stubs": "^6.0",
+    "phpstan/phpstan": "^1.7",
+    "szepeviktor/phpstan-wordpress": "^1.1",
     "brain/monkey": "^2",
-    "phpcompatibility/php-compatibility": "^9"
+    "oscarotero/env": "^2.1",
+    "roots/wp-config": "1.0.0",
+    "wpackagist-plugin/advanced-custom-fields": "^6.0",
+    "yoast/wp-test-utils": "^1.2",
+    "phpcompatibility/php-compatibility": "^9",
+    "automattic/wordbless": "^0.4.2"
 },
 "scripts": {
+  "post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
+		"post-update-cmd": "WorDBless\\Composer\\InstallDropin::copy",
+  "analyze": "phpstan analyse --memory-limit=1G",
   "lint:fix": "@php ./vendor/bin/phpcbf --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
   "lint": "@php ./vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
   "test": "@php ./vendor/bin/phpunit",
@@ -42,7 +64,8 @@
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "composer/installers": true
+      "composer/installers": true,
+      "roots/wordpress-core-installer": true
     }
   }
 }

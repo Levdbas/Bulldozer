@@ -1,0 +1,16 @@
+parameters:
+    editorUrl: 'vscode://file/%%file%%:%%line%%'
+    level: 2 # Increase until "max"
+    paths:
+        - src/
+    scanFiles:
+        - tests/bootstrap.php
+    scanDirectories:
+      - wordpress
+      - vendor/timber
+      - vendor/php-stubs
+    excludePaths:
+        - rector.php
+        - tests/*
+    ignoreErrors:
+        - '#Function spinupwp not found.#'

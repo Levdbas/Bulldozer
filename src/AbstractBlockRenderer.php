@@ -43,9 +43,9 @@ abstract class AbstractBlockRenderer
 	protected $wp_block;
 
 	/**
-	 * Block attributes. Visible on both front- and backend.
+	 * Block title.
 	 *
-	 * @var array
+	 * @var string
 	 */
 	protected static string $title;
 
@@ -292,10 +292,6 @@ abstract class AbstractBlockRenderer
 
 		foreach ($extra_attributes as $attribute_name => $value) {
 			$attributes[$attribute_name] = $value;
-		}
-
-		if (empty($attributes)) {
-			return '';
 		}
 
 		$normalized_attributes = [];
