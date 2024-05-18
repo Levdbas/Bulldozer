@@ -41,7 +41,7 @@
     "wp-coding-standards/wpcs": "^3",
     "dealerdirect/phpcodesniffer-composer-installer": "^1",
     "phpunit/phpunit": "^9.0",
-    "php-stubs/acf-pro-stubs": "^6.0",
+    "php-stubs/acf-pro-stubs": "^6.2",
     "phpstan/phpstan": "^1.7",
     "szepeviktor/phpstan-wordpress": "^1.1",
     "brain/monkey": "^2",
