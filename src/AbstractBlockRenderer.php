@@ -589,7 +589,7 @@ abstract class AbstractBlockRenderer
 	 * @return string        $inner_blocks the inner blocks appender.
 	 * @since 3.3.0
 	 */
-	public static function create_inner_blocks(array | false $allowed_blocks, array | false $template = false, string | false $classes = false, string | false $orientation = false, string | bool $templatelock = false)
+	public static function create_inner_blocks(array | false $allowed_blocks = false, array | false $template = false, string | false $classes = false, string | false $orientation = false, string | bool $templatelock = false)
 	{
 		if ($allowed_blocks) {
 			$allowed_blocks = esc_attr(wp_json_encode($allowed_blocks));
