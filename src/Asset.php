@@ -66,6 +66,16 @@ class Asset
 	}
 
 	/**
+	 * Magic method to get the uri of the asset when the object is cast to a string.
+	 *
+	 * @return string|false
+	 */
+	public function __tostring() {
+		return self::uri();
+	}
+
+
+	/**
 	 * Get asset by key.
 	 *
 	 * @param string $key Key of the asset.
