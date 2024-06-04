@@ -8,5 +8,5 @@ workspace.code-workspace
 typos.toml export-ignore
 phpcs.xml export-ignore
 CHANGELOG.md export-ignore
-CHANGELOG.md export-ignore
+composer.lock export-ignore
 workspace.code-workspace export-ignore
