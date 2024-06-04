@@ -1,0 +1,25 @@
+[files]
+extend-exclude = [
+    ".git/",
+    "src/lang/"
+]
+ignore-hidden = false
+
+[default]
+extend-ignore-re = [
+    "Nathan Hass",
+]
+
+[default.extend-identifiers]
+"field_5ba2c660ed26d" = "field_5ba2c660ed26d"
+"PNGs" = "PNGs"
+"struc" = "struc"
+"testPNGtoJPG" = "testPNGtoJPG"
+"testPNGtoWEBP" = "testPNGtoWEBP"
+# Known typo
+"timber_wp_title_seperator" = "timber_wp_title_seperator"
+"tmis" = "tmis"
+
+# Typos
+"Github" = "GitHub"
+"Wordpress" = "WordPress"

@@ -99,7 +99,7 @@ _Release Date - 18 october 2023_
 _Release Date - 18 september 2023_
 
 -   ✨ **Enhanced**
-    -   Autoloader now loads in a more predicatble order.
+    -   Autoloader now loads in a more predictable order.
     -   Language update
     
 ## 3.8.1:

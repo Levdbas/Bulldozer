@@ -1,0 +1,8 @@
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/phpcs.xml.dist export-ignore
+/phpstan.neon export-ignore
+/workspace.code-workspace
+/.editorconfig export-ignore
+/typos.toml export-ignore
+/workspace.code-workspace export-ignore

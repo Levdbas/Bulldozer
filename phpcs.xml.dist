@@ -24,7 +24,7 @@
 	-->
 	<arg value="psvn"/>
 
-	<!-- Check up to 8 files simultanously. -->
+	<!-- Check up to 8 files simultaneously. -->
 	<arg name="parallel" value="8"/>
 
 	<!-- Only check the PHP, CSS and SCSS files. JS files are checked separately with ESLint. -->
