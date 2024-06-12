@@ -228,6 +228,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      */
     public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
     {
+        $this->block_disabled = false;
         $this->fields = [];
         $this->context = [];
         self::$notifications = [];

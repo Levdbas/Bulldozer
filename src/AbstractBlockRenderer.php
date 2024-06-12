@@ -407,7 +407,7 @@ abstract class AbstractBlockRenderer
      */
     protected function maybe_disable_block()
     {
-        if (!isset($this->attributes['supports']['showDisabledButton'])) {
+        if (!isset($this->attributes['supports']['showDisableButton'])) {
             return false;
         }
 
