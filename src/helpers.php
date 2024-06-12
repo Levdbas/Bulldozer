@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Helper functions for this package
- *
- * @package HighGround\Bulldozer
+ * Helper functions for this package.
  */
 
 namespace HighGround\Bulldozer\helpers;
@@ -19,10 +17,11 @@ use HighGround\Bulldozer\Asset;
  * - asset($key)->contents(); // returns file contents
  * - asset($key)->json(); // returns decoded json
  *
- * @param string $key array key name in the manifest file.
+ * @param string $key array key name in the manifest file
+ *
  * @return Asset
  */
-function asset($key )
+function asset($key)
 {
-	return Asset::get_key($key);
+    return Asset::get_key($key);
 }
