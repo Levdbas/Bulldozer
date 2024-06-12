@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.6.0
+
+_Release Date - 03 May 2024_
+ -   🐛 **Bugs Fixed**
+    -   Fixed disabled block function in BlockRendererV2
+
 ## 4.5.4:
 
 _Release Date - 03 May 2024_
