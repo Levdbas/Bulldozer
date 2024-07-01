@@ -71,7 +71,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
     public function register_block(): void
     {
         if (null === static::NAME) {
-            throw new \Exception(esc_html('CONST::NAME not set for '.get_class($this)));
+            throw new \Exception(esc_html('CONST::NAME not set for ' . get_class($this)));
 
             return;
         }
@@ -88,12 +88,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
         // get dir from file path
         $this->block_location = plugin_dir_path($class_info->getFileName());
-        $json_file = $this->block_location.'/block.json';
+        $json_file = $this->block_location . '/block.json';
 
         $block = register_block_type($json_file);
 
         if (false === $block) {
-            throw new \Exception(esc_html('Block '.static::NAME.' not found in theme'));
+            throw new \Exception(esc_html('Block ' . static::NAME . ' not found in theme'));
 
             return;
         }
@@ -121,7 +121,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
             return;
         }
 
-        wp_dequeue_style($name.'-style');
+        wp_dequeue_style($name . '-style');
     }
 
     /**
@@ -131,7 +131,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      */
     public function change_metadata($metadata)
     {
-        if ('acf/'.static::NAME !== $metadata['name']) {
+        if ('acf/' . static::NAME !== $metadata['name']) {
             return $metadata;
         }
 
@@ -158,6 +158,9 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
     /**
      * Add block type metadata settings.
+     * 
+     * This method was introduced to add the version to the block settings.
+     * If we had a major update to the block we can use this to update the version and thus invalidate files.
      *
      * @param array $settings the block settings
      * @param mixed $metadata
@@ -166,6 +169,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      */
     public function block_type_metadata_settings($settings, $metadata)
     {
+        if ('acf/' . static::NAME !== $metadata['name']) {
+            return $settings;
+        }
+
         $settings['version'] = $metadata['version'] ?? '1.0.0';
 
         return $settings;
@@ -263,27 +270,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
             'inline_css' => $this->generate_css(),
             'notifications' => self::$notifications,
             'parent_id' => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
-            'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
+            //'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
         ];
 
         $this->context = array_merge($this->context, $args);
 
         $this->render();
-    }
-
-    /**
-     * Funnction to create normalized paths that can be used to compare paths.
-     *
-     * @param string $path the path to normalize
-     *
-     * @return string $normalized the normalized path
-     */
-    private static function normalize_path(string $path)
-    {
-        $normalized = str_replace('\\', '/', $path);
-        $normalized = preg_replace('/.*\/web\/app/', '', $normalized);
-
-        return trailingslashit($normalized);
     }
 
     /**
@@ -295,31 +287,15 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      */
     private function render()
     {
-        $twig_file_path = "blocks/{$this->slug}/{$this->slug}.twig";
-        $twig_file_origin = null;
-        $test_location = null;
-        $template_path = get_template_directory();
-        $stylesheet_path = get_stylesheet_directory();
+        $twig_file_path = "@blocks/{$this->slug}/{$this->slug}.twig";
+        $output = Timber::compile($twig_file_path, $this->context);
 
-        $template_test_location = self::normalize_path($template_path);
-        $stylesheet_test_location = self::normalize_path($stylesheet_path);
-        $block_test_location = self::normalize_path($this->block_location);
-
-        if (false !== strpos($block_test_location, $template_test_location)) {
-            $twig_file_origin = $template_test_location.$twig_file_path;
-            $test_location = $template_path.'/'.$twig_file_path;
-        } elseif (false !== strpos($block_test_location, $stylesheet_test_location)) {
-            $twig_file_origin = $stylesheet_test_location.$twig_file_path;
-            $test_location = $stylesheet_path.'/'.$twig_file_path;
-        }
-
-        if (null === $test_location || !file_exists($test_location)) {
-            throw new \Exception(sprintf(esc_attr__('Block %s not found.', 'bulldozer'), esc_attr($twig_file_origin)));
+        if (false === $output) {
+            throw new \Exception(sprintf(esc_attr__('Twig file %s not found.', 'bulldozer'), esc_attr($twig_file_path)));
 
             return;
         }
-
-        Timber::render($twig_file_path, $this->context);
+        echo $output;
     }
 
     /**

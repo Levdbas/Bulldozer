@@ -196,7 +196,7 @@ abstract class AbstractBlockRenderer
     {
         if (!empty($this->fields[$field_name])) {
             $this->css_variables[] = [
-                'variable' => '--'.$css_var_name,
+                'variable' => '--' . $css_var_name,
                 'value' => $this->fields[$field_name],
                 'selector' => $selector,
             ];
@@ -233,7 +233,7 @@ abstract class AbstractBlockRenderer
         array_push(
             self::$notifications,
             [
-                'title' => self::$title.' '.__('block', 'bulldozer'),
+                'title' => self::$title . ' ' . __('block', 'bulldozer'),
                 'message' => $message,
                 'type' => $type,
                 'type_name' => $types[$type],
@@ -248,7 +248,7 @@ abstract class AbstractBlockRenderer
      */
     public function add_modifier_class(string $modifier)
     {
-        array_push($this->classes, $this->slug.'--'.$modifier);
+        array_push($this->classes, $this->slug . '--' . $modifier);
     }
 
     /**
@@ -292,11 +292,11 @@ abstract class AbstractBlockRenderer
         }
 
         $inner_blocks = '<InnerBlocks';
-        $inner_blocks .= $allowed_blocks ? ' allowedBlocks="'.$allowed_blocks.'"' : '';
-        $inner_blocks .= $template ? ' template="'.$template.'"' : '';
-        $inner_blocks .= $classes ? ' class="'.$classes.'"' : '';
-        $inner_blocks .= $orientation ? ' orientation="'.$orientation.'"' : '';
-        $inner_blocks .= $templatelock ? ' templateLock="'.$templatelock.'"' : '';
+        $inner_blocks .= $allowed_blocks ? ' allowedBlocks="' . $allowed_blocks . '"' : '';
+        $inner_blocks .= $template ? ' template="' . $template . '"' : '';
+        $inner_blocks .= $classes ? ' class="' . $classes . '"' : '';
+        $inner_blocks .= $orientation ? ' orientation="' . $orientation . '"' : '';
+        $inner_blocks .= $templatelock ? ' templateLock="' . $templatelock . '"' : '';
 
         $inner_blocks .= ' />';
 
@@ -318,8 +318,7 @@ abstract class AbstractBlockRenderer
         $this->registered_fields = new FieldsBuilder($slug);
 
         $this->registered_fields
-            ->setLocation('block', '==', $name)
-        ;
+            ->setLocation('block', '==', $name);
 
         return $this->registered_fields;
     }
@@ -383,7 +382,7 @@ abstract class AbstractBlockRenderer
                 continue;
             }
 
-            $attributes[$attribute_name] = $extra_attributes[$attribute_name].' '.$new_attributes[$attribute_name];
+            $attributes[$attribute_name] = $extra_attributes[$attribute_name] . ' ' . $new_attributes[$attribute_name];
         }
 
         foreach ($extra_attributes as $attribute_name => $value) {
@@ -392,7 +391,7 @@ abstract class AbstractBlockRenderer
 
         $normalized_attributes = [];
         foreach ($attributes as $key => $value) {
-            $normalized_attributes[] = $key.'="'.esc_attr($value).'"';
+            $normalized_attributes[] = $key . '="' . esc_attr($value) . '"';
         }
 
         return implode(' ', $normalized_attributes);
@@ -441,8 +440,7 @@ abstract class AbstractBlockRenderer
                         'ui_on_text' => __('True', 'bulldozer'),
                         'ui_off_text' => __('False', 'bulldozer'),
                     ]
-                )
-            ;
+                );
         }
     }
 
@@ -455,7 +453,7 @@ abstract class AbstractBlockRenderer
             return;
         }
 
-        $base_selector = '#'.$this->attributes['id'];
+        $base_selector = '#' . $this->attributes['id'];
         // loop through the css variables and group them by selector
         $grouped_css_variables = [
             'default' => [],
@@ -476,10 +474,10 @@ abstract class AbstractBlockRenderer
                 continue;
             }
 
-            $compiled_selector = 'default' === $selector ? $base_selector : $base_selector.' '.$selector;
-            $compiled_css .= $compiled_selector.'{';
+            $compiled_selector = 'default' === $selector ? $base_selector : $base_selector . ' ' . $selector;
+            $compiled_css .= $compiled_selector . '{';
             foreach ($css_variables as $item) {
-                $compiled_css .= $item['variable'].':'.$item['value'].';';
+                $compiled_css .= $item['variable'] . ':' . $item['value'] . ';';
             }
             $compiled_css .= '}';
         }
@@ -506,53 +504,53 @@ abstract class AbstractBlockRenderer
         }
 
         if (isset($attributes['align']) && !empty($attributes['align'])) {
-            $this->classes[] = 'align'.esc_attr($attributes['align']);
+            $this->classes[] = 'align' . esc_attr($attributes['align']);
         }
 
         if (isset($attributes['backgroundColor']) && !empty($attributes['backgroundColor'])) {
             $this->classes[] = 'has-background';
-            $this->classes[] = 'has-'.esc_attr($attributes['backgroundColor']).'-background-color';
+            $this->classes[] = 'has-' . esc_attr($attributes['backgroundColor']) . '-background-color';
         }
 
         if (isset($attributes['textColor']) && !empty($attributes['textColor'])) {
             $this->classes[] = 'has-text-color';
-            $this->classes[] = 'has-'.esc_attr($attributes['textColor']).'-color';
+            $this->classes[] = 'has-' . esc_attr($attributes['textColor']) . '-color';
         }
 
         if (isset($attributes['supports']['align_content']) && 'matrix' == $attributes['supports']['align_content'] && !empty($attributes['align_content'])) {
             $alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
             $this->classes[] = 'has-custom-content-position';
-            $this->classes[] = 'is-position-'.$alignment;
+            $this->classes[] = 'is-position-' . $alignment;
         }
 
         if (isset($attributes['supports']['align_content']) && true === $attributes['supports']['align_content'] && !empty($attributes['align_content'])) {
             $alignment = str_replace(' ', '-', esc_attr($attributes['align_content']));
-            $this->classes[] = 'is-vertically-aligned-'.$alignment;
+            $this->classes[] = 'is-vertically-aligned-' . $alignment;
         }
 
         if (isset($attributes['gradient']) && !empty($attributes['gradient'])) {
             $this->classes[] = 'has-background-gradient';
-            $this->classes[] = 'has-'.esc_attr($attributes['gradient']).'-gradient-background';
+            $this->classes[] = 'has-' . esc_attr($attributes['gradient']) . '-gradient-background';
         }
 
         if (isset($attributes['supports']['alignContent']) && 'matrix' == $attributes['supports']['alignContent'] && !empty($attributes['alignContent']) && 'top left' !== $attributes['alignContent']) {
             $alignment = str_replace(' ', '-', esc_attr($attributes['alignContent']));
             $this->classes[] = 'has-custom-content-position';
-            $this->classes[] = 'is-position-'.$alignment;
+            $this->classes[] = 'is-position-' . $alignment;
         }
 
         if (isset($attributes['supports']['alignContent']) && true === $attributes['supports']['alignContent'] && !empty($attributes['alignContent'])) {
             $alignment = str_replace(' ', '-', esc_attr($attributes['alignContent']));
-            $this->classes[] = 'is-vertically-aligned-'.$alignment;
+            $this->classes[] = 'is-vertically-aligned-' . $alignment;
         }
 
         if (isset($attributes['align_text']) && !empty($attributes['align_text'] && 'left' !== $attributes['align_text'])) {
-            $this->classes[] = 'has-text-align-'.esc_attr($attributes['align_text']);
+            $this->classes[] = 'has-text-align-' . esc_attr($attributes['align_text']);
         }
 
         if (isset($fields['image_dim']) && !empty($fields['image_dim'])) {
             $this->classes[] = 'has-background-dim';
-            $this->classes[] = 'has-background-dim-'.esc_attr($fields['image_dim']);
+            $this->classes[] = 'has-background-dim-' . esc_attr($fields['image_dim']);
         }
 
         /*
@@ -596,6 +594,6 @@ abstract class AbstractBlockRenderer
             return;
         }
 
-        return '<style>'.$this->compiled_css.'</style>';
+        return '<style>' . $this->compiled_css . '</style>';
     }
 }
