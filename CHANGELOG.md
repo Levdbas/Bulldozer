@@ -1,8 +1,13 @@
 # Changelog
 
+## 5.0.0
+
+_Release Date - 1 July 2024_
+-   ✨ **Enhanced**
+    -   BlockRendererV2 now loads blocks via the @blocks namespace. This increases load the speed of the block renderer by 10%.
 ## 4.6.0
 
-_Release Date - 03 May 2024_
+_Release Date - 12 June 2024_
  -   🐛 **Bugs Fixed**
     -   Fixed disabled block function in BlockRendererV2
 

@@ -21,7 +21,7 @@ class Bulldozer
     /**
      * Current Bulldozer version.
      */
-    public const VERSION = '4.6.0';
+    public const VERSION = '4.7.0';
 
     /**
      * Active theme object.
@@ -93,7 +93,7 @@ class Bulldozer
      */
     public function load_textdomain()
     {
-        load_theme_textdomain('bulldozer', __DIR__.'/lang/');
+        load_theme_textdomain('bulldozer', __DIR__ . '/lang/');
     }
 
     /**
@@ -121,7 +121,7 @@ class Bulldozer
             return;
         }
 
-        $title = $title ? $title : self::$theme.' '.__('&rsaquo; error', 'bulldozer');
+        $title = $title ? $title : self::$theme . ' ' . __('&rsaquo; error', 'bulldozer');
         $message = "<h1>{$title}<br><small>{$subtitle}</small></h1><p>{$message}</p>";
 
         wp_die(wp_kses_post($message), esc_html($title));
@@ -156,7 +156,7 @@ class Bulldozer
             'error' => __('Error', 'bulldozer'),
         ];
 
-        $type_title = self::$theme.' '.__('&rsaquo; ', 'bulldozer').$types[$type];
+        $type_title = self::$theme . ' ' . __('&rsaquo; ', 'bulldozer') . $types[$type];
 
         $result = "<div class='notice notice-{$type}'><h2>{$type_title}";
         $result .= $title ? "<br><small>{$title}</small>" : '';
@@ -217,7 +217,7 @@ class Bulldozer
      */
     public function add_editor_assets()
     {
-        $data = file_get_contents(__DIR__.'/assets/acf-blocks.js');
+        $data = file_get_contents(__DIR__ . '/assets/acf-blocks.js');
 
         wp_add_inline_script('wp-blocks', $data);
     }
@@ -237,7 +237,7 @@ class Bulldozer
 
         if (version_compare(phpversion(), '8.0.2', '<') && !is_admin()) {
             // phpcs:ignore
-            trigger_error('Bulldozer requires PHP 8.0.2 or greater. You have '.phpversion(), E_USER_ERROR);
+            trigger_error('Bulldozer requires PHP 8.0.2 or greater. You have ' . phpversion(), E_USER_ERROR);
         }
 
         // check if ACF is installed
