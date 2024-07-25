@@ -573,6 +573,13 @@ abstract class AbstractBlockRenderer
             }
         );
 
+        foreach ($this->classes as $class) {
+            if (strpos($class, ' ') !== false) {
+                $classes = explode(' ', $class);
+                $this->classes = array_merge($this->classes, $classes);
+            }
+        }
+
         if ($this->is_preview) {
             $this->classes = array_merge($this->classes, $this->backend_classes);
         }
