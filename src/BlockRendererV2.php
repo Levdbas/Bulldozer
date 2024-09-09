@@ -45,7 +45,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
     /**
      * Passes the register method to acf.
      */
-    public function __construct()
+    final public function __construct()
     {
         if (false == $this->register_requirements()) {
             return;
@@ -104,7 +104,12 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         $this->setup_fields_group($this->name, $this->slug);
         $this->add_hidden_fields($block);
         $this->add_fields();
-        acf_add_local_field_group($this->registered_fields->build());
+
+        $this->registered_fields = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/fields', $this->registered_fields);
+
+        if ($this->registered_fields) {
+            acf_add_local_field_group($this->registered_fields->build());
+        }
     }
 
     /**

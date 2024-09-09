@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.1.0
+
+_Release Date - 9 September 2024_
+-   💡 **Newly added**
+    -  Added new bulldozer/blockrenderer/block/' . $this->slug . '/fields filter to allow filtering of fields in the block renderer.
+    -  new add_class and get_field methods added to AbstractBlockRenderer to allow for easier class addition and field retrieval.
+
 ## 5.0.0
 
 _Release Date - 1 July 2024_

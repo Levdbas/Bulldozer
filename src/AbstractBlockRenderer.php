@@ -173,7 +173,8 @@ abstract class AbstractBlockRenderer
 
     /**
      * Empty function that can be overwritten by the blocks to register block styles.
-     *
+     * 
+     * @api
      * @param string $name the block name
      *
      * @return bool|void
@@ -185,7 +186,8 @@ abstract class AbstractBlockRenderer
 
     /**
      * Add css variable with the value based on an acf field.
-     *
+     * 
+     * @api
      * @since 1.8.0
      *
      * @param string       $field_name   acf field name
@@ -239,16 +241,6 @@ abstract class AbstractBlockRenderer
                 'type_name' => $types[$type],
             ]
         );
-    }
-
-    /**
-     * Add modifier class to block classes.
-     *
-     * @param string $modifier the part after the -- from the BEM principle
-     */
-    public function add_modifier_class(string $modifier)
-    {
-        array_push($this->classes, $this->slug . '--' . $modifier);
     }
 
     /**
@@ -602,5 +594,48 @@ abstract class AbstractBlockRenderer
         }
 
         return '<style>' . $this->compiled_css . '</style>';
+    }
+
+    /**
+     * Add class to block classes.
+     * 
+     * When an array is passed, it will merge the array with the existing classes.
+     * 
+     * @api
+     * @since 5.1.0
+     * @param string|array $class the class or array of classes
+     * @return void
+     */
+    public function add_class(string|array $class)
+    {
+        if (is_array($class)) {
+            $this->classes = array_merge($this->classes, $class);
+            return;
+        }
+        array_push($this->classes, $class);
+    }
+
+
+    /**
+     * Add modifier class to block classes.
+     * 
+     * @api
+     * @param string $modifier the part after the -- from the BEM principle
+     */
+    public function add_modifier_class(string $modifier)
+    {
+        $this->add_class($this->slug . '--' . $modifier);
+    }
+
+    /**
+     * get ACF field value.
+     * 
+     * @since 5.1.0
+     * @param string $field_name the field name
+     * @return mixed $field the field value
+     */
+    public function get_field(string $field_name)
+    {
+        return $this->fields[$field_name] ?? null;
     }
 }
