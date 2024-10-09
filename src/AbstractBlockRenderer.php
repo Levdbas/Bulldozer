@@ -421,7 +421,7 @@ abstract class AbstractBlockRenderer
      */
     protected function add_hidden_fields($block)
     {
-        if (isset($block->supports['showDisabledButton'])) {
+        if (isset($block->supports['showDisableButton'])) {
             $this->registered_fields
                 ->addTrueFalse(
                     'is_disabled',
