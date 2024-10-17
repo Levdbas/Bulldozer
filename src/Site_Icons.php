@@ -13,6 +13,21 @@ require_once 'helpers.php';
  */
 class Site_Icons
 {
+
+    /**
+     * Whether the new filenames are used or not.
+     *
+     * @var boolean
+     */
+    private bool $new_filenames = false;
+
+    /**
+     * Whether the parent theme is used or not.
+     *
+     * @var boolean
+     */
+    private bool $parent_theme = false;
+
     /**
      * Holder of the filename. We'll use this to generate the web manifest file. Defaults to 'manifest.json'.
      * This is overwritten in multisite sites.
@@ -91,14 +106,14 @@ class Site_Icons
      * Array of attributes for the manifest file.
      */
     private static array $attributes = [
-        'name' => false,
-        'short_name' => false,
+        'name'             => false,
+        'short_name'       => false,
         'background_color' => false,
-        'theme_color' => false,
-        'display' => false,
-        'orientation' => false,
-        'start_url' => false,
-        'scope' => false,
+        'theme_color'      => false,
+        'display'          => false,
+        'orientation'      => false,
+        'start_url'        => false,
+        'scope'            => false,
     ];
 
     /**
@@ -116,6 +131,13 @@ class Site_Icons
     private $favicon_path = '';
 
     /**
+     * File prefix for the icons.
+     *
+     * @var string
+     */
+    private $file_prefix = '';
+
+    /**
      * Constructor.
      *
      * @param bool $installable whether the app is installable or not
@@ -125,14 +147,14 @@ class Site_Icons
         $this->name = get_bloginfo('name');
 
         self::$attributes = [
-            'name' => $this->name,
-            'short_name' => $this->short_name,
+            'name'             => $this->name,
+            'short_name'       => $this->short_name,
             'background_color' => $this->background_color,
-            'theme_color' => $this->theme_color,
-            'display' => $this->display,
-            'orientation' => $this->orientation,
-            'start_url' => $this->start_url,
-            'scope' => $this->scope,
+            'theme_color'      => $this->theme_color,
+            'display'          => $this->display,
+            'orientation'      => $this->orientation,
+            'start_url'        => $this->start_url,
+            'scope'            => $this->scope,
         ];
 
         if (false === $installable) {
@@ -140,8 +162,9 @@ class Site_Icons
         }
 
         $this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
-        $this->manifest_filename = $this->get_manifest_filename();
-        $this->favicon_path = $this->get_favicon_path();
+        $this->manifest_filename   = $this->get_manifest_filename();
+        $this->favicon_path        = $this->get_favicon_path();
+        $this->file_prefix         = $this->new_filenames && !$this->parent_theme ? 'web-app-manifest' : 'android-chrome';
 
         add_action('parse_request', [$this, 'generate_manifest']);
         add_action('init', [$this, 'add_rewrite_rules']);
@@ -174,11 +197,18 @@ class Site_Icons
      */
     public function get_favicon_path()
     {
-        if (file_exists(get_stylesheet_directory().'/resources/'.$this->favicon_folder_name.'/android-chrome-512x512.png')) {
-            return get_stylesheet_directory_uri().'/resources/'.$this->favicon_folder_name.'/';
+        if (file_exists(get_stylesheet_directory() . '/resources/' . $this->favicon_folder_name . '/web-app-manifest-512x512.png')) {
+            $this->new_filenames = true;
+            return get_stylesheet_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
         }
-        if (file_exists(get_template_directory().'/resources/'.$this->favicon_folder_name.'/android-chrome-512x512.png')) {
-            return get_template_directory_uri().'/resources/'.$this->favicon_folder_name.'/';
+
+        if (file_exists(get_stylesheet_directory() . '/resources/' . $this->favicon_folder_name . '/android-chrome-512x512.png')) {
+            return get_stylesheet_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
+        }
+
+        if (file_exists(get_template_directory() . '/resources/' . $this->favicon_folder_name . '/android-chrome-512x512.png')) {
+            $this->parent_theme = true;
+            return get_template_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
         }
         Bulldozer::frontend_error(sprintf(__('No icons found at /resources/%s/', 'bulldozer'), $this->favicon_folder_name));
     }
@@ -208,7 +238,7 @@ class Site_Icons
         }
 
         $query_vars_as_string = http_build_query($wp->query_vars);
-        $manifest_filename = $this->manifest_filename;
+        $manifest_filename    = $this->manifest_filename;
 
         if (false !== strpos($query_vars_as_string, $manifest_filename)) {
             header('Content-Type: application/json');
@@ -223,9 +253,9 @@ class Site_Icons
      */
     public function add_meta_to_head()
     {
-        $tags = '<!-- Manifest added by bulldozer library -->'.PHP_EOL;
-        $tags .= '<link rel="manifest" href="'.parse_url(home_url('/').$this->manifest_filename, PHP_URL_PATH).'">'.PHP_EOL;
-        $tags .= '<meta name="theme-color" content="'.self::$attributes['theme_color'].'">'.PHP_EOL;
+        $tags = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
+        $tags .= '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">' . PHP_EOL;
+        $tags .= '<meta name="theme-color" content="' . self::$attributes['theme_color'] . '">' . PHP_EOL;
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $tags;
     }
@@ -252,12 +282,13 @@ class Site_Icons
                 break;
 
             case 192:
-                $filename = 'android-chrome-192x192.png';
+
+                $filename = $this->file_prefix . '-192x192.png';
 
                 break;
 
             case 512:
-                $filename = 'android-chrome-512x512.png';
+                $filename = $this->file_prefix . '-512x512.png';
 
                 break;
 
@@ -267,7 +298,7 @@ class Site_Icons
                 break;
         }
 
-        return $this->favicon_path.$filename;
+        return $this->favicon_path . $filename;
     }
 
     /**
@@ -295,7 +326,7 @@ class Site_Icons
             return 'site.webmanifest';
         }
 
-        return 'site-'.get_current_blog_id().'.webmanifest';
+        return 'site-' . get_current_blog_id() . '.webmanifest';
     }
 
     /**
@@ -306,16 +337,16 @@ class Site_Icons
     private function get_icons()
     {
         $icons_array[] = [
-            'src' => $this->favicon_path.'android-chrome-192x192.png',
-            'sizes' => '192x192',
-            'type' => 'image/png',
+            'src'     => $this->favicon_path . $this->file_prefix . '-192x192.png',
+            'sizes'   => '192x192',
+            'type'    => 'image/png',
             'purpose' => 'any maskable',
         ];
 
         $icons_array[] = [
-            'src' => $this->favicon_path.'android-chrome-512x512.png',
+            'src'   => $this->favicon_path . $this->file_prefix . '-512x512.png',
             'sizes' => '512x512',
-            'type' => 'image/png',
+            'type'  => 'image/png',
         ];
 
         return $icons_array;
@@ -332,15 +363,15 @@ class Site_Icons
     {
         $manifest = [];
 
-        $manifest['name'] = self::$attributes['name'] ?? get_bloginfo('name');
-        $manifest['short_name'] = self::$attributes['short_name'];
-        $manifest['icons'] = $this->get_icons();
+        $manifest['name']             = self::$attributes['name'] ?? get_bloginfo('name');
+        $manifest['short_name']       = self::$attributes['short_name'];
+        $manifest['icons']            = $this->get_icons();
         $manifest['background_color'] = self::$attributes['background_color'];
-        $manifest['theme_color'] = self::$attributes['theme_color'];
-        $manifest['display'] = self::$attributes['display'];
-        $manifest['orientation'] = self::$attributes['orientation'];
-        $manifest['start_url'] = self::$attributes['start_url'];
-        $manifest['scope'] = self::$attributes['scope'];
+        $manifest['theme_color']      = self::$attributes['theme_color'];
+        $manifest['display']          = self::$attributes['display'];
+        $manifest['orientation']      = self::$attributes['orientation'];
+        $manifest['start_url']        = self::$attributes['start_url'];
+        $manifest['scope']            = self::$attributes['scope'];
 
         return $manifest;
     }
