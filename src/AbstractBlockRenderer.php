@@ -276,7 +276,7 @@ abstract class AbstractBlockRenderer
 
         if ($templatelock && true === $templatelock) {
             $templatelock = esc_attr('all');
-        } else {
+        } elseif ($templatelock) {
             $templatelock = esc_attr($templatelock);
         }
 
