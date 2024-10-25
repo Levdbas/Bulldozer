@@ -274,13 +274,10 @@ abstract class AbstractBlockRenderer
             $orientation = esc_attr($orientation);
         }
 
-        if ($templatelock) {
-            // if bool true, set to string 'all'
-            if (is_bool($templatelock)) {
-                $templatelock = 'all';
-            }
-
-            $templatelock = esc_attr($orientation);
+        if ($templatelock && true === $templatelock) {
+            $templatelock = esc_attr('all');
+        } else {
+            $templatelock = esc_attr($templatelock);
         }
 
         $inner_blocks = '<InnerBlocks';
