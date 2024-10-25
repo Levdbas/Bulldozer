@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.2.0
+
+_Release Date - 25 September 2024_
+-   💡 **Newly added**
+    -  Support for new web manifest filenames
+ -   🐛 **Bugs Fixed**
+    -   Fixed a bug where templatelock would not work
 ## 5.1.0
 
 _Release Date - 9 September 2024_

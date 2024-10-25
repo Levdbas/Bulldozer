@@ -599,7 +599,7 @@ abstract class AbstractBlockRenderer
      * When an array is passed, it will merge the array with the existing classes.
      * 
      * @api
-     * @since 5.1.0
+     * @since 5.2.0
      * @param string|array $class the class or array of classes
      * @return void
      */
@@ -627,7 +627,7 @@ abstract class AbstractBlockRenderer
     /**
      * get ACF field value.
      * 
-     * @since 5.1.0
+     * @since 5.2.0
      * @param string $field_name the field name
      * @return mixed $field the field value
      */
