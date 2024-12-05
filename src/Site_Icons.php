@@ -161,13 +161,8 @@ class Site_Icons
             unset(self::$attributes['display'], self::$attributes['start_url']);
         }
 
-        $this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
-        $this->manifest_filename   = $this->get_manifest_filename();
-        $this->favicon_path        = $this->get_favicon_path();
-        $this->file_prefix         = $this->new_filenames && !$this->parent_theme ? 'web-app-manifest' : 'android-chrome';
-
         add_action('parse_request', [$this, 'generate_manifest']);
-        add_action('init', [$this, 'add_rewrite_rules']);
+        add_action('init', [$this, 'init']);
         add_action('wp_head', [$this, 'add_meta_to_head'], 0);
         add_filter('get_site_icon_url', [$this, 'filter_favicon_path'], 10, 2);
     }
@@ -216,8 +211,13 @@ class Site_Icons
     /**
      * Add rewrite rule for virtual manifest file.
      */
-    public function add_rewrite_rules()
+    public function init()
     {
+        $this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
+        $this->manifest_filename   = $this->get_manifest_filename();
+        $this->favicon_path        = $this->get_favicon_path();
+        $this->file_prefix         = $this->new_filenames && !$this->parent_theme ? 'web-app-manifest' : 'android-chrome';
+
         $manifest_filename = $this->manifest_filename;
 
         add_rewrite_rule(
