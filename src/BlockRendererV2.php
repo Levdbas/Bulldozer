@@ -76,7 +76,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
             return;
         }
 
-        if (!function_exists('acf_add_local_field_group')) {
+        if (! function_exists('acf_add_local_field_group')) {
             $message = _x('ACF not activated.', 'Error explanation', 'bulldozer');
             Bulldozer::frontend_error($message);
             Bulldozer::backend_notification($message, 'error');
@@ -88,7 +88,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
         // get dir from file path
         $this->block_location = plugin_dir_path($class_info->getFileName());
-        $json_file = $this->block_location . '/block.json';
+        $json_file            = $this->block_location . '/block.json';
 
         $block = register_block_type($json_file);
 
@@ -143,8 +143,8 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         $metadata['acf']['renderCallback'] = [$this, 'compile'];
 
         $variations = $this->add_block_variations();
-        $icon = $this->add_icon();
-        $hide = $this->hide_from_inserter();
+        $icon       = $this->add_icon();
+        $hide       = $this->hide_from_inserter();
 
         if (false !== $variations) {
             $metadata['variations'] = $variations;
@@ -163,7 +163,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
     /**
      * Add block type metadata settings.
-     * 
+     *
      * This method was introduced to add the version to the block settings.
      * If we had a major update to the block we can use this to update the version and thus invalidate files.
      *
@@ -214,7 +214,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      *
      * @api
      */
-    public function add_icon(): false|string
+    public function add_icon(): false | string
     {
         return false;
     }
@@ -241,20 +241,20 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
     public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
     {
         $this->block_disabled = false;
-        $this->fields = [];
-        $this->context = [];
-        self::$notifications = [];
-        self::$title = $attributes['title'];
-        $this->name = $attributes['name'];
-        $this->slug = str_replace('acf/', '', $attributes['name']);
-        $this->classes = ['acf-block'];
-        $this->fields = get_fields();
-        $this->context = Timber::context();
-        $this->attributes = $attributes;
-        $this->wp_block = $wp_block;
-        $this->is_preview = $is_preview;
-        $this->post_id = $post_id;
-        $this->block_id = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
+        $this->fields         = [];
+        $this->context        = [];
+        self::$notifications  = [];
+        self::$title          = $attributes['title'];
+        $this->name           = $attributes['name'];
+        $this->slug           = str_replace('acf/', '', $attributes['name']);
+        $this->classes        = ['acf-block'];
+        $this->fields         = get_fields();
+        $this->context        = Timber::context();
+        $this->attributes     = $attributes;
+        $this->wp_block       = $wp_block;
+        $this->is_preview     = $is_preview;
+        $this->post_id        = $post_id;
+        $this->block_id       = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
 
         $this->maybe_add_deprecation_notice();
         $this->maybe_disable_block();
@@ -264,23 +264,22 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         $this->generate_css_variables();
 
         $args = [
-            'block_id' => $this->maybe_add_block_id(),
-            'parent' => $this->slug,
-            'is_disabled' => $this->block_disabled,
-            'slug' => $this->slug,
-            'attributes' => $this->attributes,
-            'is_preview' => $this->is_preview,
-            'post_id' => $this->post_id,
-            'fields' => $this->fields,
-            'classes' => $this->classes,
-            'inline_css' => $this->generate_css(),
+            'block_id'      => $this->maybe_add_block_id(),
+            'is_disabled'   => $this->block_disabled,
+            'parent'        => isset($this->context['parent']) ? $this->context['parent'] : $this->slug,
+            'slug'          => $this->slug,
+            'attributes'    => $this->attributes,
+            'is_preview'    => $this->is_preview,
+            'post_id'       => $this->post_id,
+            'fields'        => $this->fields,
+            'classes'       => $this->classes,
+            'inline_css'    => $this->generate_css(),
             'notifications' => self::$notifications,
-            'parent_id' => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
+            'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
             //'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
         ];
 
         $this->context = array_merge($this->context, $args);
-
         $this->render();
     }
 
@@ -294,7 +293,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
     private function render()
     {
         $twig_file_path = "@blocks/{$this->slug}/{$this->slug}.twig";
-        $output = Timber::compile($twig_file_path, $this->context);
+        $output         = Timber::compile($twig_file_path, $this->context);
 
         if (false === $output) {
             throw new \Exception(sprintf(esc_attr__('Twig file %s not found.', 'bulldozer'), esc_attr($twig_file_path)));
