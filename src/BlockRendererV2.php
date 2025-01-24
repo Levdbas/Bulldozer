@@ -265,6 +265,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
         $args = [
             'block_id' => $this->maybe_add_block_id(),
+            'parent' => $this->slug,
             'is_disabled' => $this->block_disabled,
             'slug' => $this->slug,
             'attributes' => $this->attributes,
