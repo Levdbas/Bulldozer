@@ -144,7 +144,9 @@ class Site_Icons
      */
     public function __construct(bool $installable = true)
     {
-        $this->name = get_bloginfo('name');
+        $this->name      = get_bloginfo('name');
+        $this->start_url = home_url();
+        $this->scope     = home_url();
 
         self::$attributes = [
             'name'             => $this->name,
@@ -175,7 +177,7 @@ class Site_Icons
      */
     public function __set($name, $value)
     {
-        if (!array_key_exists($name, self::$attributes)) {
+        if (! array_key_exists($name, self::$attributes)) {
             return;
         }
 
@@ -216,7 +218,7 @@ class Site_Icons
         $this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
         $this->manifest_filename   = $this->get_manifest_filename();
         $this->favicon_path        = $this->get_favicon_path();
-        $this->file_prefix         = $this->new_filenames && !$this->parent_theme ? 'web-app-manifest' : 'android-chrome';
+        $this->file_prefix         = $this->new_filenames && ! $this->parent_theme ? 'web-app-manifest' : 'android-chrome';
 
         $manifest_filename = $this->manifest_filename;
 
@@ -233,7 +235,7 @@ class Site_Icons
      */
     public function generate_manifest($wp)
     {
-        if (!property_exists($wp, 'query_vars') || !is_array($wp->query_vars)) {
+        if (! property_exists($wp, 'query_vars') || ! is_array($wp->query_vars)) {
             return;
         }
 
@@ -322,7 +324,7 @@ class Site_Icons
     private function get_manifest_filename()
     {
         // Return empty string if not a multisite
-        if (!is_multisite()) {
+        if (! is_multisite()) {
             return 'site.webmanifest';
         }
 
