@@ -304,7 +304,9 @@ abstract class AbstractBlockRenderer
      */
     protected function setup_fields_group($name, $slug)
     {
-        $this->registered_fields = new FieldsBuilder($slug);
+        $this->registered_fields = new FieldsBuilder($slug, [
+            'title' => sprintf(__('Block - %s', 'bulldozer'), ucfirst($slug)),
+        ]);
 
         $this->registered_fields
             ->setLocation('block', '==', $name);
