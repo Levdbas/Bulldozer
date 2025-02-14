@@ -1,5 +1,11 @@
 # Changelog
 
+# 5.3.0
+_Release Date - 14 februari 2025_
+-   ✨ **Enhanced**
+    -  Set installable to false by default in Site_Icons
+    -  Added a meaningful fieldgroup name to the block renderer for easier identification during import and export operations.
+
 ## 5.2.0
 
 _Release Date - 25 September 2024_
