@@ -142,7 +142,7 @@ class Site_Icons
      *
      * @param bool $installable whether the app is installable or not
      */
-    public function __construct(bool $installable = true)
+    public function __construct(bool $installable = false)
     {
         $this->name      = get_bloginfo('name');
         $this->start_url = home_url();
