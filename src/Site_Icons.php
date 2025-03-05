@@ -363,17 +363,8 @@ class Site_Icons
      */
     private function create_manifest()
     {
-        $manifest = [];
-
-        $manifest['name']             = self::$attributes['name'] ?? get_bloginfo('name');
-        $manifest['short_name']       = self::$attributes['short_name'];
-        $manifest['icons']            = $this->get_icons();
-        $manifest['background_color'] = self::$attributes['background_color'];
-        $manifest['theme_color']      = self::$attributes['theme_color'];
-        $manifest['display']          = self::$attributes['display'];
-        $manifest['orientation']      = self::$attributes['orientation'];
-        $manifest['start_url']        = self::$attributes['start_url'];
-        $manifest['scope']            = self::$attributes['scope'];
+        $manifest = self::$attributes;
+        $manifest['icons'] = $this->get_icons();
 
         return $manifest;
     }
