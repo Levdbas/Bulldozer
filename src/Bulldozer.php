@@ -21,7 +21,7 @@ class Bulldozer
     /**
      * Current Bulldozer version.
      */
-    public const VERSION = '5.3.1';
+    public const VERSION = '5.4.0';
 
     /**
      * Active theme object.
@@ -65,6 +65,11 @@ class Bulldozer
         Config::define('WP_MAX_MEMORY_LIMIT', '512M');
         Config::define('BE_MEDIA_FROM_PRODUCTION_URL', env('BE_MEDIA_FROM_PRODUCTION_URL') ? env('BE_MEDIA_FROM_PRODUCTION_URL') : false);
         Config::define('CONTENT_LOCK', env('CONTENT_LOCK') ? env('CONTENT_LOCK') : false);
+
+        if (WP_ENV == 'development') {
+            Config::define('WP_ENVIRONMENT_TYPE', 'development');
+            Config::define('WP_DEVELOPMENT_MODE', 'theme');
+        }
     }
 
     /**
