@@ -314,13 +314,36 @@ abstract class AbstractBlockRenderer
         return $this->registered_fields;
     }
 
+
+    /**
+     * A way to deprecate a block.
+     * 
+     * @api
+     * 
+     * @example Use this field in your block.json file to deprecate a block:
+     * ```json
+     * ...
+     * "supports": {
+     *    "mode": false,
+     *    "align": false,
+     *    "deprecated": {
+     *        "use": "acf/text-and-image",
+     *        "since": "23-05-2025"
+     *    }
+     * }
+     * ```
+     *  
+     * 
+     * 
+     * @return void
+     */
     protected function maybe_add_deprecation_notice()
     {
-        if (!isset($this->attributes['deprecated'])) {
+        if (!isset($this->attributes['supports']['deprecated'])) {
             return false;
         }
 
-        $deprecation = $this->attributes['deprecated'];
+        $deprecation = $this->attributes['supports']['deprecated'];
         $message = sprintf(__('This block is deprecated since %1$s. Please replace this block in favor of %2$s.', 'bulldozer'), $deprecation['since'], $deprecation['use']);
         $this->add_notification($message, 'warning');
 
