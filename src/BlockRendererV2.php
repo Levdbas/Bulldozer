@@ -88,7 +88,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
         // get dir from file path
         $this->block_location = plugin_dir_path($class_info->getFileName());
-        $json_file            = $this->block_location . '/block.json';
+        $json_file            = $this->block_location . 'block.json';
 
         $block = register_block_type($json_file);
 
