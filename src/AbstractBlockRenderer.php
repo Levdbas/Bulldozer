@@ -651,7 +651,7 @@ abstract class AbstractBlockRenderer
 
     /**
      * get ACF field value.
-     * 
+     * @api
      * @since 5.2.0
      * @param string $field_name the field name
      * @return mixed $field the field value
@@ -659,5 +659,17 @@ abstract class AbstractBlockRenderer
     public function get_field(string $field_name)
     {
         return $this->fields[$field_name] ?? null;
+    }
+
+    /**
+     * Get the block alignment.
+     * 
+     * @since 5.5.1
+     * @api
+     * @return string
+     */
+    public function get_block_alignment(): string
+    {
+        return $this->attributes['align'] ?? '';
     }
 }
