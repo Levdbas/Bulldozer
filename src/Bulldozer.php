@@ -82,7 +82,7 @@ class Bulldozer
     public function matches_required_version(string $required_version, string $operator = '>=')
     {
         if (false == version_compare(self::VERSION, $required_version, $operator)) {
-            $message = sprintf(__('Your theme %1$s requires at least Bulldozer %2$s. You have %3$s installed. Please update/downgrade by setting the version number like this in your composer file: highground/bulldozer": "^%2$s"', 'bulldozer'), self::$theme, $required_version, self::VERSION);
+            $message = sprintf(__('Your theme %1$s requires at least Bulldozer %2$s. You have %3$s installed. Please update by setting the version number like this in your composer file: <code>highground/bulldozer": "^%2$s"</code>', 'bulldozer'), self::$theme, $required_version, self::VERSION);
             add_action(
                 'after_setup_theme',
                 function () use ($message) {
