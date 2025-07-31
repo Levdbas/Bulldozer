@@ -31,12 +31,23 @@ class Example_Block extends BlockRenderer
 	 * With this function we can add for example a query or
 	 * other custom content.
 	 *
-	 * @param array $context      Holds the block data.
-	 * @return array  $context    Returns the array with the extra content that merges into the original block context.
+	 * @param array $context Holds the block data.
+	 * @return array Returns the array with the extra content that merges into the original block context.
 	 */
-	public function block_context($context): array
+	public function block_context(array $context): array
 	{
+		// Example: Add a modifier class based on a field
+		if ($this->block_context->get_field('is_featured')) {
+			$this->block_context->add_modifier_class('featured');
+		}
 
+		// Example: Add CSS variable based on field
+		$this->block_context->add_css_var('background_color', 'bg-color');
+
+		// Example: Add custom class based on alignment
+		if ($this->block_context->get_block_alignment() === 'wide') {
+			$this->block_context->add_class('custom-wide-layout');
+		}
 		$args = [
 			// 'InnerBlocks' => self::create_inner_blocks(allowed_blocks: ['core/heading', 'core/paragraph']),
 		];

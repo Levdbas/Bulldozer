@@ -47,11 +47,18 @@ abstract class AbstractBlockRenderer
     protected $context;
 
     /**
+     * Temporary BlockContext instance available during block_context method execution.
+     *
+     * @var BlockContext|null
+     */
+    protected $block_context;
+
+    /**
      * The rendered block attributes. Only visible on the frontend.
      *
      * @var \WP_Block
      */
-    protected $wp_block;
+    public $wp_block;
 
     /**
      * Block title.
@@ -63,7 +70,7 @@ abstract class AbstractBlockRenderer
      *
      * @var array
      */
-    protected $attributes;
+    public $attributes;
 
     /**
      * Block content.
@@ -75,7 +82,7 @@ abstract class AbstractBlockRenderer
     /**
      * Whether the block is showed on the frontend or backend. Backend returns true.
      */
-    protected bool $is_preview;
+    public bool $is_preview;
 
     /**
      * Current block id.
@@ -87,29 +94,29 @@ abstract class AbstractBlockRenderer
      *
      * @var int
      */
-    protected $post_id;
+    public $post_id;
 
     /**
      * Block name with acf/ prefix.
      */
-    protected string $name;
+    public string $name;
 
     /**
      * Block slug without acf/prefix.
      */
-    protected string $slug;
+    public string $slug;
 
     /**
      * Field data retrieved by get_fields();.
      *
      * @var array
      */
-    protected $fields = [];
+    public $fields = [];
 
     /**
      * Array of classes that are appended to the wrapper element.
      */
-    protected array $classes = [];
+    public array $classes = [];
 
     /**
      * Additional classes that should be added to the block only in the backend.
@@ -129,7 +136,7 @@ abstract class AbstractBlockRenderer
      *
      * @var bool
      */
-    protected bool $block_disabled = false;
+    public bool $block_disabled = false;
 
     /**
      * Compiled css that gets injected.
@@ -159,10 +166,11 @@ abstract class AbstractBlockRenderer
      * Add extra block context.
      *
      * Use this function to pass the results of a query, add an asset or add modifier classes.
+     * The BlockContext instance is available as a global variable within the method scope.
      *
-     * @param array $context the context that is passed to the twig partial
+     * @param array $context The context that is passed to the twig partial
      */
-    abstract public function block_context($context): array;
+    abstract public function block_context(array $context): array;
 
     /**
      * Handles the block registration on init.
@@ -182,27 +190,6 @@ abstract class AbstractBlockRenderer
     public function register_block_styles($name)
     {
         return false;
-    }
-
-    /**
-     * Add css variable with the value based on an acf field.
-     * 
-     * @api
-     * @since 1.8.0
-     *
-     * @param string       $field_name   acf field name
-     * @param string       $css_var_name the css variable without the -- prefix
-     * @param false|string $selector     the css selector where the css variable should be applied
-     */
-    public function add_css_var(string $field_name, string $css_var_name, false|string $selector = false)
-    {
-        if (!empty($this->fields[$field_name])) {
-            $this->css_variables[] = [
-                'variable' => '--' . $css_var_name,
-                'value' => $this->fields[$field_name],
-                'selector' => $selector,
-            ];
-        }
     }
 
     /**
@@ -318,7 +305,6 @@ abstract class AbstractBlockRenderer
     /**
      * A way to deprecate a block.
      * 
-     * @api
      * 
      * @example Use this field in your block.json file to deprecate a block:
      * ```json
@@ -616,60 +602,5 @@ abstract class AbstractBlockRenderer
         }
 
         return '<style>' . $this->compiled_css . '</style>';
-    }
-
-    /**
-     * Add class to block classes.
-     * 
-     * When an array is passed, it will merge the array with the existing classes.
-     * 
-     * @api
-     * @since 5.2.0
-     * @param string|array $class the class or array of classes
-     * @return void
-     */
-    public function add_class(string|array $class)
-    {
-        if (is_array($class)) {
-            $this->classes = array_merge($this->classes, $class);
-            return;
-        }
-        array_push($this->classes, $class);
-    }
-
-
-    /**
-     * Add modifier class to block classes.
-     * 
-     * @api
-     * @param string $modifier the part after the -- from the BEM principle
-     */
-    public function add_modifier_class(string $modifier)
-    {
-        $this->add_class($this->slug . '--' . $modifier);
-    }
-
-    /**
-     * get ACF field value.
-     * @api
-     * @since 5.2.0
-     * @param string $field_name the field name
-     * @return mixed $field the field value
-     */
-    public function get_field(string $field_name)
-    {
-        return $this->fields[$field_name] ?? null;
-    }
-
-    /**
-     * Get the block alignment.
-     * 
-     * @since 5.5.1
-     * @api
-     * @return string
-     */
-    public function get_block_alignment(): string
-    {
-        return $this->attributes['align'] ?? '';
     }
 }

@@ -259,7 +259,21 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         $this->maybe_add_deprecation_notice();
         $this->maybe_disable_block();
 
+        // Create BlockContext instance with the entire block renderer
+        $block_context = new BlockContext($this);
+
+        // Make BlockContext available as a temporary property for the block_context method
+        $this->block_context = $block_context;
+
+        // Call the block_context method with only the context
         $this->context = $this->block_context($this->context);
+
+        // Clean up temporary property
+        unset($this->block_context);
+
+        // Apply CSS variables back to the block renderer
+        $this->apply_css_variables($block_context);
+
         $this->add_block_classes();
         $this->generate_css_variables();
 
@@ -317,5 +331,21 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         }
 
         return false;
+    }
+
+    /**
+     * Apply CSS variables from BlockContext back to the block renderer.
+     * 
+     * This method transfers the CSS variables from BlockContext back to the block renderer's css_variables property.
+     * 
+     * @param \HighGround\Bulldozer\BlockContext $block_context The block context instance
+     * @internal
+     */
+    private function apply_css_variables(BlockContext $block_context): void
+    {
+        $this->css_variables = array_merge(
+            $this->css_variables ?? [],
+            $block_context->get_css_variables()
+        );
     }
 }
