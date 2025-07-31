@@ -10,3 +10,4 @@ phpcs.xml export-ignore
 CHANGELOG.md export-ignore
 composer.lock export-ignore
 workspace.code-workspace export-ignore
+example/ export-ignore
