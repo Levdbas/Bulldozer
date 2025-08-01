@@ -37,6 +37,7 @@ class Example_Block extends BlockRenderer
 	public function block_context($context): array
 	{
 
+
 		$args = [
 			// 'InnerBlocks' => self::create_inner_blocks(allowed_blocks: ['core/heading', 'core/paragraph']),
 		];

@@ -9,6 +9,10 @@ namespace HighGround\Bulldozer;
 require_once 'helpers.php';
 
 use Timber\Timber;
+use HighGround\Bulldozer\Interfaces\BlockRequirementsInterface;
+use HighGround\Bulldozer\Interfaces\BlockVariationsInterface;
+use HighGround\Bulldozer\Interfaces\CustomIconInterface;
+use HighGround\Bulldozer\Interfaces\HideFromInserterInterface;
 
 /**
  * V2 version of the block renderer.
@@ -47,8 +51,11 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      */
     final public function __construct()
     {
-        if (false == $this->register_requirements()) {
-            return;
+        // Check requirements using interface if implemented
+        if ($this instanceof BlockRequirementsInterface) {
+            if (false == $this->register_requirements()) {
+                return;
+            }
         }
 
         add_action('init', [$this, 'register_block']);
@@ -140,9 +147,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
         $metadata['acf']['renderCallback'] = [$this, 'compile'];
 
-        $variations = $this->add_block_variations();
-        $icon       = $this->add_icon();
-        $hide       = $this->hide_from_inserter();
+        // Use interface methods if implemented
+        $variations = $this instanceof BlockVariationsInterface ? $this->add_block_variations() : [];
+        $icon       = $this instanceof CustomIconInterface ? $this->add_icon() : false;
+        $hide       = $this instanceof HideFromInserterInterface ? $this->hide_from_inserter() : false;
 
         if (false !== $variations) {
             $metadata['variations'] = $variations;
