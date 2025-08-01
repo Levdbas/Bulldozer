@@ -112,11 +112,6 @@ abstract class AbstractBlockRenderer
     protected array $classes = [];
 
     /**
-     * Additional classes that should be added to the block only in the backend.
-     */
-    protected array $backend_classes = [];
-
-    /**
      * Array of notifications.
      * Notifications are added by compose_notification().
      *
@@ -172,19 +167,6 @@ abstract class AbstractBlockRenderer
     abstract public function register_block(): void;
 
     /**
-     * Empty function that can be overwritten by the blocks to register block styles.
-     * 
-     * @api
-     * @param string $name the block name
-     *
-     * @return bool|void
-     */
-    public function register_block_styles($name)
-    {
-        return false;
-    }
-
-    /**
      * Add css variable with the value based on an acf field.
      * 
      * @api
@@ -207,20 +189,8 @@ abstract class AbstractBlockRenderer
 
     /**
      * Compose a notification to be shown in the backend.
-     *
-     * @deprecated 1.8.0       Please use add_notification() instead.
-     *
-     * @param string $message the message, translatable
-     * @param string $type    type of notification, can be notice, warning or error
-     */
-    public function compose_notification(string $message, string $type)
-    {
-        $this->add_notification($message, $type);
-    }
-
-    /**
-     * Compose a notification to be shown in the backend.
-     *
+     * 
+     * @api
      * @param string $message the message, translatable
      * @param string $type    type of notification, can be notice, warning or error
      */
@@ -245,7 +215,8 @@ abstract class AbstractBlockRenderer
 
     /**
      * Generate inner blocks appender.
-     *
+     * 
+     * @api
      * @param array|false  $allowed_blocks array with allowed blocks or false
      * @param array|false  $template       array with template
      * @param false|string $classes        string with classes
@@ -317,8 +288,6 @@ abstract class AbstractBlockRenderer
 
     /**
      * A way to deprecate a block.
-     * 
-     * @api
      * 
      * @example Use this field in your block.json file to deprecate a block:
      * ```json
@@ -592,10 +561,6 @@ abstract class AbstractBlockRenderer
                 $classes = explode(' ', $class);
                 $this->classes = array_merge($this->classes, $classes);
             }
-        }
-
-        if ($this->is_preview) {
-            $this->classes = array_merge($this->classes, $this->backend_classes);
         }
 
         // add $this->slug  as class at the start
