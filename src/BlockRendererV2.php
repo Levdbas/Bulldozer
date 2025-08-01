@@ -46,6 +46,14 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      */
     private string $block_location = '';
 
+
+    /*
+     * Boolean whether block is disabled or not.
+     *
+     * @var bool
+     */
+    private bool $block_disabled = false;
+
     /**
      * Passes the register method to acf.
      */

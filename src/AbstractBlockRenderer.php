@@ -35,11 +35,6 @@ abstract class AbstractBlockRenderer
     public FieldsBuilder $registered_fields;
 
     /**
-     * Tracks children blocks.
-     */
-    public array $children = [];
-
-    /**
      * Going to hold the block context.
      *
      * @var array
@@ -118,13 +113,6 @@ abstract class AbstractBlockRenderer
      * @method compose_notification()
      */
     protected static array $notifications = [];
-
-    /*
-     * Boolean whether block is disabled or not.
-     *
-     * @var bool
-     */
-    protected bool $block_disabled = false;
 
     /**
      * Compiled css that gets injected.
