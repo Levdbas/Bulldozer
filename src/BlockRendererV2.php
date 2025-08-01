@@ -99,8 +99,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         }
         $this->name = $block->name;
         $this->slug = str_replace('acf/', '', $this->name);
-
-        $this->register_block_styles($this->name);
         $this->setup_fields_group($this->name, $this->slug);
         $this->add_hidden_fields($block);
         $this->add_fields();

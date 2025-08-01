@@ -41,12 +41,11 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
     public function register_block(): void
     {
         $block = $this->block_register();
-        $name = 'acf/'.$block['name'];
+        $name = 'acf/' . $block['name'];
         $slug = $block['name'];
         $block['render_callback'] = [$this, 'compile'];
 
         acf_register_block_type($block);
-        $this->register_block_styles($name);
 
         $this->setup_fields_group($name, $slug);
         $this->add_hidden_fields($block);
