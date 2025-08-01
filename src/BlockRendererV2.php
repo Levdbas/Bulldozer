@@ -190,52 +190,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
     }
 
     /**
-     * Whether the block meets the requirements and should be registered.
-     * This method can be overwritten by the block to add requirements
-     * on a per block basis.
-     *
-     * @api
-     */
-    public function register_requirements(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Register the block variants.
-     *
-     * @see https://www.advancedcustomfields.com/blog/acf-5-9-introducing-block-variations/
-     *
-     * @api
-     *
-     * @return array|false
-     */
-    public function add_block_variations()
-    {
-        return false;
-    }
-
-    /**
-     * Empty function that can be overwritten by the blocks to add a custom icon.
-     *
-     * @api
-     */
-    public function add_icon(): false | string
-    {
-        return false;
-    }
-
-    /**
-     * Empty function that can be overwritten by the blocks to add custom logic to hide the block from the inserter.
-     *
-     * @api
-     */
-    public function hide_from_inserter(): bool
-    {
-        return false;
-    }
-
-    /**
      * Compile the block.
      *
      * @param array     $attributes the block attributes
