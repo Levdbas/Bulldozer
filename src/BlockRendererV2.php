@@ -13,6 +13,7 @@ use HighGround\Bulldozer\Interfaces\BlockRequirementsInterface;
 use HighGround\Bulldozer\Interfaces\BlockVariationsInterface;
 use HighGround\Bulldozer\Interfaces\CustomIconInterface;
 use HighGround\Bulldozer\Interfaces\HideFromInserterInterface;
+use HighGround\Bulldozer\Traits\BlockRenderedHelpers;
 
 /**
  * V2 version of the block renderer.
@@ -31,6 +32,7 @@ use HighGround\Bulldozer\Interfaces\HideFromInserterInterface;
  */
 abstract class BlockRendererV2 extends AbstractBlockRenderer
 {
+    use BlockRenderedHelpers;
     public const BLOCK_VERSION = 2;
 
     public const NAME = null;
@@ -66,10 +68,18 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
             }
         }
 
-        add_action('init', [$this, 'register_block']);
-        add_filter('block_type_metadata', [$this, 'change_metadata']);
-        add_filter('block_type_metadata_settings', [$this, 'block_type_metadata_settings'], 10, 2);
-        add_action('enqueue_block_assets', [$this, 'alter_enqueue_block_assets']);
+        add_action('init', function () {
+            $this->register_block();
+        });
+        add_filter('block_type_metadata', function ($metadata) {
+            return $this->change_metadata($metadata);
+        });
+        add_filter('block_type_metadata_settings', function ($settings, $metadata) {
+            return $this->block_type_metadata_settings($settings, $metadata);
+        }, 10, 2);
+        add_action('enqueue_block_assets', function () {
+            $this->alter_enqueue_block_assets();
+        });
     }
 
     /**
@@ -130,7 +140,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      *
      * @internal description
      */
-    public function alter_enqueue_block_assets()
+    private function alter_enqueue_block_assets()
     {
         $name = $this->name;
         $name = str_replace('/', '-', $this->name);
@@ -147,7 +157,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      *
      * @param array $metadata the block metadata
      */
-    public function change_metadata($metadata)
+    private function change_metadata($metadata)
     {
         if ('acf/' . static::NAME !== $metadata['name']) {
             return $metadata;
@@ -186,7 +196,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      *
      * @return array
      */
-    public function block_type_metadata_settings($settings, $metadata)
+    private function block_type_metadata_settings($settings, $metadata)
     {
         if ('acf/' . static::NAME !== $metadata['name']) {
             return $settings;
