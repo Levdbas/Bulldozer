@@ -9,11 +9,11 @@ namespace HighGround\Bulldozer;
 require_once 'helpers.php';
 
 use Timber\Timber;
-use HighGround\Bulldozer\Interfaces\BlockRequirementsInterface;
+use StoutLogic\AcfBuilder\FieldsBuilder;
 use HighGround\Bulldozer\Interfaces\BlockVariationsInterface;
-use HighGround\Bulldozer\Interfaces\CustomIconInterface;
-use HighGround\Bulldozer\Interfaces\HideFromInserterInterface;
+use HighGround\Bulldozer\Interfaces\ExtendedSetupInterface;
 use HighGround\Bulldozer\Traits\BlockRenderedHelpers;
+use HighGround\Bulldozer\Traits\ContextBuilder;
 
 /**
  * V2 version of the block renderer.
@@ -30,31 +30,101 @@ use HighGround\Bulldozer\Traits\BlockRenderedHelpers;
  *
  * @since 3.0.0
  */
-abstract class BlockRendererV2 extends AbstractBlockRenderer
+abstract class BlockRendererV2
 {
     use BlockRenderedHelpers;
+    use ContextBuilder;
+
+    /**
+     * Fields registered to the block using AcfBuilder.
+     */
+    public FieldsBuilder $registered_fields;
+
+    /**
+     * Compiled css that gets injected.
+     */
+    public string $compiled_css = '';
+
+    /**
+     * The rendered block attributes. Only visible on the frontend.
+     *
+     * @var \WP_Block
+     */
+    protected $wp_block;
+
+    /**
+     * Block title.
+     */
+    protected static string $title;
+
+    /**
+     * Block attributes. Visible on both front- and backend.
+     *
+     * @var array
+     */
+    protected $attributes;
+
+    /**
+     * Current post id where the block belongs to.
+     *
+     * @var int
+     */
+    protected $post_id;
+
+    /**
+     * Block name with acf/ prefix.
+     */
+    protected string $name;
+
+    /**
+     * Block slug without acf/prefix.
+     */
+    protected string $slug;
+
+    /**
+     * Field data retrieved by get_fields();.
+     *
+     * @var array
+     */
+    protected $fields = [];
+
+    /**
+     * Array of notifications.
+     * Notifications are added by compose_notification().
+     *
+     * @method compose_notification()
+     */
+    protected static array $notifications = [];
+
     public const BLOCK_VERSION = 2;
 
     public const NAME = null;
-
-    /**
-     * Whether the block should always have a block id or not.
-     * Normally the block id is only added when the block has an anchor.
-     */
-    protected bool $always_add_block_id = false;
 
     /**
      * Location of the block.
      */
     private string $block_location = '';
 
-
-    /*
-     * Boolean whether block is disabled or not.
+    /**
+     * Register fields to the block.
      *
-     * @var bool
+     * The array is passed to the acf_register_block_type() function that registers the block with ACF.
+     *
+     * @see https://github.com/StoutLogic/acf-builder
+     *
+     * @return FieldsBuilder
      */
-    private bool $block_disabled = false;
+    abstract public function add_fields(): object;
+
+    /**
+     * Add extra block context.
+     *
+     * Use this function to pass the results of a query, add an asset or add modifier classes.
+     *
+     * @param array $context the context that is passed to the twig partial
+     */
+    abstract public function block_context($context): array;
+
 
     /**
      * Passes the register method to acf.
@@ -62,8 +132,8 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
     final public function __construct()
     {
         // Check requirements using interface if implemented
-        if ($this instanceof BlockRequirementsInterface) {
-            if (false == $this->register_requirements()) {
+        if ($this instanceof ExtendedSetupInterface) {
+            if (false == $this->additional_settings()['meets_requirements']) {
                 return;
             }
         }
@@ -71,12 +141,15 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         add_action('init', function () {
             $this->register_block();
         });
+
         add_filter('block_type_metadata', function ($metadata) {
             return $this->change_metadata($metadata);
         });
+
         add_filter('block_type_metadata_settings', function ($settings, $metadata) {
             return $this->block_type_metadata_settings($settings, $metadata);
         }, 10, 2);
+
         add_action('enqueue_block_assets', function () {
             $this->alter_enqueue_block_assets();
         });
@@ -93,7 +166,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      *
      * @internal
      */
-    public function register_block(): void
+    private function register_block(): void
     {
         if (null === static::NAME) {
             throw new \Exception(esc_html('CONST::NAME not set for ' . get_class($this)));
@@ -125,7 +198,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         $this->name = $block->name;
         $this->slug = str_replace('acf/', '', $this->name);
         $this->setup_fields_group($this->name, $this->slug);
-        $this->add_hidden_fields($block);
+        $this->maybe_add_disable_block_field($block);
         $this->add_fields();
 
         $this->registered_fields = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/fields', $this->registered_fields);
@@ -167,8 +240,8 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 
         // Use interface methods if implemented
         $variations = $this instanceof BlockVariationsInterface ? $this->add_block_variations() : [];
-        $icon       = $this instanceof CustomIconInterface ? $this->add_icon() : false;
-        $hide       = $this instanceof HideFromInserterInterface ? $this->hide_from_inserter() : false;
+        $icon       = $this instanceof ExtendedSetupInterface ? $this->additional_settings()['custom_icon'] : false;
+        $hide       = $this instanceof ExtendedSetupInterface ? $this->additional_settings()['hide_from_inserter'] : false;
 
         if (false !== $variations) {
             $metadata['variations'] = $variations;
@@ -207,6 +280,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         return $settings;
     }
 
+
     /**
      * Compile the block.
      *
@@ -218,7 +292,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      */
     public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
     {
-        $this->block_disabled = false;
         $this->fields         = [];
         $this->context        = [];
         self::$notifications  = [];
@@ -235,15 +308,13 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         $this->block_id       = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
 
         $this->maybe_add_deprecation_notice();
-        $this->maybe_disable_block();
-
         $this->context = $this->block_context($this->context);
         $this->add_block_classes();
         $this->generate_css_variables();
 
         $args = [
             'block_id'      => $this->maybe_add_block_id(),
-            'is_disabled'   => $this->block_disabled,
+            'is_disabled'   => $this->maybe_disable_block(),
             'parent'        => isset($this->context['parent']) ? $this->context['parent'] : $this->slug,
             'slug'          => $this->slug,
             'attributes'    => $this->attributes,
@@ -254,7 +325,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
             'inline_css'    => $this->generate_css(),
             'notifications' => self::$notifications,
             'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
-            //'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
         ];
 
         $this->context = array_merge($this->context, $args);
@@ -290,10 +360,49 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
             return $this->attributes['anchor'];
         }
 
-        if (true == $this->always_add_block_id) {
+        if ($this instanceof ExtendedSetupInterface && true == $this->additional_settings()['always_add_block_id']) {
             return $this->attributes['id'];
         }
 
+        if (property_exists($this, 'always_add_block_id') && true === $this->always_add_block_id) {
+            wp_trigger_error('', sprintf('Setting $always_add_block_id in %s is deprecated, please implement the ExtendedSetupInterface', static::class), E_USER_DEPRECATED);
+            return $this->attributes['id'];
+        }
+
+
         return false;
+    }
+
+    public function &__get($name)
+    {
+
+        if ($name == 'is_preview' && method_exists($this, $name)) {
+            wp_trigger_error('', sprintf('Accessing property $this->%s directly is deprecated, please use $this->is_preview() instead.', $name, static::class), E_USER_DEPRECATED);
+            return $this->{$name}();
+        }
+
+        if ($name == 'block_id') {
+            wp_trigger_error('', sprintf('Accessing property $this->%s directly is deprecated, please use $this->get_block_id() instead.', $name, static::class), E_USER_DEPRECATED);
+            $block_id = $this->get_block_id();
+            return $block_id;
+        }
+
+        if (property_exists($this, $name)) {
+            wp_trigger_error('', sprintf('Accessing property %s directly is deprecated', $name, static::class), E_USER_DEPRECATED);
+            return $this->{$name};
+        }
+
+        throw new \Exception(sprintf('Property or method %s does not exist in %s', $name, static::class));
+    }
+
+    public function __set($name, $value)
+    {
+        wp_trigger_error('', sprintf('Setting property %s directly is deprecated', $name, static::class), E_USER_DEPRECATED);
+        if (property_exists($this, $name)) {
+            $this->{$name} = $value;
+            return;
+        }
+
+        throw new \Exception(sprintf('Property or method %s does not exist in %s', $name, static::class));
     }
 }
