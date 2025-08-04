@@ -8,6 +8,7 @@ namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
 
+use Exception;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 /**
@@ -626,6 +627,28 @@ abstract class AbstractBlockRenderer
         return $this->fields[$field_name] ?? null;
     }
 
+    public function get_attribute(string $attribute_name)
+    {
+        return $this->attributes[$attribute_name] ?? null;
+    }
+
+    public function is_preview(): bool
+    {
+        return $this->is_preview;
+    }
+
+    /**
+     * Get the block id.
+     * 
+     * @since 5.5.1
+     * @api
+     * @return string
+     */
+    public function get_block_id(): string
+    {
+        return $this->attributes['id'] ?? '';
+    }
+
     /**
      * Get the block alignment.
      * 
@@ -636,5 +659,36 @@ abstract class AbstractBlockRenderer
     public function get_block_alignment(): string
     {
         return $this->attributes['align'] ?? '';
+    }
+
+    public function is_full_width(): bool
+    {
+        return 'full' === $this->get_block_alignment();
+    }
+
+    public function is_wide_width(): bool
+    {
+        return 'wide' === $this->get_block_alignment();
+    }
+
+
+    public function set_disabled()
+    {
+        $this->block_disabled = true;
+    }
+
+    public function add_css(string $css): string
+    {
+        $this->compiled_css .= $css;
+        return $this->compiled_css;
+    }
+
+    public function set_attribute(string $attribute_name, mixed $value): void
+    {
+        if (!isset($this->attributes[$attribute_name])) {
+            throw new Exception(sprintf('Attribute %s does not exist in the block attributes.', $attribute_name));
+        }
+
+        $this->attributes[$attribute_name] = $value;
     }
 }
