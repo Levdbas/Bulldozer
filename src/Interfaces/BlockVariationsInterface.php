@@ -8,9 +8,9 @@ namespace HighGround\Bulldozer\Interfaces;
 
 /**
  * Interface BlockVariationsInterface
- * 
+ *
  * Implement this interface when your block needs to define variations.
- * 
+ *
  * @example
  * ```php
  * class MyBlock extends BlockRendererV2 implements BlockVariationsInterface
@@ -27,15 +27,15 @@ namespace HighGround\Bulldozer\Interfaces;
  *     }
  * }
  * ```
- * 
+ *
  * @see https://www.advancedcustomfields.com/blog/acf-5-9-introducing-block-variations/
  */
 interface BlockVariationsInterface
 {
-    /**
-     * Register the block variants.
-     * 
-     * @return array
-     */
-    public function add_block_variations(): array;
+	/**
+	 * Register the block variants.
+	 *
+	 * @return array
+	 */
+	public function add_block_variations(): array;
 }
