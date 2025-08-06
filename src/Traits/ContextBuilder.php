@@ -6,6 +6,8 @@
 
 namespace HighGround\Bulldozer\Traits;
 
+use Exception;
+
 trait ContextBuilder
 {
 
@@ -57,7 +59,7 @@ trait ContextBuilder
     * @param string $message the message, translatable
     * @param string $type    type of notification, can be notice, warning or error
     */
-   public static function add_notification(string $message, string $type)
+   public function add_notification(string $message, string $type)
    {
       $types = [
          'notice' => __('Notice', 'bulldozer'),
@@ -66,14 +68,191 @@ trait ContextBuilder
       ];
 
       array_push(
-         self::$notifications,
+         $this->notifications,
          [
-            'title' => self::$title . ' ' . __('block', 'bulldozer'),
+            'title' => $this->title . ' ' . __('block', 'bulldozer'),
             'message' => $message,
             'type' => $type,
             'type_name' => $types[$type],
          ]
       );
+   }
+
+   public function add_css(string $css): string
+   {
+
+      $this->compiled_css .= $css;
+
+      return $this->compiled_css;
+   }
+
+   /**
+    * Add modifier class to block classes.
+    * 
+    * @api
+    * @param string $modifier the part after the -- from the BEM principle
+    */
+   public function add_modifier_class(string $modifier)
+   {
+      $this->add_class($this->slug . '--' . $modifier);
+   }
+
+   /**
+    * get ACF field value.
+    * @api
+    * @since 5.2.0
+    * @param string $field_name the field name
+    * @return mixed $field the field value
+    */
+   public function get_field(string $field_name)
+   {
+      return $this->fields[$field_name] ?? null;
+   }
+
+   /**
+    * Get the block id.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return string
+    */
+   public function get_block_id(): string
+   {
+      return $this->block_id ?? '';
+   }
+
+   /**
+    * Get the post id.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return int
+    */
+   public function get_post_id(): int
+   {
+      return (int) $this->post_id ?? 0;
+   }
+
+   /**
+    * Get the block name.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return string
+    */
+   public function get_block_name(): string
+   {
+      return $this->name ?? '';
+   }
+
+   /**
+    * Get the block slug.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return string
+    */
+   public function get_wp_block(): \WP_Block
+   {
+      if (! $this->wp_block instanceof \WP_Block) {
+         throw new Exception('The wp_block property is not set or is not an instance of WP_Block.');
+      }
+
+      return $this->wp_block;
+   }
+
+   /**
+    * Get the block attribute.
+    * 
+    * @api
+    * @since 6.0.0
+    * @param string $attribute_name the attribute name
+    * @return mixed|null $value the attribute value or null if not set
+    */
+   public function get_attribute(string $attribute_name)
+   {
+      return $this->attributes[$attribute_name] ?? null;
+   }
+
+   /**
+    * Set the block as disabled.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return void
+    */
+   public function set_disabled()
+   {
+
+      $this->block_disabled = true;
+   }
+
+   /**
+    * Set a block attribute.
+    * 
+    * @api
+    * @since 6.0.0
+    * @param string $attribute_name the attribute name
+    * @param mixed  $value          the value to set
+    * @throws \Exception if the attribute does not exist
+    */
+   public function set_attribute(string $attribute_name, mixed $value): void
+   {
+
+      if (! isset($this->attributes[$attribute_name])) {
+         throw new \Exception(sprintf('Attribute %s does not exist in the block attributes.', $attribute_name));
+      }
+
+      $this->attributes[$attribute_name] = $value;
+   }
+
+   /**
+    * Check if the block is shown in the backend.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return bool true if the block is shown in the backend, false otherwise
+    */
+   public function is_preview(): bool
+   {
+      return $this->is_preview ?? false;
+   }
+
+   /**
+    * Get the block alignment.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return string
+    */
+   public function get_block_alignment(): string
+   {
+      return $this->attributes['align'] ?? '';
+   }
+
+   /**
+    * Check if the block is full width.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return bool true if the block is full width, false otherwise
+    */
+   public function is_full_width(): bool
+   {
+
+      return 'full' === $this->get_block_alignment();
+   }
+
+   /**
+    * Check if the block is wide width.
+    * 
+    * @since 6.0.0
+    * @api
+    * @return bool true if the block is wide width, false otherwise
+    */
+   public function is_wide_width(): bool
+   {
+      return 'wide' === $this->get_block_alignment();
    }
 
    /**
@@ -124,58 +303,5 @@ trait ContextBuilder
       $inner_blocks .= ' />';
 
       return $inner_blocks;
-   }
-
-   /**
-    * Add modifier class to block classes.
-    * 
-    * @api
-    * @param string $modifier the part after the -- from the BEM principle
-    */
-   public function add_modifier_class(string $modifier)
-   {
-      $this->add_class($this->slug . '--' . $modifier);
-   }
-
-   /**
-    * get ACF field value.
-    * @api
-    * @since 5.2.0
-    * @param string $field_name the field name
-    * @return mixed $field the field value
-    */
-   public function get_field(string $field_name)
-   {
-      return $this->fields[$field_name] ?? null;
-   }
-
-
-   /**
-    * Get the block id.
-    * 
-    * @since 6.0.0
-    * @api
-    * @return string
-    */
-   public function get_block_id(): string
-   {
-      return $this->block_id ?? '';
-   }
-
-   /**
-    * Get the block alignment.
-    * 
-    * @since 5.5.1
-    * @api
-    * @return string
-    */
-   public function get_block_alignment(): string
-   {
-      return $this->attributes['align'] ?? '';
-   }
-
-   public function is_preview(): bool
-   {
-      return $this->is_preview ?? false;
    }
 }
