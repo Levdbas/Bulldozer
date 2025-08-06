@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * ACF Block Type Registry.
+ *
+ * @package HighGround\Bulldozer
+ */
+
 namespace HighGround\Bulldozer;
 
 use HighGround\Bulldozer\Interfaces\BlockVariationsInterface;
@@ -7,13 +13,25 @@ use HighGround\Bulldozer\Interfaces\ExtendedSetupInterface;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * Class AcfBlockTypeRegistry
+ *
+ * Handles registration and management of ACF block types.
+ */
 class AcfBlockTypeRegistry
 {
 	/**
 	 * Array of registered ACF block types.
+	 *
+	 * @var array
 	 */
 	public static array $registered_acf_blocks = [];
 
+	/**
+	 * Initialize the block type registry.
+	 *
+	 * @return void
+	 */
 	public static function init()
 	{
 		add_action(
@@ -41,8 +59,7 @@ class AcfBlockTypeRegistry
 	/**
 	 * Register an ACF block type.
 	 *
-	 * @param string $block_name The name of the block
-	 * @param object $block_renderer The block renderer instance
+	 * @param string $namespace The namespace for the blocks.
 	 */
 	public static function register_acf_blocks($namespace)
 	{
@@ -70,6 +87,14 @@ class AcfBlockTypeRegistry
 		);
 	}
 
+	/**
+	 * Register a single ACF block.
+	 *
+	 * @param string $namespace  The namespace for the block.
+	 * @param string $block_name The name of the block.
+	 *
+	 * @return void
+	 */
 	public static function register_acf_block(string $namespace, string $block_name)
 	{
 		if (! $block_name) {
@@ -149,8 +174,8 @@ class AcfBlockTypeRegistry
 	 * This method was introduced to add the version to the block settings.
 	 * If we had a major update to the block we can use this to update the version and thus invalidate files.
 	 *
-	 * @param array $settings the block settings
-	 * @param mixed $metadata
+	 * @param array $settings The block settings.
+	 * @param mixed $metadata Block metadata.
 	 *
 	 * @return array
 	 */
@@ -169,7 +194,7 @@ class AcfBlockTypeRegistry
 	/**
 	 * Update the block metadata.
 	 *
-	 * @param array $metadata the block metadata
+	 * @param array $metadata The block metadata.
 	 */
 	private static function change_metadata($metadata)
 	{
@@ -208,8 +233,10 @@ class AcfBlockTypeRegistry
 	 *
 	 * We create the group & set the location.
 	 *
-	 * @param string $name the block name
-	 * @param string $slug the block slug
+	 * @param object $block The block instance.
+	 * @param string $title The block title.
+	 * @param string $name  The block name.
+	 * @param string $slug  The block slug.
 	 *
 	 * @return FieldsBuilder
 	 */
@@ -231,7 +258,11 @@ class AcfBlockTypeRegistry
 	/**
 	 * Add blockrenderer hidden fields.
 	 *
-	 * @param false|\WP_Block_Type $block the block object
+	 * @param FieldsBuilder        $fields         The fields builder instance.
+	 * @param \WP_Block_Type|false $block          The block object.
+	 * @param object               $block_instance The block instance.
+	 *
+	 * @return FieldsBuilder The modified fields builder.
 	 */
 	private static function maybe_add_disable_block_field($fields, $block, $block_instance)
 	{
@@ -251,6 +282,13 @@ class AcfBlockTypeRegistry
 		return $fields;
 	}
 
+	/**
+	 * Convert a block name to a class name.
+	 *
+	 * @param string $string The block name.
+	 *
+	 * @return string The converted class name.
+	 */
 	private static function classname_from_name($string)
 	{
 		// Replace hyphens and underscores with spaces
@@ -263,6 +301,11 @@ class AcfBlockTypeRegistry
 		return str_replace(' ', '', $string) . '_Block';
 	}
 
+	/**
+	 * Get all registered blocks.
+	 *
+	 * @return array Array of registered blocks.
+	 */
 	public static function get_registered_blocks(): array
 	{
 		return self::$registered_acf_blocks;

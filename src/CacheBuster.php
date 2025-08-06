@@ -2,6 +2,8 @@
 
 /**
  * Cachebuster class.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer;

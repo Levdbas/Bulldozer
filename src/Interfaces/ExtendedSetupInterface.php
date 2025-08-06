@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Extended setup interface for blocks.
+ *
+ * @package HighGround\Bulldozer
+ */
+
 namespace HighGround\Bulldozer\Interfaces;
 
 interface ExtendedSetupInterface

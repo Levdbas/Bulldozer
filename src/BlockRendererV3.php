@@ -2,6 +2,8 @@
 
 /**
  * BlockrendererV2.php.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer;
@@ -27,6 +29,8 @@ abstract class BlockRendererV3
 
 	/**
 	 * Compiled css that gets injected.
+	 *
+	 * @var string
 	 */
 	private string $compiled_css = '';
 
@@ -41,6 +45,8 @@ abstract class BlockRendererV3
 
 	/**
 	 * Block title.
+	 *
+	 * @var string
 	 */
 	private string $title;
 
@@ -64,11 +70,15 @@ abstract class BlockRendererV3
 	 * Array of classes that are appended to the wrapper element.
 	 *
 	 * @deprecated Do not use this property directly, use $this->add_class(['name']) instead.
+	 *
+	 * @var array
 	 */
 	private array $classes = [];
 
 	/**
 	 * Block name with acf/ prefix.
+	 *
+	 * @var string
 	 */
 	private string $name;
 
@@ -79,7 +89,7 @@ abstract class BlockRendererV3
 	 */
 	private $context;
 
-	/*
+	/**
 	 * Boolean whether block is disabled or not.
 	 *
 	 * @var bool
@@ -88,11 +98,15 @@ abstract class BlockRendererV3
 
 	/**
 	 * Array of css variables to add to to the styles.
+	 *
+	 * @var array
 	 */
 	private array $css_variables = [];
 
 	/**
 	 * Current block id.
+	 *
+	 * @var string
 	 */
 	private string $block_id;
 
@@ -105,11 +119,15 @@ abstract class BlockRendererV3
 
 	/**
 	 * Whether the block is showed on the frontend or backend. Backend returns true.
+	 *
+	 * @var bool
 	 */
 	private bool $is_preview;
 
 	/**
 	 * Block slug without acf/prefix.
+	 *
+	 * @var string
 	 */
 	private string $slug;
 
@@ -126,11 +144,15 @@ abstract class BlockRendererV3
 	 * Notifications are added by compose_notification().
 	 *
 	 * @method compose_notification()
+	 *
+	 * @var array
 	 */
 	private array $notifications = [];
 
 	/**
 	 * Location of the block.
+	 *
+	 * @var string
 	 */
 	private string $block_location = '';
 
@@ -140,7 +162,7 @@ abstract class BlockRendererV3
 	 * The array is passed to the acf_register_block_type() function that registers the block with ACF.
 	 *
 	 * @see https://github.com/StoutLogic/acf-builder
-	 * @param FieldsBuilder $fields the fields to register to the block
+	 * @param FieldsBuilder $fields The fields to register to the block.
 	 * @return FieldsBuilder
 	 */
 	abstract public function add_fields(FieldsBuilder $fields): FieldsBuilder;
@@ -150,17 +172,17 @@ abstract class BlockRendererV3
 	 *
 	 * Use this function to pass the results of a query, add an asset or add modifier classes.
 	 *
-	 * @param array $context the context that is passed to the twig partial
+	 * @param array $context The context that is passed to the twig partial.
 	 */
 	abstract public function block_context($context): array;
 
 	/**
 	 * Compile the block.
 	 *
-	 * @param array     $attributes the block attributes
-	 * @param string    $content    the block content
-	 * @param bool      $is_preview whether or not the block is being rendered for editing preview
-	 * @param int       $post_id    the current post being edited or viewed
+	 * @param array     $attributes The block attributes.
+	 * @param string    $content    The block content.
+	 * @param bool      $is_preview Whether or not the block is being rendered for editing preview.
+	 * @param int       $post_id    The current post being edited or viewed.
 	 * @param \WP_Block $wp_block   The block instance (since WP 5.5).
 	 */
 	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
@@ -207,7 +229,7 @@ abstract class BlockRendererV3
 	/**
 	 * Renders the block.
 	 *
-	 * @throws \Exception if the block template is not found
+	 * @throws \Exception If the block template is not found.
 	 *
 	 * @internal locates the block template and renders it
 	 */
@@ -221,6 +243,7 @@ abstract class BlockRendererV3
 
 			return;
 		}
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Twig output is pre-escaped
 		echo $output;
 	}
 
@@ -297,7 +320,7 @@ abstract class BlockRendererV3
 	 *    }
 	 * }
 	 * ```
-	 * @return void
+	 * @return bool Returns false if no deprecation, void otherwise.
 	 */
 	private function maybe_add_deprecation_notice()
 	{
@@ -456,6 +479,14 @@ abstract class BlockRendererV3
 		return false;
 	}
 
+	/**
+	 * Magic method to get deprecated properties.
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return mixed
+	 * @throws \Exception If property doesn't exist.
+	 */
 	public function &__get($name)
 	{
 
@@ -475,9 +506,18 @@ abstract class BlockRendererV3
 			return $this->{$name};
 		}
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message doesn't need escaping
 		throw new \Exception(sprintf('Property or method %s does not exist in %s', $name, static::class));
 	}
 
+	/**
+	 * Magic method to set deprecated properties.
+	 *
+	 * @param string $name  Property name.
+	 * @param mixed  $value Property value.
+	 *
+	 * @throws \Exception If property doesn't exist.
+	 */
 	public function __set($name, $value)
 	{
 		wp_trigger_error('', sprintf('Setting property %s directly is deprecated', $name, static::class), E_USER_DEPRECATED);
@@ -486,6 +526,7 @@ abstract class BlockRendererV3
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message doesn't need escaping
 		throw new \Exception(sprintf('Property or method %s does not exist in %s', $name, static::class));
 	}
 }

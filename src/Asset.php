@@ -2,6 +2,8 @@
 
 /**
  * Asset class.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer;
@@ -22,6 +24,8 @@ class Asset
 
 	/**
 	 * Error flag.
+	 *
+	 * @var bool
 	 */
 	protected bool $error = false;
 
@@ -49,7 +53,7 @@ class Asset
 	/**
 	 * Asset constructor.
 	 *
-	 * @param string $key key of the asset
+	 * @param string $key Key of the asset.
 	 */
 	private function __construct($key = null)
 	{
@@ -109,7 +113,7 @@ class Asset
 	/**
 	 * Get asset by key.
 	 *
-	 * @param string $key key of the asset
+	 * @param string $key Key of the asset.
 	 *
 	 * @return object
 	 */
@@ -167,7 +171,7 @@ class Asset
 	/**
 	 * Get the contents of the asset as JSON.
 	 *
-	 * @param bool $assoc whether to return an associative array
+	 * @param bool $assoc Whether to return an associative array.
 	 *
 	 * @return array|false
 	 */

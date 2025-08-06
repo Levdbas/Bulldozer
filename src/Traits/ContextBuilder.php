@@ -2,6 +2,8 @@
 
 /**
  * BlockrendererV2.php.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer\Traits;
@@ -18,7 +20,7 @@ trait ContextBuilder
 	 *
 	 * @api
 	 * @since 5.2.0
-	 * @param string|array $class the class or array of classes
+	 * @param string|array $class The class or array of classes.
 	 * @return void
 	 */
 	public function add_class(string|array $class)
@@ -37,9 +39,9 @@ trait ContextBuilder
 	 * @api
 	 * @since 1.8.0
 	 *
-	 * @param string       $field_name   acf field name
-	 * @param string       $css_var_name the css variable without the -- prefix
-	 * @param false|string $selector     the css selector where the css variable should be applied
+	 * @param string       $field_name   ACF field name.
+	 * @param string       $css_var_name The CSS variable without the -- prefix.
+	 * @param false|string $selector     The CSS selector where the CSS variable should be applied.
 	 */
 	public function add_css_var(string $field_name, string $css_var_name, false|string $selector = false)
 	{
@@ -56,8 +58,8 @@ trait ContextBuilder
 	 * Compose a notification to be shown in the backend.
 	 *
 	 * @api
-	 * @param string $message the message, translatable
-	 * @param string $type    type of notification, can be notice, warning or error
+	 * @param string $message The message, translatable.
+	 * @param string $type    Type of notification, can be notice, warning or error.
 	 */
 	public function add_notification(string $message, string $type)
 	{
@@ -78,6 +80,13 @@ trait ContextBuilder
 		);
 	}
 
+	/**
+	 * Add CSS to the compiled CSS.
+	 *
+	 * @param string $css The CSS to add.
+	 *
+	 * @return string The compiled CSS.
+	 */
 	public function add_css(string $css): string
 	{
 
@@ -90,7 +99,7 @@ trait ContextBuilder
 	 * Add modifier class to block classes.
 	 *
 	 * @api
-	 * @param string $modifier the part after the -- from the BEM principle
+	 * @param string $modifier The part after the -- from the BEM principle.
 	 */
 	public function add_modifier_class(string $modifier)
 	{
@@ -98,11 +107,11 @@ trait ContextBuilder
 	}
 
 	/**
-	 * get ACF field value.
+	 * Get ACF field value.
 	 *
 	 * @api
 	 * @since 5.2.0
-	 * @param string $field_name the field name
+	 * @param string $field_name The field name.
 	 * @return mixed $field the field value
 	 */
 	public function get_field(string $field_name)
@@ -151,6 +160,8 @@ trait ContextBuilder
 	 *
 	 * @since 6.0.0
 	 * @api
+	 *
+	 * @throws Exception If wp_block property is not set properly.
 	 * @return string
 	 */
 	public function get_wp_block(): \WP_Block
@@ -167,7 +178,7 @@ trait ContextBuilder
 	 *
 	 * @api
 	 * @since 6.0.0
-	 * @param string $attribute_name the attribute name
+	 * @param string $attribute_name The attribute name.
 	 * @return mixed|null $value the attribute value or null if not set
 	 */
 	public function get_attribute(string $attribute_name)
@@ -193,14 +204,15 @@ trait ContextBuilder
 	 *
 	 * @api
 	 * @since 6.0.0
-	 * @param string $attribute_name the attribute name
-	 * @param mixed  $value          the value to set
-	 * @throws \Exception if the attribute does not exist
+	 * @param string $attribute_name The attribute name.
+	 * @param mixed  $value          The value to set.
+	 * @throws \Exception If the attribute does not exist.
 	 */
 	public function set_attribute(string $attribute_name, mixed $value): void
 	{
 
 		if (! isset($this->attributes[$attribute_name])) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception message doesn't need escaping
 			throw new \Exception(sprintf('Attribute %s does not exist in the block attributes.', $attribute_name));
 		}
 
@@ -260,10 +272,10 @@ trait ContextBuilder
 	 * Generate inner blocks appender.
 	 *
 	 * @api
-	 * @param array|false  $allowed_blocks array with allowed blocks or false
-	 * @param array|false  $template       array with template
-	 * @param false|string $classes        string with classes
-	 * @param false|string $orientation    string with orientation, can be 'horizontal' or 'vertical'
+	 * @param array|false  $allowed_blocks Array with allowed blocks or false.
+	 * @param array|false  $template       Array with template.
+	 * @param false|string $classes        String with classes.
+	 * @param false|string $orientation    String with orientation, can be 'horizontal' or 'vertical'.
 	 * @param bool|string  $templatelock   true or one of 'all' or 'insert'. True defaults to 'all'.
 	 *
 	 * @return string $inner_blocks the inner blocks appender

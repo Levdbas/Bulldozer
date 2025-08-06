@@ -2,6 +2,8 @@
 
 /**
  * Autoloader class.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer;
@@ -30,6 +32,8 @@ class Autoloader
 
 	/**
 	 * Array of directories to load.
+	 *
+	 * @var array
 	 */
 	private array $dirs_to_load = ['controllers', 'models', 'blocks'];
 
@@ -53,7 +57,7 @@ class Autoloader
 	 *
 	 * @api
 	 *
-	 * @param array|false $dirs_to_load array of directories to load
+	 * @param array|false $dirs_to_load Array of directories to load.
 	 */
 	public function parent($dirs_to_load = false)
 	{
@@ -70,7 +74,7 @@ class Autoloader
 	 *
 	 * @api
 	 *
-	 * @param array $dirs_to_load array of directories to load
+	 * @param array $dirs_to_load Array of directories to load.
 	 */
 	public function child(array $dirs_to_load)
 	{

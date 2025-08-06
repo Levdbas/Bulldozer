@@ -2,6 +2,8 @@
 
 /**
  * Site icons class.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer;
@@ -31,6 +33,8 @@ class Site_Icons
 	/**
 	 * Holder of the filename. We'll use this to generate the web manifest file. Defaults to 'manifest.json'.
 	 * This is overwritten in multisite sites.
+	 *
+	 * @var string
 	 */
 	public string $manifest_filename = '';
 
@@ -39,6 +43,8 @@ class Site_Icons
 	 *
 	 * Used in the web manifest file
 	 * Defaults to site name
+	 *
+	 * @var string
 	 */
 	private string $name = '';
 
@@ -46,6 +52,8 @@ class Site_Icons
 	 * Short name, used in the web manifest file.
 	 *
 	 * Defaults to site name but can be overwritten for a shorter name.
+	 *
+	 * @var string
 	 */
 	private string $short_name = '';
 
@@ -55,6 +63,8 @@ class Site_Icons
 	 * The background_color member defines a placeholder background color for the application page to display before its stylesheet is loaded. This value is used by the user agent to draw the background color of a shortcut when the manifest is available before the stylesheet has loaded.
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/background_color
+	 *
+	 * @var string
 	 */
 	private string $background_color = '#f7d600';
 
@@ -63,6 +73,8 @@ class Site_Icons
 	 * This sometimes affects how the OS displays the site (e.g., on Android's task switcher, the theme color surrounds the site).
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/theme_color
+	 *
+	 * @var string
 	 */
 	private string $theme_color = '#f7d600';
 
@@ -73,6 +85,8 @@ class Site_Icons
 	 * - standalone
 	 * - minimal-ui
 	 * - browser
+	 *
+	 * @var string
 	 */
 	private string $display = 'standalone';
 
@@ -82,6 +96,8 @@ class Site_Icons
 	 * - portrait
 	 * - landscape
 	 * - any
+	 *
+	 * @var string
 	 */
 	private string $orientation = 'portrait';
 
@@ -90,6 +106,8 @@ class Site_Icons
 	 * Defaults to home url.
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/start_url
+	 *
+	 * @var string
 	 */
 	private string $start_url = '';
 
@@ -104,6 +122,8 @@ class Site_Icons
 
 	/**
 	 * Array of attributes for the manifest file.
+	 *
+	 * @var array
 	 */
 	private static array $attributes = [
 		'name'             => false,
@@ -118,6 +138,8 @@ class Site_Icons
 
 	/**
 	 * Folder name where the icons are stored.
+	 *
+	 * @var string
 	 */
 	private string $favicon_folder_name = '';
 
@@ -140,7 +162,7 @@ class Site_Icons
 	/**
 	 * Constructor.
 	 *
-	 * @param bool $installable whether the app is installable or not
+	 * @param bool $installable Whether the app is installable or not.
 	 */
 	public function __construct(bool $installable = false)
 	{
@@ -172,8 +194,8 @@ class Site_Icons
 	/**
 	 * Magic method for setting attributes.
 	 *
-	 * @param string $name  name of the attribute
-	 * @param string $value value of the attribute
+	 * @param string $name  Name of the attribute.
+	 * @param string $value Value of the attribute.
 	 */
 	public function __set($name, $value)
 	{
@@ -231,7 +253,7 @@ class Site_Icons
 	/**
 	 * Generates manifest and outputs it on the virtual path.
 	 *
-	 * @param \WP $wp current WordPress environment instance (passed by reference)
+	 * @param \WP $wp current WordPress environment instance (passed by reference).
 	 */
 	public function generate_manifest($wp)
 	{
@@ -258,15 +280,15 @@ class Site_Icons
 		$tags = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
 		$tags .= '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">' . PHP_EOL;
 		$tags .= '<meta name="theme-color" content="' . self::$attributes['theme_color'] . '">' . PHP_EOL;
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $tags;
 	}
 
 	/**
 	 * Update the file paths so that WordPress knows where the new icons are.
 	 *
-	 * @param string $url  the URL of the icon
-	 * @param string $size the size of the icon
+	 * @param string $url  The URL of the icon.
+	 * @param string $size The size of the icon.
 	 *
 	 * @return false|string
 	 */
@@ -307,7 +329,7 @@ class Site_Icons
 	 *
 	 * @api get_attribute
 	 *
-	 * @param string $attribute attribute name
+	 * @param string $attribute Attribute name.
 	 */
 	public static function get_attribute(string $attribute): string
 	{

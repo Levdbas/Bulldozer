@@ -2,6 +2,8 @@
 
 /**
  * Interface for blocks that need block variations.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer\Interfaces;
