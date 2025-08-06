@@ -9,7 +9,7 @@
 
 namespace WP_Lemon\Child\Blocks;
 
-use HighGround\Bulldozer\BlockRendererV2 as BlockRenderer;
+use HighGround\Bulldozer\BlockRendererV3 as BlockRenderer;
 use StoutLogic\AcfBuilder\FieldsBuilder;
 
 /**
@@ -19,13 +19,6 @@ use StoutLogic\AcfBuilder\FieldsBuilder;
  */
 class Example_Block extends BlockRenderer
 {
-
-	/**
-	 * The name of the block.
-	 * This needs to be the same as the folder and file name.
-	 */
-	const NAME = 'example';
-
 	/**
 	 * Extend the base context of our block.
 	 * With this function we can add for example a query or
@@ -52,13 +45,8 @@ class Example_Block extends BlockRenderer
 	 * @link https://github.com/StoutLogic/acf-builder
 	 * @return FieldsBuilder
 	 */
-	public function add_fields(): FieldsBuilder
+	public function add_fields($fields): FieldsBuilder
 	{
-		return $this->registered_fields;
+		return $fields;
 	}
 }
-
-/**
- * Enable the class
- */
-// new Example_Block();

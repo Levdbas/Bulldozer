@@ -48,7 +48,7 @@ class AcfBlockTypeRegistry
 			function ($metadata) {
 
 				if (! isset($metadata['name']) || ! str_starts_with($metadata['name'], 'acf/')) {
-						return $metadata;
+					return $metadata;
 				}
 
 				return self::change_metadata($metadata);
@@ -77,11 +77,11 @@ class AcfBlockTypeRegistry
 			function () use ($namespace) {
 				$finder = new Finder();
 				$finder->directories()
-				->in(get_stylesheet_directory() . '/blocks/')
-				->sortByName();
+					->in(get_stylesheet_directory() . '/blocks/')
+					->sortByName();
 
 				foreach ($finder as $folder) {
-						self::register_acf_block($namespace, $folder->getFilename());
+					self::register_acf_block($namespace, $folder->getFilename());
 				}
 			}
 		);
@@ -250,7 +250,7 @@ class AcfBlockTypeRegistry
 		);
 
 		$fields
-		 ->setLocation('block', '==', $name);
+			->setLocation('block', '==', $name);
 
 		return $fields;
 	}
@@ -268,16 +268,16 @@ class AcfBlockTypeRegistry
 	{
 		if (isset($block->supports['showDisableButton'])) {
 			$fields
-			->addTrueFalse(
-				'is_disabled',
-				[
-					'label'        => __('Disable block', 'bulldozer'),
-					'instructions' => __('You can disable the block if you need to temporarily hide its content. For example, an announcement block can be still kept inside the editor but will not be show until it\'s enabled again.', 'bulldozer'),
-					'ui'           => 1,
-					'ui_on_text'   => __('True', 'bulldozer'),
-					'ui_off_text'  => __('False', 'bulldozer'),
-				]
-			);
+				->addTrueFalse(
+					'is_disabled',
+					[
+						'label'        => __('Disable block', 'bulldozer'),
+						'instructions' => __('You can disable the block if you need to temporarily hide its content. For example, an announcement block can be still kept inside the editor but will not be show until it\'s enabled again.', 'bulldozer'),
+						'ui'           => 1,
+						'ui_on_text'   => __('True', 'bulldozer'),
+						'ui_off_text'  => __('False', 'bulldozer'),
+					]
+				);
 		}
 		return $fields;
 	}

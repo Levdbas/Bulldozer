@@ -118,8 +118,8 @@ class Bulldozer
 	 */
 	public static function frontend_error($message, $subtitle = '', $title = '')
 	{
-        // phpcs:ignore
-        $script = explode('/', $_SERVER['SCRIPT_NAME']);
+		// phpcs:ignore
+		$script = explode('/', $_SERVER['SCRIPT_NAME']);
 		$script = end($script);
 
 		if (is_admin() || wp_doing_ajax() || wp_doing_cron() || wp_is_json_request()) {
@@ -237,16 +237,16 @@ class Bulldozer
 	 */
 	private function test_compatibility()
 	{
-        // phpcs:ignore
-        $path = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
+		// phpcs:ignore
+		$path = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
 
 		if (is_admin() || '/wp-login.php' == $path) {
 			return;
 		}
 
 		if (version_compare(phpversion(), '8.0.2', '<') && !is_admin()) {
-            // phpcs:ignore
-            trigger_error('Bulldozer requires PHP 8.0.2 or greater. You have ' . phpversion(), E_USER_ERROR);
+			// phpcs:ignore
+			trigger_error('Bulldozer requires PHP 8.0.2 or greater. You have ' . phpversion(), E_USER_ERROR);
 		}
 
 		// check if ACF is installed
