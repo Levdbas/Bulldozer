@@ -187,15 +187,13 @@ abstract class BlockRendererV3
 	 */
 	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
 	{
-		$this->fields        = [];
-		$this->context       = [];
 		$this->notifications = [];
 		$this->title         = $attributes['title'];
 		$this->name          = $attributes['name'];
 		$this->slug          = str_replace('acf/', '', $attributes['name']);
 		$this->classes       = ['acf-block'];
 		$this->fields        = get_fields();
-		$this->context       = Timber::context();
+		$context       = Timber::context();
 		$this->attributes    = $attributes;
 		$this->wp_block      = $wp_block;
 		$this->is_preview    = $is_preview;
@@ -203,7 +201,7 @@ abstract class BlockRendererV3
 		$this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
 
 		$this->maybe_add_deprecation_notice();
-		$this->context = $this->block_context($this->context);
+		$context = $this->block_context($context);
 		$this->add_block_classes();
 		$this->generate_css_variables();
 
@@ -222,8 +220,8 @@ abstract class BlockRendererV3
 			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
 		];
 
-		$this->context = array_merge($this->context, $args);
-		$this->render();
+		$context = array_merge($this->context, $args);
+		$this->render($context);
 	}
 
 	/**
@@ -233,10 +231,10 @@ abstract class BlockRendererV3
 	 *
 	 * @internal locates the block template and renders it
 	 */
-	private function render()
+	private function render($context)
 	{
 		$twig_file_path = "@blocks/{$this->slug}/{$this->slug}.twig";
-		$output         = Timber::compile($twig_file_path, $this->context);
+		$output         = Timber::compile($twig_file_path, $context);
 
 		if (false === $output) {
 			throw new \Exception(sprintf(esc_attr__('Twig file %s not found.', 'bulldozer'), esc_attr($twig_file_path)));
