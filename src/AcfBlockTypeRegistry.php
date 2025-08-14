@@ -111,7 +111,7 @@ class AcfBlockTypeRegistry
 
 		$classname = 'WP_Lemon\Blocks\\' . self::classname_from_name($block_name);
 
-		if (! class_exists($classname)) {
+		if (! class_exists($classname, false)) {
 			Bulldozer::frontend_error(sprintf(__('Block class %s not found.', 'bulldozer'), $classname));
 			Bulldozer::backend_notification(sprintf(__('Block class %s not found.', 'bulldozer'), $classname), 'error');
 			return;
