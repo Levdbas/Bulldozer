@@ -169,7 +169,7 @@ class Autoloader
 
         if ($this->fields_loader) {
             $this->finder->files()
-                ->notContains('fields');
+                ->notPath('fields');
         }
 
 
