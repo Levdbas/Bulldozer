@@ -93,6 +93,8 @@ class Autoloader
      * If the 'reusable' folder exists, it will load all PHP files from that folder.
      *
      * After loading the reusable fields, it will then load all other fields in the main fields directory.
+     * 
+     * Please call this function before you call the $autoloader->child(['..']) method
      *
      * @api
      * @since 6.7.0
