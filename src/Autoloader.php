@@ -186,8 +186,7 @@ class Autoloader
 
         if ($this->fields_loader) {
             $this->finder->files()
-                ->notPath('fields')
-                ->notPath('filtered');
+                ->notPath('fields');
         }
 
 
