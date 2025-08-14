@@ -278,7 +278,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         ];
 
         $context = array_merge($context, $args);
-        $this->render();
+        $this->render($context);
     }
 
     /**
@@ -288,10 +288,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
      *
      * @internal locates the block template and renders it
      */
-    private function render()
+    private function render($context)
     {
         $twig_file_path = "@blocks/{$this->slug}/{$this->slug}.twig";
-        $output         = Timber::compile($twig_file_path, $this->context);
+        $output         = Timber::compile($twig_file_path, $context);
 
         if (false === $output) {
             throw new \Exception(sprintf(esc_attr__('Twig file %s not found.', 'bulldozer'), esc_attr($twig_file_path)));
