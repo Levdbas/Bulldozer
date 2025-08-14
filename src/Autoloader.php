@@ -97,7 +97,7 @@ class Autoloader
      * Please call this function before you call the $autoloader->child(['..']) method
      *
      * @api
-     * @since 6.7.0
+     * @since 5.7.0
      * @return void
      */
     public function fields()
