@@ -87,14 +87,17 @@ class Autoloader
     }
 
     /**
-     * This function loads the fields for ACF.
+     * Fields loader
      * 
-     * The function checks if the fields folder exists. If so, it will start searching for the 'reusable' folder first.
-     * If the 'reusable' folder exists, it will load all PHP files from that folder.
+     * This function looks into the `library/models/fields/` directory for files to load.
      *
-     * After loading the reusable fields, it will then load all other fields in the main fields directory.
+     * This process starts by checking for the existence of the `filtered` folder and loading any PHP files found within it.
+     * That way we will load the files first that modify the existing fields in `wp-lemon`. 
      * 
-     * Please call this function before you call the $autoloader->child(['..']) method
+     * After that, we will search for the `fields/reusable` folder and load all PHP files from that folder.
+     * This ensures that any reusable fields are loaded before any other fields. Make sure to not include full field groups, including locations here.
+     * 
+     * Finally, it will load all other PHP files in the `fields` directory within the `acf/init` action.
      *
      * @api
      * @since 5.7.0
@@ -103,11 +106,25 @@ class Autoloader
     public function fields()
     {
         $this->fields_loader = true;
+        $fields_dir = get_stylesheet_directory() . '/library/models/fields';
+
+        $filtered_fields_dir = $fields_dir . '/filtered';
+
+        if (is_dir($filtered_fields_dir)) {
+            $filtered_fields_loader = new Finder();
+            $filtered_fields_loader->files()
+                ->in($filtered_fields_dir)
+                ->name('*.php')
+                ->sortByName();
+
+            foreach ($filtered_fields_loader as $file) {
+                require_once $file->getRealPath();
+            }
+        }
 
         add_action(
             'acf/init',
-            function () {
-                $fields_dir = get_stylesheet_directory() . '/library/models/fields';
+            function () use ($fields_dir) {
                 $reusable_dir = $fields_dir . '/reusable';
 
                 // First, load files from the reusable folder if it exists
@@ -169,7 +186,8 @@ class Autoloader
 
         if ($this->fields_loader) {
             $this->finder->files()
-                ->notPath('fields');
+                ->notPath('fields')
+                ->notPath('filtered');
         }
 
 
