@@ -7,6 +7,7 @@
 namespace HighGround\Bulldozer;
 
 use Symfony\Component\Finder\Finder;
+use Timber\URLHelper;
 
 /**
  * Autoloader class that loads pre-defined or custom folders.
@@ -33,6 +34,8 @@ class Autoloader
      */
     private array $dirs_to_load = ['controllers', 'models', 'blocks'];
 
+    private array $loaded_files = [];
+
     /**
      * Holds whether the fields are already loaded.
      *
@@ -50,10 +53,7 @@ class Autoloader
      * - controllers - passes data to the twig $context
      * - classes
      */
-    public function __construct()
-    {
-        $this->finder = new Finder();
-    }
+    public function __construct() {}
 
     /**
      * Loader for parent folder in lib directory.
@@ -118,7 +118,8 @@ class Autoloader
                 ->sortByName();
 
             foreach ($filtered_fields_loader as $file) {
-                require_once $file->getRealPath();
+                $this->loaded_files[] = $file->getPathname();
+                require_once $file->getPathname();
             }
         }
 
@@ -136,7 +137,8 @@ class Autoloader
                         ->sortByName();
 
                     foreach ($reusable_finder as $file) {
-                        require_once $file->getRealPath();
+                        $this->loaded_files[] = $file->getPathname();
+                        require_once $file->getPathname();
                     }
                 }
 
@@ -149,7 +151,8 @@ class Autoloader
                     ->sortByName();
 
                 foreach ($finder as $file) {
-                    require_once $file->getRealPath();
+                    $this->loaded_files[] = $file->getPathname();
+                    require_once $file->getPathname();
                 }
             }
         );
@@ -179,19 +182,51 @@ class Autoloader
         }
 
         unset($dir_to_load);
-        $this->finder->files()
+        $finder = new Finder();
+        $finder->files()
             ->in($this->dirs_to_load)
             ->name('*.php')
             ->sortByName();
 
         if ($this->fields_loader) {
-            $this->finder->files()
-                ->notPath('fields');
+            $finder->files()
+                ->notPath('fields')
+                ->notPath('filtered');
         }
 
 
-        foreach ($this->finder as $file) {
-            require_once $file->getRealPath();
+        foreach ($finder as $file) {
+            $this->loaded_files[] = $file->getPathname();
+            require_once $file->getPathname();
         }
+    }
+
+    /**
+     * Use this function to get all loaded files and manually include them in your theme.
+     * That way we can skip the autoloading, that will lead to a more performant theme.
+     *
+     * @api
+     * @return void
+     */
+    public function getLoadedFiles()
+    {
+        $files = $this->loaded_files;
+        $path = get_stylesheet_directory();
+
+        $files = array_map(function ($file) use ($path) {
+            // Convert absolute paths to relative paths
+            $relativePath = str_replace($path, '', $file);
+            return ltrim($relativePath, '/');
+        }, $files);
+
+
+
+        // dump loaded files in a <pre> tag
+        echo '<pre>';
+        // print the files, one per row, with quotes and a comma at the end
+        foreach ($files as $file) {
+            echo "'" . $file . "'," . PHP_EOL;
+        }
+        echo '</pre>';
     }
 }
