@@ -206,9 +206,10 @@ class Autoloader
      * That way we can skip the autoloading, that will lead to a more performant theme.
      *
      * @api
-     * @return void
+     * @param bool $return Whether to return the files array or echo them
+     * @return array|void
      */
-    public function getLoadedFiles()
+    public function getLoadedFiles($return = false)
     {
         $files = $this->loaded_files;
         $path = get_stylesheet_directory();
@@ -219,7 +220,12 @@ class Autoloader
             return ltrim($relativePath, '/');
         }, $files);
 
+        if ($return) {
+            return $files;
+        }
 
+        // order all files by their path
+        sort($files);
 
         // dump loaded files in a <pre> tag
         echo '<pre>';
