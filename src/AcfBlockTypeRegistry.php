@@ -60,8 +60,9 @@ class AcfBlockTypeRegistry
 	 * Register an ACF block type.
 	 *
 	 * @param string $namespace The namespace for the blocks.
+	 * @param array $blocks The blocks to register.
 	 */
-	public static function register_acf_blocks($namespace)
+	public static function register_acf_blocks(string $namespace, array $blocks)
 	{
 
 		if (! function_exists('acf_add_local_field_group')) {
@@ -74,14 +75,9 @@ class AcfBlockTypeRegistry
 
 		add_action(
 			'init',
-			function () use ($namespace) {
-				$finder = new Finder();
-				$finder->directories()
-					->in(get_stylesheet_directory() . '/blocks/')
-					->sortByName();
-
-				foreach ($finder as $folder) {
-					self::register_acf_block($namespace, $folder->getFilename());
+			function () use ($namespace, $blocks) {
+				foreach ($blocks as $block) {
+					self::register_acf_block($namespace, $block);
 				}
 			}
 		);
@@ -109,7 +105,7 @@ class AcfBlockTypeRegistry
 
 		require_once $class_file;
 
-		$classname = 'WP_Lemon\Blocks\\' . self::classname_from_name($block_name);
+		$classname = $namespace . '\\' . self::classname_from_name($block_name);
 
 		if (! class_exists($classname, false)) {
 			Bulldozer::frontend_error(sprintf(__('Block class %s not found.', 'bulldozer'), $classname));
@@ -202,7 +198,7 @@ class AcfBlockTypeRegistry
 
 		$current_block = self::$registered_acf_blocks[$name] ?? null;
 
-		if (null === $current_block) {
+		if (null === $current_block || ! $current_block['class'] instanceof BlockRendererV3) {
 			return $metadata;
 		}
 
