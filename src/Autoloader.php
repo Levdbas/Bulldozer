@@ -169,8 +169,16 @@ class Autoloader
      *
      * @api
      */
-    public function child_blocks()
+    public function child_blocks(string $version = 'v2')
     {
+        if ('v3' == $version) {
+            $finder = new Finder();
+            $finder->directories()
+                ->in(get_stylesheet_directory() . '/blocks/')
+                ->sortByName();
+            return;
+        }
+
         $this->dirs_to_load = ['blocks'];
         $this->base_dir = get_stylesheet_directory();
         $this->load();
