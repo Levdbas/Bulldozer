@@ -220,18 +220,6 @@ trait ContextBuilder
 	}
 
 	/**
-	 * Check if the block is shown in the backend.
-	 *
-	 * @since 6.0.0
-	 * @api
-	 * @return bool true if the block is shown in the backend, false otherwise
-	 */
-	public function is_preview(): bool
-	{
-		return $this->is_preview ?? false;
-	}
-
-	/**
 	 * Get the block alignment.
 	 *
 	 * @since 6.0.0
@@ -241,6 +229,18 @@ trait ContextBuilder
 	public function get_block_alignment(): string
 	{
 		return $this->attributes['align'] ?? '';
+	}
+
+	/**
+	 * Check if the block is shown in the backend.
+	 *
+	 * @since 6.0.0
+	 * @api
+	 * @return bool true if the block is shown in the backend, false otherwise
+	 */
+	public function is_preview(): bool
+	{
+		return $this->is_preview ?? false;
 	}
 
 	/**
