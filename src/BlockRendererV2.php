@@ -240,14 +240,14 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
    {
       $this->block_disabled = false;
       $this->fields         = [];
-      $this->context        = [];
+      $context              = [];
       self::$notifications  = [];
       self::$title          = $attributes['title'];
       $this->name           = $attributes['name'];
       $this->slug           = str_replace('acf/', '', $attributes['name']);
       $this->classes        = ['acf-block'];
       $this->fields         = get_fields();
-      $this->context        = Timber::context();
+      $context              = Timber::context();
       $this->attributes     = $attributes;
       $this->wp_block       = $wp_block;
       $this->is_preview     = $is_preview;
@@ -257,14 +257,14 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
       $this->maybe_add_deprecation_notice();
       $this->maybe_disable_block();
 
-      $this->context = $this->block_context($this->context);
+      $context = $this->block_context($context);
       $this->add_block_classes();
       $this->generate_css_variables();
 
       $args = [
          'block_id'      => $this->maybe_add_block_id(),
          'is_disabled'   => $this->block_disabled,
-         'parent'        => isset($this->context['parent']) ? $this->context['parent'] : $this->slug,
+         'parent'        => isset($context['parent']) ? $context['parent'] : $this->slug,
          'slug'          => $this->slug,
          'attributes'    => $this->attributes,
          'is_preview'    => $this->is_preview,
@@ -277,8 +277,8 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
          //'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
       ];
 
-      $this->context = array_merge($this->context, $args);
-      $this->render();
+      $context = array_merge($context, $args);
+      $this->render($context);
    }
 
    /**
@@ -288,10 +288,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
     *
     * @internal locates the block template and renders it
     */
-   private function render()
+   private function render($context)
    {
       $twig_file_path = "@blocks/{$this->slug}/{$this->slug}.twig";
-      $output         = Timber::compile($twig_file_path, $this->context);
+      $output         = Timber::compile($twig_file_path, $context);
 
       if (false === $output) {
          throw new \Exception(sprintf(esc_attr__('Twig file %s not found.', 'bulldozer'), esc_attr($twig_file_path)));

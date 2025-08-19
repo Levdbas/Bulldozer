@@ -57,6 +57,14 @@ class Bulldozer
 		add_action('after_setup_theme', [$this, 'load_textdomain']);
 		$this->test_compatibility();
 		add_action('enqueue_block_editor_assets', [$this, 'add_editor_assets']);
+
+		// Register WP-CLI commands
+		add_action('wp_loaded', function () {
+			if (defined('WP_CLI') && \WP_CLI) {
+				AutoloaderWpCli::register();
+			}
+		});
+
 		// CacheBuster::register();
 	}
 
