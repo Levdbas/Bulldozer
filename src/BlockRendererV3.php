@@ -208,7 +208,7 @@ abstract class BlockRendererV3
 		$args = [
 			'block_id'      => $this->maybe_add_block_id(),
 			'is_disabled'   => $this->maybe_disable_block(),
-			'parent'        => isset($this->context['parent']) ? $this->context['parent'] : $this->slug,
+			'parent'        => isset($context['parent']) ? $context['parent'] : $this->slug,
 			'slug'          => $this->slug,
 			'attributes'    => $this->attributes,
 			'is_preview'    => $this->is_preview,
@@ -220,7 +220,7 @@ abstract class BlockRendererV3
 			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
 		];
 
-		$context = array_merge($this->context, $args);
+		$context = array_merge($context, $args);
 		$this->render($context);
 	}
 

@@ -144,6 +144,18 @@ trait ContextBuilder
 	}
 
 	/**
+	 * Get the block title.
+	 *
+	 * @since 6.0.0
+	 * @api
+	 * @return string
+	 */
+	public function get_block_title(): string
+	{
+		return $this->title ?? '';
+	}
+
+	/**
 	 * Get the block name.
 	 *
 	 * @since 6.0.0
