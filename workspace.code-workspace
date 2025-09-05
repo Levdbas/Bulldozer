@@ -1,7 +1,12 @@
 {
 	"folders": [
 		{
+			"name": "wp-lemon current",
 			"path": "../../sites/wplemon"
+		},
+		{
+			"name": "wp-lemon next",
+			"path": "../../sites/wplemon-next"
 		},
 		{
 			"name": "bulldozer",

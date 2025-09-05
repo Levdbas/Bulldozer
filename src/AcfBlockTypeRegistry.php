@@ -11,7 +11,6 @@ namespace HighGround\Bulldozer;
 use HighGround\Bulldozer\Interfaces\BlockVariationsInterface;
 use HighGround\Bulldozer\Interfaces\ExtendedSetupInterface;
 use StoutLogic\AcfBuilder\FieldsBuilder;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Class AcfBlockTypeRegistry
@@ -41,19 +40,19 @@ class AcfBlockTypeRegistry
 			}
 		);
 
-		add_filter('block_type_metadata_settings', [self::class, 'block_type_metadata_settings'], 10, 2);
+		//add_filter('block_type_metadata_settings', [self::class, 'block_type_metadata_settings'], 10, 2);
 
-		add_filter(
-			'block_type_metadata',
-			function ($metadata) {
+		// add_filter(
+		// 	'block_type_metadata',
+		// 	function ($metadata) {
 
-				if (! isset($metadata['name']) || ! str_starts_with($metadata['name'], 'acf/')) {
-					return $metadata;
-				}
+		// 		if (! isset($metadata['name']) || ! str_starts_with($metadata['name'], 'acf/')) {
+		// 			return $metadata;
+		// 		}
 
-				return self::change_metadata($metadata);
-			}
-		);
+		// 		return self::change_metadata($metadata);
+		// 	}
+		// );
 	}
 
 	/**
@@ -99,12 +98,8 @@ class AcfBlockTypeRegistry
 
 		$slug = str_replace('acf/', '', $block_name);
 
-		$base_dir = get_stylesheet_directory() . '/blocks/';
-		$json_file  = $base_dir . $block_name . '/block.json';
-		$class_file = $base_dir . $block_name . '/' . basename($block_name) . '.php';
-
-		require_once $class_file;
-
+		$base_dir  = get_stylesheet_directory() . '/blocks/';
+		$json_file = $base_dir . $block_name . '/block.json';
 		$classname = $namespace . '\\' . self::classname_from_name($block_name);
 
 		if (! class_exists($classname, false)) {
@@ -122,30 +117,29 @@ class AcfBlockTypeRegistry
 		}
 
 		self::$registered_acf_blocks[$block_name] = [
-			'name'   => $block_name,
-			'slug'   => $slug,
-			'class'  => $block_instance,
-			'fields' => null,
+			'name'       => $block_name,
+			'slug'       => $slug,
+			'isv3'       => $block_instance instanceof BlockRendererV3,
+			'variations' => $block_instance instanceof BlockVariationsInterface ? $block_instance->add_block_variations() : [],
+			'icon'       => $block_instance instanceof ExtendedSetupInterface ? $block_instance->additional_settings()['custom_icon'] : false,
+			'hide'       => $block_instance instanceof ExtendedSetupInterface ? $block_instance->additional_settings()['hide_from_inserter'] : false,
 		];
 
-		$registered_block = register_block_type($json_file);
+		$registered_block = register_block_type($json_file, [
+			'render_callback' => [$block_instance, 'compile'],
+		]);
 
 		/**
 		 * Setup the block fields group.
 		 */
-		$fields = self::setup_fields_group($block_instance, $registered_block->title, $registered_block->name, $slug);
-		$fields = self::maybe_add_disable_block_field($fields, $registered_block, $block_instance);
+		$fields = self::setup_fields_group($registered_block->title, $registered_block->name, $slug);
+		$fields = self::maybe_add_disable_block_field($fields, $registered_block);
 		$fields = $block_instance->add_fields($fields);
 		$fields = apply_filters('bulldozer/blockrenderer/block/' . $slug . '/fields', $fields);
 
 		if ($fields) {
 			acf_add_local_field_group($fields->build());
 		}
-
-		/**
-		 * Add the fields to the block instance.
-		 */
-		self::$registered_acf_blocks[$block_name]['fields'] = $fields;
 	}
 
 	/**
@@ -194,30 +188,24 @@ class AcfBlockTypeRegistry
 	 */
 	private static function change_metadata($metadata)
 	{
-		$name = str_replace('acf/', '', $metadata['name']);
 
+		$name          = str_replace('acf/', '', $metadata['name']);
 		$current_block = self::$registered_acf_blocks[$name] ?? null;
 
-		if (null === $current_block || ! $current_block['class'] instanceof BlockRendererV3) {
+		if (null === $current_block || ! $current_block['isv3']) {
 			return $metadata;
 		}
 
-		$metadata['acf']['renderCallback'] = [$current_block['class'], 'compile'];
 
-		// Use interface methods if implemented
-		$variations = $current_block['class'] instanceof BlockVariationsInterface ? $current_block['class']->add_block_variations() : [];
-		$icon       = $current_block['class'] instanceof ExtendedSetupInterface ? $current_block['class']->additional_settings()['custom_icon'] : false;
-		$hide       = $current_block['class'] instanceof ExtendedSetupInterface ? $current_block['class']->additional_settings()['hide_from_inserter'] : false;
-
-		if (false !== $variations) {
-			$metadata['variations'] = $variations;
+		if (false !== $current_block['variations']) {
+			$metadata['variations'] = $current_block['variations'];
 		}
 
-		if (false !== $icon) {
-			$metadata['icon'] = $icon;
+		if (false !== $current_block['icon']) {
+			$metadata['icon'] = $current_block['icon'];
 		}
 
-		if (true === $hide) {
+		if (true === $current_block['hide']) {
 			$metadata['supports']['inserter'] = false;
 		}
 
@@ -236,7 +224,7 @@ class AcfBlockTypeRegistry
 	 *
 	 * @return FieldsBuilder
 	 */
-	private static function setup_fields_group(object $block, $title, $name, $slug)
+	private static function setup_fields_group($title, $name, $slug)
 	{
 		$fields = new FieldsBuilder(
 			$slug,
@@ -256,11 +244,10 @@ class AcfBlockTypeRegistry
 	 *
 	 * @param FieldsBuilder        $fields         The fields builder instance.
 	 * @param \WP_Block_Type|false $block          The block object.
-	 * @param object               $block_instance The block instance.
 	 *
 	 * @return FieldsBuilder The modified fields builder.
 	 */
-	private static function maybe_add_disable_block_field($fields, $block, $block_instance)
+	private static function maybe_add_disable_block_field($fields, $block)
 	{
 		if (isset($block->supports['showDisableButton'])) {
 			$fields

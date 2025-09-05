@@ -193,12 +193,12 @@ abstract class BlockRendererV3
 		$this->slug          = str_replace('acf/', '', $attributes['name']);
 		$this->classes       = ['acf-block'];
 		$this->fields        = get_fields();
-		$context       = Timber::context();
+		$context             = Timber::context();
 		$this->attributes    = $attributes;
 		$this->wp_block      = $wp_block;
 		$this->is_preview    = $is_preview;
 		$this->post_id       = $post_id;
-		$this->block_id      = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
+		$this->block_id      = isset($attributes['anchor']) ? $attributes['anchor'] : $attributes['id'];
 
 		$this->maybe_add_deprecation_notice();
 		$context = $this->block_context($context);
@@ -210,7 +210,7 @@ abstract class BlockRendererV3
 			'is_disabled'   => $this->maybe_disable_block(),
 			'parent'        => isset($context['parent']) ? $context['parent'] : $this->slug,
 			'slug'          => $this->slug,
-			'attributes'    => $this->attributes,
+			'attributes'    => $attributes,
 			'is_preview'    => $this->is_preview,
 			'post_id'       => $this->post_id,
 			'fields'        => $this->fields,
@@ -243,8 +243,8 @@ abstract class BlockRendererV3
 		}
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Twig output is pre-escaped
 		echo $output;
+		return;
 	}
-
 
 	/**
 	 * Generate the css for the block.
