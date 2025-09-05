@@ -21,7 +21,7 @@ class Bulldozer
     /**
      * Current Bulldozer version.
      */
-    public const VERSION = '5.7.1';
+    public const VERSION = '5.8.0';
 
     /**
      * Active theme object.
@@ -53,14 +53,14 @@ class Bulldozer
         add_action('after_setup_theme', [$this, 'load_textdomain']);
         $this->test_compatibility();
         add_action('enqueue_block_editor_assets', [$this, 'add_editor_assets']);
-        
+
         // Register WP-CLI commands
-        add_action('wp_loaded', function() {
+        add_action('wp_loaded', function () {
             if (defined('WP_CLI') && \WP_CLI) {
                 AutoloaderWpCli::register();
             }
         });
-        
+
         // CacheBuster::register();
     }
 
