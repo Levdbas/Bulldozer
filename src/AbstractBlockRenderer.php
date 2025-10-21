@@ -683,6 +683,17 @@ abstract class AbstractBlockRenderer
         return $this->compiled_css;
     }
 
+    public function set_alignment(string $alignment): void
+    {
+        // can be wide or full
+        if (!in_array($alignment, ['wide', 'full'])) {
+            _doing_it_wrong('set_alignment', 'Alignment must be either "wide" or "full".', '5.8.1');
+            return;
+        }
+
+        $this->attributes['align'] = $alignment;
+    }
+
     public function set_attribute(string $attribute_name, mixed $value): void
     {
         if (!isset($this->attributes[$attribute_name])) {
