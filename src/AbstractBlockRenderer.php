@@ -696,10 +696,6 @@ abstract class AbstractBlockRenderer
 
     public function set_attribute(string $attribute_name, mixed $value): void
     {
-        if (!isset($this->attributes[$attribute_name])) {
-            throw new Exception(sprintf('Attribute %s does not exist in the block attributes.', $attribute_name));
-        }
-
         $this->attributes[$attribute_name] = $value;
     }
 }
