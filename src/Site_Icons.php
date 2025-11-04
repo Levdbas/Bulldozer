@@ -274,7 +274,7 @@ class Site_Icons
     {
         switch ($size) {
             case 32:
-                $filename = 'favicon-32x32.png';
+                $filename = 'favicon.svg';
 
                 break;
 
