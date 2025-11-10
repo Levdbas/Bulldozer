@@ -698,4 +698,9 @@ abstract class AbstractBlockRenderer
     {
         $this->attributes[$attribute_name] = $value;
     }
+
+    public function set_anchor(string $value): void
+    {
+        $this->attributes['anchor'] = $value;
+    }
 }
