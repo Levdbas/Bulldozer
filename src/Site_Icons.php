@@ -140,27 +140,44 @@ class Site_Icons
     /**
      * Constructor.
      *
-     * @param bool $installable whether the app is installable or not
+     * @param array|bool $attributes an array containing name, short_name, background_color, theme_color, display, orientation, installable
+     * 
+     * @example
+     * ```php
+     * new Site_Icons([
+     *    'short_name' => 'My App',
+     *   'background_color' => '#ffffff',
+     *   'theme_color' => '#000000',
+     * ]);
+     * ```
      */
-    public function __construct(bool $installable = false)
+    public function __construct(array|bool $attributes = false)
     {
+        if (false === $attributes) {
+            _doing_it_wrong(
+                'Site_Icons::__construct',
+                __('No attributes provided, using defaults.', 'bulldozer'),
+                '5.9.0'
+            );
+        }
+
         $this->name      = get_bloginfo('name');
         $this->start_url = home_url();
         $this->scope     = home_url();
 
         self::$attributes = [
-            'name'             => $this->name,
-            'short_name'       => $this->short_name,
-            'background_color' => $this->background_color,
-            'theme_color'      => $this->theme_color,
-            'display'          => $this->display,
+            'name'             => isset($attributes['name']) ? $attributes['name'] : $this->name,
+            'short_name'       => isset($attributes['short_name']) ? $attributes['short_name'] : $this->name,
+            'background_color' => isset($attributes['background_color']) ? $attributes['background_color'] : $this->background_color,
+            'theme_color'      => isset($attributes['theme_color']) ? $attributes['theme_color'] : $this->theme_color,
             'orientation'      => $this->orientation,
-            'start_url'        => $this->start_url,
             'scope'            => $this->scope,
         ];
 
-        if (false === $installable) {
-            unset(self::$attributes['display'], self::$attributes['start_url']);
+
+        if (true === $attributes || (isset($attributes['installable']) && true === $attributes['installable'])) {
+            self::$attributes['display']   = isset($attributes['display']) ? $attributes['display'] : $this->display;
+            self::$attributes['start_url'] = isset($attributes['start_url']) ? $attributes['start_url'] : $this->start_url;
         }
 
         add_action('parse_request', [$this, 'generate_manifest']);
