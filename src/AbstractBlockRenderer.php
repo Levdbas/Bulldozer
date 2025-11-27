@@ -652,6 +652,18 @@ abstract class AbstractBlockRenderer
     /**
      * Get the block alignment.
      * 
+     * @since 5.9.1
+     * @api
+     * @return string
+     */
+    public function get_post_id(): int
+    {
+        return $this->post_id ?? 0;
+    }
+
+    /**
+     * Get the block alignment.
+     * 
      * @since 5.5.1
      * @api
      * @return string
