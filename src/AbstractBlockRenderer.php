@@ -93,7 +93,7 @@ abstract class AbstractBlockRenderer
     /**
      * Block name with acf/ prefix.
      */
-    protected string $name;
+    protected string $name = '';
 
     /**
      * Block slug without acf/prefix.
