@@ -35,7 +35,9 @@ add_filter('bulldozer/blockrenderer/block/section/classes', function (array $cla
 
 Filters the registered fields for a particular block.
 
-**since** 5.1.0
+`$slug` The block slug.
+
+**since** 5.10.0
 
 <div class="table-responsive">
 
@@ -54,6 +56,34 @@ add_filter('bulldozer/blockrenderer/block/section/fields', function (FieldsBuild
    ]);
 
    return $fields;
+});
+```
+
+## bulldozer/blockrenderer/block/.$this->slug./context
+
+Filters the block context for a particular block.
+
+Be aware to not overwrite existing context keys unless intended. If you overwrite existing keys you may break the block rendering.
+
+`$slug` The block slug.
+
+**since** 5.10.0
+
+<div class="table-responsive">
+
+| Name | Type | Description |
+| --- | --- | --- |
+| $ | `array` | The block context. |
+
+</div>
+
+**PHP**
+
+```php
+add_filter('bulldozer/blockrenderer/block/section/context', function (array $context) {
+   $context['custom_key'] = 'Custom Value';
+
+   return $context;
 });
 ```
 

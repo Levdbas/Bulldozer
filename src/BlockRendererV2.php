@@ -109,7 +109,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
          *
          * `$slug` The block slug.
          *
-         * @since 5.1.0
+         * @since 5.10.0
          * @param array<string, mixed> An array of scroll values.
          * @return FieldsBuilder 
          * @example
@@ -298,6 +298,28 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         ];
 
         $context = array_merge($context, $args);
+
+        /**
+         * Filters the block context for a particular block.
+         * 
+         * Be aware to not overwrite existing context keys unless intended. If you overwrite existing keys you may break the block rendering.
+         *
+         * `$slug` The block slug.
+         *
+         * @since 5.10.0
+         * @param array< mixed> The block context.
+         * @return array< mixed> The block context. 
+         * @example
+         * ```php
+         * add_filter('bulldozer/blockrenderer/block/section/context', function (array $context) {
+         *    $context['custom_key'] = 'Custom Value';
+         * 
+         *    return $context;
+         * });
+         * ```
+         */
+        $context = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/context', $context);
+
         $this->render($context);
     }
 
