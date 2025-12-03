@@ -1,5 +1,36 @@
 # Filter Hooks
 
+## bulldozer/blockrenderer/block/.$this->slug./classes
+
+Filters the block classes before rendering.
+
+`$slug` The block slug.
+
+**since** 5.10.0
+
+<div class="table-responsive">
+
+| Name | Type | Description |
+| --- | --- | --- |
+| $classes | `string[]` | Array of block classes. |
+| $fields | `array` | Array of block fields values. |
+| $attributes | `array` | Array of block attributes. |
+
+</div>
+
+**PHP**
+
+```php
+add_filter('bulldozer/blockrenderer/block/section/classes', function (array $classes, array $fields, array $attributes) {
+    // Add a custom class based on a field value
+   if (!empty($fields['custom_field'])) {
+       $classes[] = 'custom-class-' . $fields['custom_field'];
+   }
+
+   return $classes;
+}, 10, 3);
+```
+
 ## bulldozer/blockrenderer/block/.$this->slug./fields
 
 Filters the registered fields for a particular block.
