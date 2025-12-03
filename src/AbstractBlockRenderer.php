@@ -567,6 +567,30 @@ abstract class AbstractBlockRenderer
         // add $this->slug  as class at the start
         array_unshift($this->classes, $this->slug);
 
+        /**
+         * Filters the block classes before rendering.
+         *
+         * `$slug` The block slug.
+         * 
+         * @since 5.10.0
+         * @param array<string> $classes Array of block classes.
+         * @param array        $fields  Array of block fields values.
+         * @param array        $attributes Array of block attributes.
+         * @return array<string>
+         * @example
+         * ```php
+         * add_filter('bulldozer/blockrenderer/block/section/classes', function (array $classes, array $fields, array $attributes) {
+         *     // Add a custom class based on a field value
+         *    if (!empty($fields['custom_field'])) {
+         *        $classes[] = 'custom-class-' . $fields['custom_field'];
+         *    }
+         * 
+         *    return $classes;
+         * }, 10, 3);
+         * ```
+         */
+        $this->classes = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/classes', $this->classes, $this->fields, $this->attributes);
+
         $this->classes = array_unique($this->classes);
     }
 
