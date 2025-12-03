@@ -8,8 +8,10 @@ namespace HighGround\Bulldozer;
 
 /**
  * Asset class.
- *
+ * 
  * This singleton class stores the manifest.json file and provides methods to retrieve the assets.
+ * 
+ * @api
  */
 class Asset
 {
@@ -54,7 +56,7 @@ class Asset
     private function __construct($key = null)
     {
         if (null === self::$manifest) {
-            $manifest = get_stylesheet_directory().'/dist/manifest.json';
+            $manifest = get_stylesheet_directory() . '/dist/manifest.json';
 
             if (!file_exists($manifest)) {
                 Bulldozer::frontend_error(__('Did you run Webpack for the first time?', 'bulldozer'), 'Manifest file not found');
@@ -86,7 +88,8 @@ class Asset
 
     /**
      * Magic method to get the uri of the asset when the object is cast to a string.
-     *
+     * 
+     * @api
      * @return false|string
      */
     public function __toString()
@@ -96,7 +99,8 @@ class Asset
 
     /**
      * Get the manifest file.
-     *
+     * 
+     * @api
      * @return array
      */
     public static function get_manifest()
@@ -108,9 +112,9 @@ class Asset
 
     /**
      * Get asset by key.
-     *
+     * 
+     * @api
      * @param string $key key of the asset
-     *
      * @return object
      */
     public static function get_key($key)
@@ -122,6 +126,9 @@ class Asset
 
     /**
      * Get the uri to the asset.
+     * 
+     * @api
+     * @return false|string
      */
     public function uri(): string
     {
@@ -129,19 +136,23 @@ class Asset
             return false;
         }
 
-        return get_stylesheet_directory_uri().'/dist/'.$this->path;
+        return get_stylesheet_directory_uri() . '/dist/' . $this->path;
     }
 
     /**
      * Get the path to the asset.
+     * 
+     * @api
      */
     public function path(): string
     {
-        return get_stylesheet_directory().'/dist/'.$this->path;
+        return get_stylesheet_directory() . '/dist/' . $this->path;
     }
 
     /**
      * Check if the asset exists.
+     * 
+     * @api
      */
     public function exists(): bool
     {
@@ -154,6 +165,8 @@ class Asset
 
     /**
      * Get the contents of the asset.
+     * 
+     * @api
      */
     public function contents(): false|string
     {
@@ -166,7 +179,8 @@ class Asset
 
     /**
      * Get the contents of the asset as JSON.
-     *
+     * 
+     * @api
      * @param bool $assoc whether to return an associative array
      *
      * @return array|false

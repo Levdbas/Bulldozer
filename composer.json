@@ -14,7 +14,7 @@
   "prefer-stable": true,
   "require": {
     "php": ">=8.2.0",
-    "composer/installers": 	"^1.0 || ^2.0",
+    "composer/installers": "^1.0 || ^2.0",
     "symfony/finder": "^7.0",
     "stoutlogic/acf-builder": "^1.12",
     "timber/timber": "^2.2"
@@ -50,17 +50,22 @@
     "wpackagist-plugin/advanced-custom-fields": "^6.0",
     "yoast/wp-test-utils": "^1.2",
     "phpcompatibility/php-compatibility": "^9",
+    "timber/teak": "^1.2",
     "automattic/wordbless": "^0.4.2"
-},
-"scripts": {
-  "post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
-		"post-update-cmd": "WorDBless\\Composer\\InstallDropin::copy",
-  "analyze": "phpstan analyse --memory-limit=1G",
-  "lint:fix": "@php ./vendor/bin/phpcbf --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
-  "lint": "@php ./vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
-  "test": "@php ./vendor/bin/phpunit",
-  "sniffer:php8": "@php ./vendor/bin/phpcs -p ./includes --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 8.1"
-},
+  },
+  "scripts": {
+    "post-install-cmd": "WorDBless\\Composer\\InstallDropin::copy",
+    "post-update-cmd": "WorDBless\\Composer\\InstallDropin::copy",
+    "analyze": "phpstan analyse --memory-limit=1G",
+    "lint:fix": "@php ./vendor/bin/phpcbf --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
+    "lint": "@php ./vendor/bin/phpcs --standard=phpcs.xml.dist --extensions=php --colors -s -p -v ./",
+    "test": "@php ./vendor/bin/phpunit",
+    "sniffer:php8": "@php ./vendor/bin/phpcs -p ./includes --standard=vendor/phpcompatibility/php-compatibility/PHPCompatibility --runtime-set testVersion 8.1",
+    "docs:classes": "vendor/bin/teak generate:class-reference ./src/ --output ./docs/reference",
+    "docs:filters": "vendor/bin/teak generate:hook-reference ./src/ --output ./docs/hooks --hook_type=filter",
+    "docs:actions": "vendor/bin/teak generate:hook-reference ./src/ --output ./docs/hooks --hook_type=action",
+    "docs:all": "composer run docs:classes && composer run docs:filters && composer run docs:actions"
+  },
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
