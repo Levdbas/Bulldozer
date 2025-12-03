@@ -107,6 +107,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         /**
          * Filters the registered fields for a particular block.
          *
+         * `$slug` The block slug.
          *
          * @since 5.1.0
          * @param array<string, mixed> An array of scroll values.
