@@ -9,7 +9,7 @@ Bulldozer is a collection of classes to extend your (Timber) based theme.
 * Cachebuster - A few methods to help you bust your cache via a Cron job.
 * Site Icons - Adds your favicon files directly from your theme to your WordPress site.
 
-
+📖 **[View Full Documentation](https://levdbas.github.io/Bulldozer/#/)**
 
 * * *
 
