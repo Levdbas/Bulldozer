@@ -18,7 +18,7 @@ use HighGround\Bulldozer\Asset;
  * - asset($key)->json(); // returns decoded json
  *
  * @param string $key array key name in the manifest file
- *
+ * @api
  * @return Asset
  */
 function asset($key)

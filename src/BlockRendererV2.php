@@ -22,7 +22,8 @@ use Timber\Timber;
  * - change_metadata: This method is called by the acf filter block_type_metadata.
  * - add_block_variations: This method is called by the change_metadata method.
  * - add_icon: : This method is called by the change_metadata method.
- *
+ * 
+ * @api
  * @since 3.0.0
  */
 abstract class BlockRendererV2 extends AbstractBlockRenderer
@@ -103,6 +104,24 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
         $this->add_hidden_fields($block);
         $this->add_fields();
 
+        /**
+         * Filters the registered fields for a particular block.
+         *
+         *
+         * @since 5.1.0
+         * @param array<string, mixed> An array of scroll values.
+         * @return FieldsBuilder 
+         * @example
+         * ```php
+         * add_filter('bulldozer/blockrenderer/block/section/fields', function (FieldsBuilder $fields) {
+         *     ->addText('custom_field', [
+         *         'label' => 'Custom Field',
+         *    ]);
+         * 
+         *    return $fields;
+         * });
+         * ```
+         */
         $this->registered_fields = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/fields', $this->registered_fields);
 
         if ($this->registered_fields) {

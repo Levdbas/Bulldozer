@@ -627,11 +627,30 @@ abstract class AbstractBlockRenderer
         return $this->fields[$field_name] ?? null;
     }
 
+    /**
+     * Get block attribute.
+     * 
+     * @since 5.5.1
+     * @api
+     * @param string $attribute_name the attribute name
+     * @return mixed the attribute value
+     */
     public function get_attribute(string $attribute_name)
     {
         return $this->attributes[$attribute_name] ?? null;
     }
 
+    /**
+     * Check if the block is rendered in preview mode.
+     * 
+     * This is true when the block is rendered in the backend.
+     * 
+     * Use this method to conditionally load assets or change the rendering.
+     * 
+     * @since 5.5.1
+     * @api
+     * @return bool
+     */
     public function is_preview(): bool
     {
         return $this->is_preview;
@@ -673,28 +692,67 @@ abstract class AbstractBlockRenderer
         return $this->attributes['align'] ?? '';
     }
 
+    /**
+     * Check if the block is full width.
+     * 
+     * @since 5.5.1
+     * @api
+     * @return bool
+     */
     public function is_full_width(): bool
     {
         return 'full' === $this->get_block_alignment();
     }
 
+    /**
+     * Check if the block is wide width.
+     * 
+     * @since 5.5.1
+     * @api
+     * @return bool
+     */
     public function is_wide_width(): bool
     {
         return 'wide' === $this->get_block_alignment();
     }
 
 
+    /**
+     * Mark the renderer's block as disabled.
+     *
+     * Sets the internal flag indicating the block is disabled so that subsequent
+     * rendering logic can treat this block as inactive or skip its output.
+     * 
+     * @since 5.5.1
+     * @api 
+     * @return void
+     */
     public function set_disabled()
     {
         $this->block_disabled = true;
     }
 
+    /**
+     * Add css to the compiled css.
+     * 
+     * @since 5.5.1
+     * @api
+     * @param string $css the css to add
+     * @return string the compiled css
+     */
     public function add_css(string $css): string
     {
         $this->compiled_css .= $css;
         return $this->compiled_css;
     }
 
+    /**
+     * Set the block alignment.
+     * @since 5.5.1
+     * @api
+     * @param string $alignment the alignment, can be wide or full
+     * @return void
+     */
     public function set_alignment(string $alignment): void
     {
         // can be wide or full
@@ -706,11 +764,28 @@ abstract class AbstractBlockRenderer
         $this->attributes['align'] = $alignment;
     }
 
+    /**
+     * Set a block attribute.
+     * 
+     * @since 5.5.1
+     * @api
+     * @param string $attribute_name the attribute name
+     * @param mixed  $value          the value to set
+     * @return void
+     */
     public function set_attribute(string $attribute_name, mixed $value): void
     {
         $this->attributes[$attribute_name] = $value;
     }
 
+    /**
+     * Set the block anchor.
+     * 
+     * @since 5.5.1
+     * @api
+     * @param string $value the anchor value
+     * @return void
+     */
     public function set_anchor(string $value): void
     {
         $this->attributes['anchor'] = $value;

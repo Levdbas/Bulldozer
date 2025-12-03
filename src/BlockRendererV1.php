@@ -18,7 +18,8 @@ use Timber\Timber;
  * In addition to AbstractBlockRenderer this extended class adds the following:
  *
  * - block_register: This abstract method must be implemented by the extended class.
- *
+ * 
+ * @api
  * @since 3.0.0
  */
 abstract class BlockRendererV1 extends AbstractBlockRenderer
