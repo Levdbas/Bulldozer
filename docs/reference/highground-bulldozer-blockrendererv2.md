@@ -59,6 +59,15 @@ Register the block variants.
 
 **Returns:** `array|false` 
 
+**PHP**
+
+```php
+public function register_requirements(): bool
+{
+ return class_exists('RankMath\Helper', false);
+}
+```
+
 ---
 
 ### add\_class()
@@ -83,6 +92,16 @@ When an array is passed, it will merge the array with the existing classes.
 | $class | `string` or `array` | the class or array of classes |
 
 </div>
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+$this->add_class(['section', 'has-background']);
+return $context;
+}
+```
 
 ---
 
@@ -130,11 +149,31 @@ Add css variable with the value based on an acf field.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+ $this->add_css_var('color_card_bg', 'card-base-background-color', '.crd');
+
+ return $context;
+}
+```
+
 ---
 
 ### add\_icon()
 
 Empty function that can be overwritten by the blocks to add a custom icon.
+
+**PHP**
+
+```php
+public function add_icon(): string|false
+{
+ return '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid-3x3-gap-fill" viewBox="0 0 16 16"><path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V7zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2z"/></svg>';
+}
+```
 
 ---
 
@@ -155,6 +194,18 @@ Add modifier class to block classes.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+if ($this->get_field('is_featured')) {
+ 	$this->add_modifier_class('featured');
+}
+return $context;
+}
+```
+
 ---
 
 ### add\_notification()
@@ -174,6 +225,20 @@ Compose a notification to be shown in the backend.
 | $type | `string` | type of notification, can be notice, warning or error |
 
 </div>
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+$posts = Timber::get_posts([
+   'post_type' => 'post',
+   'posts_per_page' => 3,
+])->to_array();
+if (empty($posts)) {
+  $this->add_notification(__('Please add some posts.', 'wp-lemon-child'), 'warning');
+}
+```
 
 ---
 
@@ -202,6 +267,18 @@ Generate inner blocks appender.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+ $args = [
+     'InnerBlocks' => self::create_inner_blocks($allowed_blocks, $template, 'row archive-content', 'horizontal'),
+ ];
+ return array_merge($context, $args);
+}
+```
+
 ---
 
 ### get\_attribute()
@@ -225,6 +302,16 @@ Get block attribute.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$align = $this->get_attribute('align');
+	return $context;
+}
+```
+
 ---
 
 ### get\_block\_alignment()
@@ -238,6 +325,16 @@ Get the block alignment.
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+  $alignment = $this->get_block_alignment();
+  return $context;
+ }
+```
+
 ---
 
 ### get\_block\_id()
@@ -250,6 +347,16 @@ Get the block id.
 
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+  $block_id = $this->get_block_id();
+  return $context;
+}
+```
 
 ---
 
@@ -274,6 +381,16 @@ get ACF field value.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$is_featured = $this->get_field('is_featured');
+	return $context;
+}
+```
+
 ---
 
 ### get\_post\_id()
@@ -287,11 +404,31 @@ Get the block alignment.
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+  $post_id = $this->get_post_id();
+  return $context;
+}
+```
+
 ---
 
 ### hide\_from\_inserter()
 
 Empty function that can be overwritten by the blocks to add custom logic to hide the block from the inserter.
+
+**PHP**
+
+```php
+public function hide_from_inserter(): bool
+{
+ $env = get_constant('WP_ENV');
+ return $env === 'production';
+}
+```
 
 ---
 
@@ -305,6 +442,18 @@ Check if the block is full width.
 
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+ if ($this->is_full_width()) {
+     $this->add_class('has-background');
+ }
+ return $context;
+}
+```
 
 ---
 
@@ -323,6 +472,18 @@ Use this method to conditionally load assets or change the rendering.
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	if ($this->is_preview()) {
+ 		$this->add_notification(__('This is a preview mode.', 'wp-lemon-child'), 'notice');
+	}
+	return $context;
+}
+```
+
 ---
 
 ### is\_wide\_width()
@@ -336,6 +497,18 @@ Check if the block is wide width.
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+ if ($this->is_wide_width()) {
+     $this->add_class('has-background');
+ }
+ return $context;
+}
+```
+
 ---
 
 ### register\_requirements()
@@ -344,6 +517,61 @@ Whether the block meets the requirements and should be registered.
 
 This method can be overwritten by the block to add requirements
 on a per block basis.
+
+**PHP**
+
+```php
+public function add_block_variations()
+{
+    $variations = [];
+
+    $post_types = get_post_types(
+        [
+            'enable_overview_block' => true,
+        ],
+        'objects'
+    );
+
+    $i = 0;
+    foreach ($post_types as $post_type_obj) {
+        $variant = [
+            'name'        => sanitize_title('nodeOverview_' . $post_type_obj->name),
+            'title'       => sprintf(_x('%1$s overview', 'Dynamic Block title', 'wp-lemon'), $post_type_obj->labels->singular_name),
+            'description' => sprintf(_x('Shows a dynamic overview of %1$s items. You can choose to show a filter or loadmore button.', 'Dynamic block description', 'wp-lemon'), strtolower($post_type_obj->labels->name)),
+            'icon'        => str_replace('dashicons-', '', $post_type_obj->menu_icon),
+            'isDefault'   => 0 === $i,
+            'keywords'    => [
+                _x('overview', 'Block keyword', 'wp-lemon'),
+                _x('items', 'Block keyword', 'wp-lemon'),
+                _x('archive', 'Block keyword', 'wp-lemon'),
+                _x('posts', 'Block keyword', 'wp-lemon'),
+                _x('grid', 'Block keyword', 'wp-lemon'),
+                _x('latest', 'Block keyword', 'wp-lemon'),
+                $post_type_obj->name,
+                sprintf(_x('%s archive', 'Block keyword', 'wp-lemon'), $post_type_obj->name),
+            ],
+            "example"     => [
+                "viewportWidth" => 1100,
+                'attributes'    => [
+                    'data' => [
+                        'field_node-overview_query_post_type' => $post_type_obj->name,
+                    ],
+                ],
+            ],
+            'attributes'  => [
+                'data' => [
+                    'field_node-overview_query_post_type' => $post_type_obj->name,
+                ],
+            ],
+        ];
+
+        $variations[] = $variant;
+        $i++;
+    }
+
+    return $variations;
+}
+```
 
 ---
 
@@ -368,6 +596,16 @@ Set the block alignment.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$this->set_alignment('full');
+	return $context;
+}
+```
+
 ---
 
 ### set\_anchor()
@@ -390,6 +628,16 @@ Set the block anchor.
 | $value | `string` | the anchor value |
 
 </div>
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$this->set_anchor('my-custom-anchor');
+	return $context;
+}
+```
 
 ---
 
@@ -415,6 +663,16 @@ Set a block attribute.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$this->set_attribute('align', 'full');
+	return $context;
+}
+```
+
 ---
 
 ### set\_disabled()
@@ -430,6 +688,19 @@ rendering logic can treat this block as inactive or skip its output.
 
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
+
+**PHP**
+
+```php
+public function block_context($context): array
+ if (empty($this->get_field('gallery'))) {
+     $this->add_notification(__('Add images to the slider', 'wp-lemon-child'), 'warning');
+     $this->set_disabled();
+     return $context;
+ }
+ return $context;
+}
+```
 
 ---
 

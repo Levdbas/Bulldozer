@@ -66,6 +66,16 @@ When an array is passed, it will merge the array with the existing classes.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+$this->add_class(['section', 'has-background']);
+return $context;
+}
+```
+
 ---
 
 ### add\_css()
@@ -112,6 +122,17 @@ Add css variable with the value based on an acf field.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+ $this->add_css_var('color_card_bg', 'card-base-background-color', '.crd');
+
+ return $context;
+}
+```
+
 ---
 
 ### add\_modifier\_class()
@@ -130,6 +151,18 @@ Add modifier class to block classes.
 | $modifier | `string` | the part after the -- from the BEM principle |
 
 </div>
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+if ($this->get_field('is_featured')) {
+ 	$this->add_modifier_class('featured');
+}
+return $context;
+}
+```
 
 ---
 
@@ -150,6 +183,20 @@ Compose a notification to be shown in the backend.
 | $type | `string` | type of notification, can be notice, warning or error |
 
 </div>
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+$posts = Timber::get_posts([
+   'post_type' => 'post',
+   'posts_per_page' => 3,
+])->to_array();
+if (empty($posts)) {
+  $this->add_notification(__('Please add some posts.', 'wp-lemon-child'), 'warning');
+}
+```
 
 ---
 
@@ -178,6 +225,18 @@ Generate inner blocks appender.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+ $args = [
+     'InnerBlocks' => self::create_inner_blocks($allowed_blocks, $template, 'row archive-content', 'horizontal'),
+ ];
+ return array_merge($context, $args);
+}
+```
+
 ---
 
 ### get\_attribute()
@@ -201,6 +260,16 @@ Get block attribute.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$align = $this->get_attribute('align');
+	return $context;
+}
+```
+
 ---
 
 ### get\_block\_alignment()
@@ -214,6 +283,16 @@ Get the block alignment.
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+  $alignment = $this->get_block_alignment();
+  return $context;
+ }
+```
+
 ---
 
 ### get\_block\_id()
@@ -226,6 +305,16 @@ Get the block id.
 
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+  $block_id = $this->get_block_id();
+  return $context;
+}
+```
 
 ---
 
@@ -250,6 +339,16 @@ get ACF field value.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$is_featured = $this->get_field('is_featured');
+	return $context;
+}
+```
+
 ---
 
 ### get\_post\_id()
@@ -263,6 +362,16 @@ Get the block alignment.
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+  $post_id = $this->get_post_id();
+  return $context;
+}
+```
+
 ---
 
 ### is\_full\_width()
@@ -275,6 +384,18 @@ Check if the block is full width.
 
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+ if ($this->is_full_width()) {
+     $this->add_class('has-background');
+ }
+ return $context;
+}
+```
 
 ---
 
@@ -293,6 +414,18 @@ Use this method to conditionally load assets or change the rendering.
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	if ($this->is_preview()) {
+ 		$this->add_notification(__('This is a preview mode.', 'wp-lemon-child'), 'notice');
+	}
+	return $context;
+}
+```
+
 ---
 
 ### is\_wide\_width()
@@ -305,6 +438,18 @@ Check if the block is wide width.
 
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+ if ($this->is_wide_width()) {
+     $this->add_class('has-background');
+ }
+ return $context;
+}
+```
 
 ---
 
@@ -329,6 +474,16 @@ Set the block alignment.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$this->set_alignment('full');
+	return $context;
+}
+```
+
 ---
 
 ### set\_anchor()
@@ -351,6 +506,16 @@ Set the block anchor.
 | $value | `string` | the anchor value |
 
 </div>
+
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$this->set_anchor('my-custom-anchor');
+	return $context;
+}
+```
 
 ---
 
@@ -376,6 +541,16 @@ Set a block attribute.
 
 </div>
 
+**PHP**
+
+```php
+public function block_context($context): array
+{
+	$this->set_attribute('align', 'full');
+	return $context;
+}
+```
+
 ---
 
 ### set\_disabled()
@@ -391,6 +566,19 @@ rendering logic can treat this block as inactive or skip its output.
 
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
+
+**PHP**
+
+```php
+public function block_context($context): array
+ if (empty($this->get_field('gallery'))) {
+     $this->add_notification(__('Add images to the slider', 'wp-lemon-child'), 'warning');
+     $this->set_disabled();
+     return $context;
+ }
+ return $context;
+}
+```
 
 ---
 

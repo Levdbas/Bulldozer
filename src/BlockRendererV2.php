@@ -22,340 +22,415 @@ use Timber\Timber;
  * - change_metadata: This method is called by the acf filter block_type_metadata.
  * - add_block_variations: This method is called by the change_metadata method.
  * - add_icon: : This method is called by the change_metadata method.
- * 
+ *
  * @api
  * @since 3.0.0
  */
 abstract class BlockRendererV2 extends AbstractBlockRenderer
 {
-    public const BLOCK_VERSION = 2;
+	public const BLOCK_VERSION = 2;
 
-    public const NAME = null;
+	public const NAME = null;
 
-    /**
-     * Whether the block should always have a block id or not.
-     * Normally the block id is only added when the block has an anchor.
-     */
-    protected bool $always_add_block_id = false;
+	/**
+	 * Whether the block should always have a block id or not.
+	 * Normally the block id is only added when the block has an anchor.
+	 */
+	protected bool $always_add_block_id = false;
 
-    /**
-     * Location of the block.
-     */
-    private string $block_location = '';
+	/**
+	 * Location of the block.
+	 */
+	private string $block_location = '';
 
-    /**
-     * Passes the register method to acf.
-     */
-    final public function __construct()
-    {
-        if (false == $this->register_requirements()) {
-            return;
-        }
+	/**
+	 * Passes the register method to acf.
+	 */
+	final public function __construct()
+	{
+		if (false == $this->register_requirements()) {
+			return;
+		}
 
-        add_action('init', [$this, 'register_block']);
-        add_filter('block_type_metadata', [$this, 'change_metadata']);
-        add_filter('block_type_metadata_settings', [$this, 'block_type_metadata_settings'], 10, 2);
-        add_action('enqueue_block_assets', [$this, 'alter_enqueue_block_assets']);
-    }
+		add_action('init', [$this, 'register_block']);
+		add_filter('block_type_metadata', [$this, 'change_metadata']);
+		add_filter('block_type_metadata_settings', [$this, 'block_type_metadata_settings'], 10, 2);
+		add_action('enqueue_block_assets', [$this, 'alter_enqueue_block_assets']);
+	}
 
-    /**
-     * Register the block.
-     *
-     * First checks if the block name is set and if the block.json file exists.
-     * If the block.json file exists it will be used to register the block by using register_block_type().
-     * In addition to registering the block it will also register the block styles, setup the fields group and add the hidden fields.
-     *
-     * @throws \Exception If the block name is not set or the block is not found in the theme and if the block.json file is not found.
-     *
-     * @internal
-     */
-    public function register_block(): void
-    {
-        if (null === static::NAME) {
-            throw new \Exception(esc_html('CONST::NAME not set for ' . get_class($this)));
+	/**
+	 * Register the block.
+	 *
+	 * First checks if the block name is set and if the block.json file exists.
+	 * If the block.json file exists it will be used to register the block by using register_block_type().
+	 * In addition to registering the block it will also register the block styles, setup the fields group and add the hidden fields.
+	 *
+	 * @throws \Exception If the block name is not set or the block is not found in the theme and if the block.json file is not found.
+	 *
+	 * @internal
+	 */
+	public function register_block(): void
+	{
+		if (null === static::NAME) {
+			throw new \Exception(esc_html('CONST::NAME not set for ' . get_class($this)));
 
-            return;
-        }
+			return;
+		}
 
-        if (! function_exists('acf_add_local_field_group')) {
-            $message = _x('ACF not activated.', 'Error explanation', 'bulldozer');
-            Bulldozer::frontend_error($message);
-            Bulldozer::backend_notification($message, 'error');
+		if (! function_exists('acf_add_local_field_group')) {
+			$message = _x('ACF not activated.', 'Error explanation', 'bulldozer');
+			Bulldozer::frontend_error($message);
+			Bulldozer::backend_notification($message, 'error');
 
-            return;
-        }
+			return;
+		}
 
-        $class_info = new \ReflectionClass($this);
+		$class_info = new \ReflectionClass($this);
 
-        // get dir from file path
-        $this->block_location = plugin_dir_path($class_info->getFileName());
-        $json_file            = $this->block_location . 'block.json';
+		// get dir from file path
+		$this->block_location = plugin_dir_path($class_info->getFileName());
+		$json_file            = $this->block_location . 'block.json';
 
-        $block = register_block_type($json_file);
+		$block = register_block_type($json_file);
 
-        if (false === $block) {
-            throw new \Exception(esc_html('Block ' . static::NAME . ' not found in theme'));
+		if (false === $block) {
+			throw new \Exception(esc_html('Block ' . static::NAME . ' not found in theme'));
 
-            return;
-        }
-        $this->name = $block->name;
-        $this->slug = str_replace('acf/', '', $this->name);
-        $this->setup_fields_group($this->name, $this->slug);
-        $this->add_hidden_fields($block);
-        $this->add_fields();
+			return;
+		}
+		$this->name = $block->name;
+		$this->slug = str_replace('acf/', '', $this->name);
+		$this->setup_fields_group($this->name, $this->slug);
+		$this->add_hidden_fields($block);
+		$this->add_fields();
 
-        /**
-         * Filters the registered fields for a particular block.
-         *
-         * `$slug` The block slug.
-         *
-         * @since 5.10.0
-         * @param array<string, mixed> An array of scroll values.
-         * @return FieldsBuilder 
-         * @example
-         * ```php
-         * add_filter('bulldozer/blockrenderer/block/section/fields', function (FieldsBuilder $fields) {
-         *     ->addText('custom_field', [
-         *         'label' => 'Custom Field',
-         *    ]);
-         * 
-         *    return $fields;
-         * });
-         * ```
-         */
-        $this->registered_fields = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/fields', $this->registered_fields);
+		/**
+		 * Filters the registered fields for a particular block.
+		 *
+		 * `$slug` The block slug.
+		 *
+		 * @since 5.10.0
+		 * @param array<string, mixed> An array of scroll values.
+		 * @return FieldsBuilder
+		 * @example
+		 * ```php
+		 * add_filter('bulldozer/blockrenderer/block/section/fields', function (FieldsBuilder $fields) {
+		 *     ->addText('custom_field', [
+		 *         'label' => 'Custom Field',
+		 *    ]);
+		 *
+		 *    return $fields;
+		 * });
+		 * ```
+		 */
+		$this->registered_fields = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/fields', $this->registered_fields);
 
-        if ($this->registered_fields) {
-            acf_add_local_field_group($this->registered_fields->build());
-        }
-    }
+		if ($this->registered_fields) {
+			acf_add_local_field_group($this->registered_fields->build());
+		}
+	}
 
-    /**
-     * This method is called to first dequeue the default acf block styles and then enqueue the block styles on render_block.
-     *
-     * @internal description
-     */
-    public function alter_enqueue_block_assets()
-    {
-        $name = $this->name;
-        $name = str_replace('/', '-', $this->name);
+	/**
+	 * This method is called to first dequeue the default acf block styles and then enqueue the block styles on render_block.
+	 *
+	 * @internal description
+	 */
+	public function alter_enqueue_block_assets()
+	{
+		$name = $this->name;
+		$name = str_replace('/', '-', $this->name);
 
-        if (is_admin()) {
-            return;
-        }
+		if (is_admin()) {
+			return;
+		}
 
-        wp_dequeue_style($name . '-style');
-    }
+		wp_dequeue_style($name . '-style');
+	}
 
-    /**
-     * Update the block metadata.
-     *
-     * @param array $metadata the block metadata
-     */
-    public function change_metadata($metadata)
-    {
-        if ('acf/' . static::NAME !== $metadata['name']) {
-            return $metadata;
-        }
+	/**
+	 * Update the block metadata.
+	 *
+	 * @param array $metadata the block metadata
+	 */
+	public function change_metadata($metadata)
+	{
+		if ('acf/' . static::NAME !== $metadata['name']) {
+			return $metadata;
+		}
 
-        $metadata['acf']['renderCallback'] = [$this, 'compile'];
+		$metadata['acf']['renderCallback'] = [$this, 'compile'];
 
-        $variations = $this->add_block_variations();
-        $icon       = $this->add_icon();
-        $hide       = $this->hide_from_inserter();
+		$variations = $this->add_block_variations();
+		$icon       = $this->add_icon();
+		$hide       = $this->hide_from_inserter();
 
-        if (false !== $variations) {
-            $metadata['variations'] = $variations;
-        }
+		if (false !== $variations) {
+			$metadata['variations'] = $variations;
+		}
 
-        if (false !== $icon) {
-            $metadata['icon'] = $icon;
-        }
+		if (false !== $icon) {
+			$metadata['icon'] = $icon;
+		}
 
-        if (true === $hide) {
-            $metadata['supports']['inserter'] = false;
-        }
+		if (true === $hide) {
+			$metadata['supports']['inserter'] = false;
+		}
 
-        return $metadata;
-    }
+		return $metadata;
+	}
 
-    /**
-     * Add block type metadata settings.
-     *
-     * This method was introduced to add the version to the block settings.
-     * If we had a major update to the block we can use this to update the version and thus invalidate files.
-     *
-     * @param array $settings the block settings
-     * @param mixed $metadata
-     *
-     * @return array
-     */
-    public function block_type_metadata_settings($settings, $metadata)
-    {
-        if ('acf/' . static::NAME !== $metadata['name']) {
-            return $settings;
-        }
+	/**
+	 * Add block type metadata settings.
+	 *
+	 * This method was introduced to add the version to the block settings.
+	 * If we had a major update to the block we can use this to update the version and thus invalidate files.
+	 *
+	 * @param array $settings the block settings
+	 * @param mixed $metadata
+	 *
+	 * @return array
+	 */
+	public function block_type_metadata_settings($settings, $metadata)
+	{
+		if ('acf/' . static::NAME !== $metadata['name']) {
+			return $settings;
+		}
 
-        $settings['version'] = $metadata['version'] ?? '1.0.0';
+		$settings['version'] = $metadata['version'] ?? '1.0.0';
 
-        return $settings;
-    }
+		return $settings;
+	}
 
-    /**
-     * Whether the block meets the requirements and should be registered.
-     * This method can be overwritten by the block to add requirements
-     * on a per block basis.
-     *
-     * @api
-     */
-    public function register_requirements(): bool
-    {
-        return true;
-    }
+	/**
+	 * Whether the block meets the requirements and should be registered.
+	 * This method can be overwritten by the block to add requirements
+	 * on a per block basis.
+	 *
+	 * @api
+	 *
+	 * @example
+	 * ```php
+	 * public function add_block_variations()
+	 * {
+	 *     $variations = [];
+	 *
+	 *     $post_types = get_post_types(
+	 *         [
+	 *             'enable_overview_block' => true,
+	 *         ],
+	 *         'objects'
+	 *     );
+	 *
+	 *     $i = 0;
+	 *     foreach ($post_types as $post_type_obj) {
+	 *         $variant = [
+	 *             'name'        => sanitize_title('nodeOverview_' . $post_type_obj->name),
+	 *             'title'       => sprintf(_x('%1$s overview', 'Dynamic Block title', 'wp-lemon'), $post_type_obj->labels->singular_name),
+	 *             'description' => sprintf(_x('Shows a dynamic overview of %1$s items. You can choose to show a filter or loadmore button.', 'Dynamic block description', 'wp-lemon'), strtolower($post_type_obj->labels->name)),
+	 *             'icon'        => str_replace('dashicons-', '', $post_type_obj->menu_icon),
+	 *             'isDefault'   => 0 === $i,
+	 *             'keywords'    => [
+	 *                 _x('overview', 'Block keyword', 'wp-lemon'),
+	 *                 _x('items', 'Block keyword', 'wp-lemon'),
+	 *                 _x('archive', 'Block keyword', 'wp-lemon'),
+	 *                 _x('posts', 'Block keyword', 'wp-lemon'),
+	 *                 _x('grid', 'Block keyword', 'wp-lemon'),
+	 *                 _x('latest', 'Block keyword', 'wp-lemon'),
+	 *                 $post_type_obj->name,
+	 *                 sprintf(_x('%s archive', 'Block keyword', 'wp-lemon'), $post_type_obj->name),
+	 *             ],
+	 *             "example"     => [
+	 *                 "viewportWidth" => 1100,
+	 *                 'attributes'    => [
+	 *                     'data' => [
+	 *                         'field_node-overview_query_post_type' => $post_type_obj->name,
+	 *                     ],
+	 *                 ],
+	 *             ],
+	 *             'attributes'  => [
+	 *                 'data' => [
+	 *                     'field_node-overview_query_post_type' => $post_type_obj->name,
+	 *                 ],
+	 *             ],
+	 *         ];
+	 *
+	 *         $variations[] = $variant;
+	 *         $i++;
+	 *     }
+	 *
+	 *     return $variations;
+	 * }
+	 * ```
+	 */
+	public function register_requirements(): bool
+	{
+		return true;
+	}
 
-    /**
-     * Register the block variants.
-     *
-     * @see https://www.advancedcustomfields.com/blog/acf-5-9-introducing-block-variations/
-     *
-     * @api
-     *
-     * @return array|false
-     */
-    public function add_block_variations()
-    {
-        return false;
-    }
+	/**
+	 * Register the block variants.
+	 *
+	 * @see https://www.advancedcustomfields.com/blog/acf-5-9-introducing-block-variations/
+	 *
+	 * @api
+	 * @example
+	 * ```php
+	 * public function register_requirements(): bool
+	 * {
+	 *  return class_exists('RankMath\Helper', false);
+	 * }
+	 * ```
+	 * @return array|false
+	 */
+	public function add_block_variations()
+	{
+		return false;
+	}
 
-    /**
-     * Empty function that can be overwritten by the blocks to add a custom icon.
-     *
-     * @api
-     */
-    public function add_icon(): false | string
-    {
-        return false;
-    }
+	/**
+	 * Empty function that can be overwritten by the blocks to add a custom icon.
+	 *
+	 * @api
+	 * @example
+	 * ```php
+	 * public function add_icon(): string|false
+	 * {
+	 *  return '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid-3x3-gap-fill" viewBox="0 0 16 16"><path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V7zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2z"/></svg>';
+	 * }
+	 * ```
+	 */
+	public function add_icon(): false|string
+	{
+		return false;
+	}
 
-    /**
-     * Empty function that can be overwritten by the blocks to add custom logic to hide the block from the inserter.
-     *
-     * @api
-     */
-    public function hide_from_inserter(): bool
-    {
-        return false;
-    }
+	/**
+	 * Empty function that can be overwritten by the blocks to add custom logic to hide the block from the inserter.
+	 *
+	 * @api
+	 * @example
+	 * ```php
+	 * public function hide_from_inserter(): bool
+	 * {
+	 *  $env = get_constant('WP_ENV');
+	 *  return $env === 'production';
+	 * }
+	 * ```
+	 */
+	public function hide_from_inserter(): bool
+	{
+		return false;
+	}
 
-    /**
-     * Compile the block.
-     *
-     * @param array     $attributes the block attributes
-     * @param string    $content    the block content
-     * @param bool      $is_preview whether or not the block is being rendered for editing preview
-     * @param int       $post_id    the current post being edited or viewed
-     * @param \WP_Block $wp_block   The block instance (since WP 5.5).
-     */
-    public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
-    {
-        $this->block_disabled = false;
-        $this->fields         = [];
-        $context              = [];
-        self::$notifications  = [];
-        self::$title          = $attributes['title'];
-        $this->name           = $attributes['name'];
-        $this->slug           = str_replace('acf/', '', $attributes['name']);
-        $this->classes        = ['acf-block'];
-        $this->fields         = get_fields();
-        $context              = Timber::context();
-        $this->attributes     = $attributes;
-        $this->wp_block       = $wp_block;
-        $this->is_preview     = $is_preview;
-        $this->post_id        = $post_id;
-        $this->block_id       = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
+	/**
+	 * Compile the block.
+	 *
+	 * @param array     $attributes the block attributes
+	 * @param string    $content    the block content
+	 * @param bool      $is_preview whether or not the block is being rendered for editing preview
+	 * @param int       $post_id    the current post being edited or viewed
+	 * @param \WP_Block $wp_block   The block instance (since WP 5.5).
+	 */
+	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
+	{
+		$this->block_disabled = false;
+		$this->fields         = [];
+		$context              = [];
+		self::$notifications  = [];
+		self::$title          = $attributes['title'];
+		$this->name           = $attributes['name'];
+		$this->slug           = str_replace('acf/', '', $attributes['name']);
+		$this->classes        = ['acf-block'];
+		$this->fields         = get_fields();
+		$context              = Timber::context();
+		$this->attributes     = $attributes;
+		$this->wp_block       = $wp_block;
+		$this->is_preview     = $is_preview;
+		$this->post_id        = $post_id;
+		$this->block_id       = isset($this->attributes['anchor']) ? $this->attributes['anchor'] : $this->attributes['id'];
 
-        $this->maybe_add_deprecation_notice();
-        $this->maybe_disable_block();
+		$this->maybe_add_deprecation_notice();
+		$this->maybe_disable_block();
 
-        $context = $this->block_context($context);
-        $this->add_block_classes();
-        $this->generate_css_variables();
+		$context = $this->block_context($context);
+		$this->add_block_classes();
+		$this->generate_css_variables();
 
-        $args = [
-            'block_id'      => $this->maybe_add_block_id(),
-            'is_disabled'   => $this->block_disabled,
-            'parent'        => isset($context['parent']) ? $context['parent'] : $this->slug,
-            'slug'          => $this->slug,
-            'attributes'    => $this->attributes,
-            'is_preview'    => $this->is_preview,
-            'post_id'       => $this->post_id,
-            'fields'        => $this->fields,
-            'classes'       => $this->classes,
-            'inline_css'    => $this->generate_css(),
-            'notifications' => self::$notifications,
-            'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
-            //'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
-        ];
+		$args = [
+			'block_id'      => $this->maybe_add_block_id(),
+			'is_disabled'   => $this->block_disabled,
+			'parent'        => isset($context['parent']) ? $context['parent'] : $this->slug,
+			'slug'          => $this->slug,
+			'attributes'    => $this->attributes,
+			'is_preview'    => $this->is_preview,
+			'post_id'       => $this->post_id,
+			'fields'        => $this->fields,
+			'classes'       => $this->classes,
+			'inline_css'    => $this->generate_css(),
+			'notifications' => self::$notifications,
+			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
+			// 'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
+		];
 
-        $context = array_merge($context, $args);
+		$context = array_merge($context, $args);
 
-        /**
-         * Filters the block context for a particular block.
-         * 
-         * Be aware to not overwrite existing context keys unless intended. If you overwrite existing keys you may break the block rendering.
-         *
-         * `$slug` The block slug.
-         *
-         * @since 5.10.0
-         * @param array< mixed> The block context.
-         * @return array< mixed> The block context. 
-         * @example
-         * ```php
-         * add_filter('bulldozer/blockrenderer/block/section/context', function (array $context) {
-         *    $context['custom_key'] = 'Custom Value';
-         * 
-         *    return $context;
-         * });
-         * ```
-         */
-        $context = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/context', $context);
+		/**
+		 * Filters the block context for a particular block.
+		 *
+		 * Be aware to not overwrite existing context keys unless intended. If you overwrite existing keys you may break the block rendering.
+		 *
+		 * `$slug` The block slug.
+		 *
+		 * @since 5.10.0
+		 * @param array< mixed> The block context.
+		 * @return array< mixed> The block context.
+		 * @example
+		 * ```php
+		 * add_filter('bulldozer/blockrenderer/block/section/context', function (array $context) {
+		 *    $context['custom_key'] = 'Custom Value';
+		 *
+		 *    return $context;
+		 * });
+		 * ```
+		 */
+		$context = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/context', $context);
 
-        $this->render($context);
-    }
+		$this->render($context);
+	}
 
-    /**
-     * Renders the block.
-     *
-     * @throws \Exception if the block template is not found
-     *
-     * @internal locates the block template and renders it
-     */
-    private function render($context)
-    {
-        $twig_file_path = "@blocks/{$this->slug}/{$this->slug}.twig";
-        $output         = Timber::compile($twig_file_path, $context);
+	/**
+	 * Renders the block.
+	 *
+	 * @throws \Exception if the block template is not found
+	 *
+	 * @internal locates the block template and renders it
+	 */
+	private function render($context)
+	{
+		$twig_file_path = "@blocks/{$this->slug}/{$this->slug}.twig";
+		$output         = Timber::compile($twig_file_path, $context);
 
-        if (false === $output) {
-            throw new \Exception(sprintf(esc_attr__('Twig file %s not found.', 'bulldozer'), esc_attr($twig_file_path)));
+		if (false === $output) {
+			throw new \Exception(sprintf(esc_attr__('Twig file %s not found.', 'bulldozer'), esc_attr($twig_file_path)));
 
-            return;
-        }
-        echo $output;
-    }
+			return;
+		}
+		echo $output;
+	}
 
-    /**
-     * Add the block id to the block if has a anchor or if the block is always adding the id.
-     */
-    private function maybe_add_block_id()
-    {
-        if (isset($this->attributes['anchor'])) {
-            return $this->attributes['anchor'];
-        }
+	/**
+	 * Add the block id to the block if has a anchor or if the block is always adding the id.
+	 */
+	private function maybe_add_block_id()
+	{
+		if (isset($this->attributes['anchor'])) {
+			return $this->attributes['anchor'];
+		}
 
-        if (true == $this->always_add_block_id) {
-            return $this->attributes['id'];
-        }
+		if (true == $this->always_add_block_id) {
+			return $this->attributes['id'];
+		}
 
-        return false;
-    }
+		return false;
+	}
 }

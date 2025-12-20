@@ -23,5 +23,5 @@ use HighGround\Bulldozer\Asset;
  */
 function asset($key)
 {
-    return Asset::get_key($key);
+	return Asset::get_key($key);
 }
