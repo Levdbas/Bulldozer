@@ -418,6 +418,18 @@ abstract class AbstractBlockRenderer
 	 * Adds notice to backend if the block is deprecated.
 	 *
 	 * Checks registered block array for 'lemon_deprecated'.
+	 * 
+	 * @example
+	 * 
+	 * ```json
+	 * ...
+	 * "supports": {
+	 *    "mode": false,
+	 *    "align": false,
+	 *    "showDisableButton": true
+	 * }
+	 * ```
+	 * 
 	 *
 	 * @return bool
 	 */

@@ -1,9 +1,11 @@
 - **Getting Started**
   - [Home](/)
   - [WP-CLI Commands](wp-cli-commands.md)
+  - [Additional BlockRenderer Documentation](blockrenderer.md)
 - **Hooks**
   - [Actions](hooks/actions.md)
   - [Filters](hooks/filters.md)
+
 
 - **Class Reference**
   - [Asset](reference/highground-bulldozer-asset.md)
