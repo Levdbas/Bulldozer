@@ -15,7 +15,7 @@ To mark a block as deprecated in BlockRenderer v3, you need to update the `suppo
 }
 ```
 
-This will output  `This block is deprecated since 23-05-2025. Please replace this block in favor of %2$s acf/text-and-image.` when the block is displayed in the editor.
+This will output  `This block is deprecated since 23-05-2025. Please replace this block in favor of acf/text-and-image.` when the block is displayed in the editor.
 
 ## Add disable button to Block
 To add a disable button to a block in BlockRenderer v3, you need to include the `showDisableButton` key in the `supports` array of your block.json file.
