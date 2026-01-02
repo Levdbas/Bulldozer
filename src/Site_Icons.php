@@ -202,7 +202,12 @@ class Site_Icons
 	 *
 	 * Sets up site icons with an array of attributes.
 	 *
-	 * @param array|bool $attributes an array containing name, short_name, background_color, theme_color, display, orientation, installable
+	 * @param array{
+	 *     name?: string,
+	 *     short_name?: string,
+	 *     background_color?: string,
+	 *     theme_color?: string
+	 * } $attributes Array of attributes for the site icons and manifest.
 	 * @api
 	 * @example
 	 * ```php
@@ -213,7 +218,7 @@ class Site_Icons
 	 * ]);
 	 * ```
 	 */
-	public function __construct(array|bool $attributes = false)
+	public function __construct(array $attributes)
 	{
 		if (false === $attributes) {
 			_doing_it_wrong(
@@ -236,7 +241,7 @@ class Site_Icons
 			'scope'            => $this->scope,
 		];
 
-		if (true === $attributes || (isset($attributes['installable']) && true === $attributes['installable'])) {
+		if ((isset($attributes['installable']) && true === $attributes['installable'])) {
 			self::$attributes['display']   = isset($attributes['display']) ? $attributes['display'] : $this->display;
 			self::$attributes['start_url'] = isset($attributes['start_url']) ? $attributes['start_url'] : $this->start_url;
 		}
@@ -356,7 +361,7 @@ class Site_Icons
 		$tags = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
 		$tags .= '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">' . PHP_EOL;
 		$tags .= '<meta name="theme-color" content="' . self::$attributes['theme_color'] . '">' . PHP_EOL;
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $tags;
 	}
 
