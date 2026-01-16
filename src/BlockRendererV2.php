@@ -22,7 +22,8 @@ use Timber\Timber;
  * - change_metadata: This method is called by the acf filter block_type_metadata.
  * - add_block_variations: This method is called by the change_metadata method.
  * - add_icon: : This method is called by the change_metadata method.
- *
+ * 
+ * @link https://levdbas.github.io/Bulldozer/#/reference/highground-bulldozer-blockrendererv2
  * @api
  * @since 3.0.0
  */
@@ -210,55 +211,9 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 *
 	 * @example
 	 * ```php
-	 * public function add_block_variations()
+	 * public function register_requirements(): bool
 	 * {
-	 *     $variations = [];
-	 *
-	 *     $post_types = get_post_types(
-	 *         [
-	 *             'enable_overview_block' => true,
-	 *         ],
-	 *         'objects'
-	 *     );
-	 *
-	 *     $i = 0;
-	 *     foreach ($post_types as $post_type_obj) {
-	 *         $variant = [
-	 *             'name'        => sanitize_title('nodeOverview_' . $post_type_obj->name),
-	 *             'title'       => sprintf(_x('%1$s overview', 'Dynamic Block title', 'wp-lemon'), $post_type_obj->labels->singular_name),
-	 *             'description' => sprintf(_x('Shows a dynamic overview of %1$s items. You can choose to show a filter or loadmore button.', 'Dynamic block description', 'wp-lemon'), strtolower($post_type_obj->labels->name)),
-	 *             'icon'        => str_replace('dashicons-', '', $post_type_obj->menu_icon),
-	 *             'isDefault'   => 0 === $i,
-	 *             'keywords'    => [
-	 *                 _x('overview', 'Block keyword', 'wp-lemon'),
-	 *                 _x('items', 'Block keyword', 'wp-lemon'),
-	 *                 _x('archive', 'Block keyword', 'wp-lemon'),
-	 *                 _x('posts', 'Block keyword', 'wp-lemon'),
-	 *                 _x('grid', 'Block keyword', 'wp-lemon'),
-	 *                 _x('latest', 'Block keyword', 'wp-lemon'),
-	 *                 $post_type_obj->name,
-	 *                 sprintf(_x('%s archive', 'Block keyword', 'wp-lemon'), $post_type_obj->name),
-	 *             ],
-	 *             "example"     => [
-	 *                 "viewportWidth" => 1100,
-	 *                 'attributes'    => [
-	 *                     'data' => [
-	 *                         'field_node-overview_query_post_type' => $post_type_obj->name,
-	 *                     ],
-	 *                 ],
-	 *             ],
-	 *             'attributes'  => [
-	 *                 'data' => [
-	 *                     'field_node-overview_query_post_type' => $post_type_obj->name,
-	 *                 ],
-	 *             ],
-	 *         ];
-	 *
-	 *         $variations[] = $variant;
-	 *         $i++;
-	 *     }
-	 *
-	 *     return $variations;
+	 *	  return class_exists('RankMath\Helper', false);
 	 * }
 	 * ```
 	 */
