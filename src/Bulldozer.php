@@ -34,8 +34,6 @@ class Bulldozer
 
 	/**
 	 * Backend messages.
-	 *
-	 * @var array
 	 */
 	private static array $backend_messages = [];
 
@@ -48,7 +46,7 @@ class Bulldozer
 			return;
 		}
 
-		if (!class_exists('\WP', false)) {
+		if (!class_exists('\WP')) {
 			return;
 		}
 
@@ -88,8 +86,8 @@ class Bulldozer
 	 * Check if the installed version of Bulldozer is compatible with the theme.
 	 * If not, display a notice.
 	 *
-	 * @param string $required_version The required version of Bulldozer.
-	 * @param string $operator         The operator to use for the version comparison.
+	 * @param string $required_version the required version of Bulldozer
+	 * @param string $operator         the operator to use for the version comparison
 	 */
 	public function matches_required_version(string $required_version, string $operator = '>=')
 	{

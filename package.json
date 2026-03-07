@@ -1,0 +1,30 @@
+{
+  "name": "bulldozer-docs",
+  "version": "1.0.0",
+  "description": "Documentation for Bulldozer - A collection of classes to extend your Timber-based WordPress theme",
+  "private": true,
+  "scripts": {
+    "docs:serve": "docsify serve docs",
+    "docs:start": "docsify serve docs --port 3000",
+    "docs:open": "docsify serve docs --open"
+  },
+  "devDependencies": {
+    "docsify-cli": "^4.4.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Levdbas/Bulldozer.git"
+  },
+  "keywords": [
+    "wordpress",
+    "timber",
+    "blocks",
+    "documentation"
+  ],
+  "author": "Levdbas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Levdbas/Bulldozer/issues"
+  },
+  "homepage": "https://levdbas.github.io/Bulldozer/"
+}

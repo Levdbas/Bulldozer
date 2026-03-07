@@ -11,7 +11,67 @@ namespace HighGround\Bulldozer;
 require_once 'helpers.php';
 
 /**
- * Site Icons is a combination of custom code.
+ * Overwrite WordPress site icons and generate a virtual Web App Manifest.
+ *
+ * This class allows you to bypass WordPress's default site icon handling and serve custom
+ * favicons and PWA icons from your theme's `/resources/favicons/` directory. It also generates
+ * a virtual `site.webmanifest` file dynamically, enabling Progressive Web App (PWA) features
+ * without requiring a physical manifest file.
+ *
+ * ## Features
+ *
+ * - **Custom Favicon Path**: Serves site icons from `/resources/favicons/` in your child or parent theme.
+ * - **Virtual Web Manifest**: Generates a `site.webmanifest` (or `site-{blog_id}.webmanifest` on multisite)
+ *   on-the-fly via WordPress rewrite rules.
+ * - **PWA Support**: Configure name, colors, display mode, orientation, and start URL for installable web apps.
+ * - **Multisite Compatible**: Automatically generates unique manifest filenames per site in a multisite network.
+ * - **Theme Fallback**: First checks the child theme for icons, then falls back to the parent theme.
+ *
+ * ## Required Icon Files
+ *
+ * Place these files in your theme at `/resources/favicons/`:
+ *
+ * - `favicon.svg` (32x32 fallback)
+ * - `apple-touch-icon.png` (180x180)
+ * - `android-chrome-192x192.png` or `web-app-manifest-192x192.png` (192x192)
+ * - `android-chrome-512x512.png` or `web-app-manifest-512x512.png` (512x512)
+ *
+ * The class auto-detects whether you're using the newer `web-app-manifest-*` naming convention.
+ *
+ * ## Usage
+ *
+ * Basic usage with default settings:
+ *
+ * ```php
+ * new \HighGround\Bulldozer\Site_Icons([]);
+ * ```
+ *
+ * Customize manifest attributes:
+ *
+ * ```php
+ * new \HighGround\Bulldozer\Site_Icons([
+ *     'short_name'       => 'MyApp',
+ *     'background_color' => '#ffffff',
+ *     'theme_color'      => '#1a1a1a',
+ * ]);
+ * ```
+ *
+ * Enable installable PWA mode:
+ *
+ * ```php
+ * new \HighGround\Bulldozer\Site_Icons([
+ *     'installable'      => true,
+ *     'display'          => 'standalone',
+ *     'background_color' => '#ffffff',
+ *     'theme_color'      => '#1a1a1a',
+ * ]);
+ * ```
+ *
+ * ## Filters
+ *
+ * - `highground/bulldozer/site-icons/folder-name` - Change the favicon folder name (default: `favicons`).
+ *
+ * @api
  */
 class Site_Icons
 {
@@ -33,8 +93,6 @@ class Site_Icons
 	/**
 	 * Holder of the filename. We'll use this to generate the web manifest file. Defaults to 'manifest.json'.
 	 * This is overwritten in multisite sites.
-	 *
-	 * @var string
 	 */
 	public string $manifest_filename = '';
 
@@ -43,8 +101,6 @@ class Site_Icons
 	 *
 	 * Used in the web manifest file
 	 * Defaults to site name
-	 *
-	 * @var string
 	 */
 	private string $name = '';
 
@@ -52,8 +108,6 @@ class Site_Icons
 	 * Short name, used in the web manifest file.
 	 *
 	 * Defaults to site name but can be overwritten for a shorter name.
-	 *
-	 * @var string
 	 */
 	private string $short_name = '';
 
@@ -63,8 +117,6 @@ class Site_Icons
 	 * The background_color member defines a placeholder background color for the application page to display before its stylesheet is loaded. This value is used by the user agent to draw the background color of a shortcut when the manifest is available before the stylesheet has loaded.
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/background_color
-	 *
-	 * @var string
 	 */
 	private string $background_color = '#f7d600';
 
@@ -73,8 +125,6 @@ class Site_Icons
 	 * This sometimes affects how the OS displays the site (e.g., on Android's task switcher, the theme color surrounds the site).
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/theme_color
-	 *
-	 * @var string
 	 */
 	private string $theme_color = '#f7d600';
 
@@ -85,8 +135,6 @@ class Site_Icons
 	 * - standalone
 	 * - minimal-ui
 	 * - browser
-	 *
-	 * @var string
 	 */
 	private string $display = 'standalone';
 
@@ -96,8 +144,6 @@ class Site_Icons
 	 * - portrait
 	 * - landscape
 	 * - any
-	 *
-	 * @var string
 	 */
 	private string $orientation = 'portrait';
 
@@ -106,8 +152,6 @@ class Site_Icons
 	 * Defaults to home url.
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/start_url
-	 *
-	 * @var string
 	 */
 	private string $start_url = '';
 
@@ -122,8 +166,6 @@ class Site_Icons
 
 	/**
 	 * Array of attributes for the manifest file.
-	 *
-	 * @var array
 	 */
 	private static array $attributes = [
 		'name'             => false,
@@ -138,8 +180,6 @@ class Site_Icons
 
 	/**
 	 * Folder name where the icons are stored.
-	 *
-	 * @var string
 	 */
 	private string $favicon_folder_name = '';
 
@@ -162,27 +202,50 @@ class Site_Icons
 	/**
 	 * Constructor.
 	 *
-	 * @param bool $installable Whether the app is installable or not.
+	 * Sets up site icons with an array of attributes.
+	 *
+	 * @param array{
+	 *     name?: string,
+	 *     short_name?: string,
+	 *     background_color?: string,
+	 *     theme_color?: string
+	 * } $attributes Array of attributes for the site icons and manifest.
+	 * @api
+	 * @example
+	 * ```php
+	 * new Site_Icons([
+	 *   'short_name'       => 'My App',
+	 *   'background_color' => '#ffffff',
+	 *   'theme_color'      => '#000000',
+	 * ]);
+	 * ```
 	 */
-	public function __construct(bool $installable = false)
+	public function __construct(array $attributes)
 	{
+		if (false === $attributes) {
+			_doing_it_wrong(
+				'Site_Icons::__construct',
+				__('No attributes provided, using defaults.', 'bulldozer'),
+				'5.9.0'
+			);
+		}
+
 		$this->name      = get_bloginfo('name');
 		$this->start_url = home_url();
 		$this->scope     = home_url();
 
 		self::$attributes = [
-			'name'             => $this->name,
-			'short_name'       => $this->short_name,
-			'background_color' => $this->background_color,
-			'theme_color'      => $this->theme_color,
-			'display'          => $this->display,
+			'name'             => isset($attributes['name']) ? $attributes['name'] : $this->name,
+			'short_name'       => isset($attributes['short_name']) ? $attributes['short_name'] : $this->name,
+			'background_color' => isset($attributes['background_color']) ? $attributes['background_color'] : $this->background_color,
+			'theme_color'      => isset($attributes['theme_color']) ? $attributes['theme_color'] : $this->theme_color,
 			'orientation'      => $this->orientation,
-			'start_url'        => $this->start_url,
 			'scope'            => $this->scope,
 		];
 
-		if (false === $installable) {
-			unset(self::$attributes['display'], self::$attributes['start_url']);
+		if ((isset($attributes['installable']) && true === $attributes['installable'])) {
+			self::$attributes['display']   = isset($attributes['display']) ? $attributes['display'] : $this->display;
+			self::$attributes['start_url'] = isset($attributes['start_url']) ? $attributes['start_url'] : $this->start_url;
 		}
 
 		add_action('parse_request', [$this, 'generate_manifest']);
@@ -194,8 +257,8 @@ class Site_Icons
 	/**
 	 * Magic method for setting attributes.
 	 *
-	 * @param string $name  Name of the attribute.
-	 * @param string $value Value of the attribute.
+	 * @param string $name  name of the attribute
+	 * @param string $value value of the attribute
 	 */
 	public function __set($name, $value)
 	{
@@ -237,6 +300,26 @@ class Site_Icons
 	 */
 	public function init()
 	{
+		/**
+		 * Filters default scroll values for the navigation bar.
+		 *
+		 * This filter is used to add or modify the default scroll values.
+		 *
+		 * @since 5.1.0
+		 * @param string $folder_name The folder name inside `/resources/` where the favicons are stored. Default 'favicons'.
+		 *
+		 * @example
+		 * ```php
+		 * add_filter('highground/bulldozer/site-icons/folder-name', function (): string {
+		 *
+		 *   if ('other' == get_constant('WEBSITE_VARIANT')) {
+		 *      return 'favicons-other';
+		 *  }
+		 *
+		 *  return 'favicons';
+		 *});
+		 * ```
+		 */
 		$this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
 		$this->manifest_filename   = $this->get_manifest_filename();
 		$this->favicon_path        = $this->get_favicon_path();
@@ -253,7 +336,7 @@ class Site_Icons
 	/**
 	 * Generates manifest and outputs it on the virtual path.
 	 *
-	 * @param \WP $wp current WordPress environment instance (passed by reference).
+	 * @param \WP $wp current WordPress environment instance (passed by reference)
 	 */
 	public function generate_manifest($wp)
 	{
@@ -287,8 +370,8 @@ class Site_Icons
 	/**
 	 * Update the file paths so that WordPress knows where the new icons are.
 	 *
-	 * @param string $url  The URL of the icon.
-	 * @param string $size The size of the icon.
+	 * @param string $url  the URL of the icon
+	 * @param string $size the size of the icon
 	 *
 	 * @return false|string
 	 */
@@ -296,7 +379,7 @@ class Site_Icons
 	{
 		switch ($size) {
 			case 32:
-				$filename = 'favicon-32x32.png';
+				$filename = 'favicon.svg';
 
 				break;
 
@@ -329,7 +412,7 @@ class Site_Icons
 	 *
 	 * @api get_attribute
 	 *
-	 * @param string $attribute Attribute name.
+	 * @param string $attribute attribute name
 	 */
 	public static function get_attribute(string $attribute): string
 	{

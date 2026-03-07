@@ -12,6 +12,8 @@ namespace HighGround\Bulldozer;
  * Asset class.
  *
  * This singleton class stores the manifest.json file and provides methods to retrieve the assets.
+ *
+ * @api
  */
 class Asset
 {
@@ -24,8 +26,6 @@ class Asset
 
 	/**
 	 * Error flag.
-	 *
-	 * @var bool
 	 */
 	protected bool $error = false;
 
@@ -53,7 +53,7 @@ class Asset
 	/**
 	 * Asset constructor.
 	 *
-	 * @param string $key Key of the asset.
+	 * @param string $key key of the asset
 	 */
 	private function __construct($key = null)
 	{
@@ -91,6 +91,7 @@ class Asset
 	/**
 	 * Magic method to get the uri of the asset when the object is cast to a string.
 	 *
+	 * @api
 	 * @return false|string
 	 */
 	public function __toString()
@@ -101,6 +102,7 @@ class Asset
 	/**
 	 * Get the manifest file.
 	 *
+	 * @api
 	 * @return array
 	 */
 	public static function get_manifest()
@@ -113,8 +115,8 @@ class Asset
 	/**
 	 * Get asset by key.
 	 *
-	 * @param string $key Key of the asset.
-	 *
+	 * @api
+	 * @param string $key key of the asset
 	 * @return object
 	 */
 	public static function get_key($key)
@@ -126,6 +128,9 @@ class Asset
 
 	/**
 	 * Get the uri to the asset.
+	 *
+	 * @api
+	 * @return false|string
 	 */
 	public function uri(): string
 	{
@@ -138,6 +143,8 @@ class Asset
 
 	/**
 	 * Get the path to the asset.
+	 *
+	 * @api
 	 */
 	public function path(): string
 	{
@@ -146,6 +153,8 @@ class Asset
 
 	/**
 	 * Check if the asset exists.
+	 *
+	 * @api
 	 */
 	public function exists(): bool
 	{
@@ -158,6 +167,8 @@ class Asset
 
 	/**
 	 * Get the contents of the asset.
+	 *
+	 * @api
 	 */
 	public function contents(): false|string
 	{
@@ -171,7 +182,8 @@ class Asset
 	/**
 	 * Get the contents of the asset as JSON.
 	 *
-	 * @param bool $assoc Whether to return an associative array.
+	 * @api
+	 * @param bool $assoc whether to return an associative array
 	 *
 	 * @return array|false
 	 */

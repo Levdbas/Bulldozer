@@ -1,0 +1,118 @@
+# Filter Hooks
+
+## bulldozer/blockrenderer/block/.$this->slug./classes
+
+Filters the block classes before rendering.
+
+`$slug` The block slug.
+
+**since** 5.10.0
+
+<div class="table-responsive">
+
+| Name | Type | Description |
+| --- | --- | --- |
+| $classes | `string[]` | Array of block classes. |
+| $fields | `array` | Array of block fields values. |
+| $attributes | `array` | Array of block attributes. |
+
+</div>
+
+**PHP**
+
+```php
+add_filter('bulldozer/blockrenderer/block/section/classes', function (array $classes, array $fields, array $attributes) {
+    // Add a custom class based on a field value
+   if (!empty($fields['custom_field'])) {
+       $classes[] = 'custom-class-' . $fields['custom_field'];
+   }
+
+   return $classes;
+}, 10, 3);
+```
+
+## bulldozer/blockrenderer/block/.$this->slug./fields
+
+Filters the registered fields for a particular block.
+
+`$slug` The block slug.
+
+**since** 5.10.0
+
+<div class="table-responsive">
+
+| Name | Type | Description |
+| --- | --- | --- |
+| $ | `array<string,mixed>` | An array of scroll values. |
+
+</div>
+
+**PHP**
+
+```php
+add_filter('bulldozer/blockrenderer/block/section/fields', function (FieldsBuilder $fields) {
+    ->addText('custom_field', [
+        'label' => 'Custom Field',
+   ]);
+
+   return $fields;
+});
+```
+
+## bulldozer/blockrenderer/block/.$this->slug./context
+
+Filters the block context for a particular block.
+
+Be aware to not overwrite existing context keys unless intended. If you overwrite existing keys you may break the block rendering.
+
+`$slug` The block slug.
+
+**since** 5.10.0
+
+<div class="table-responsive">
+
+| Name | Type | Description |
+| --- | --- | --- |
+| $ | `array` | The block context. |
+
+</div>
+
+**PHP**
+
+```php
+add_filter('bulldozer/blockrenderer/block/section/context', function (array $context) {
+   $context['custom_key'] = 'Custom Value';
+
+   return $context;
+});
+```
+
+## highground/bulldozer/site-icons/folder-name
+
+Filters default scroll values for the navigation bar.
+
+This filter is used to add or modify the default scroll values.
+
+**since** 5.1.0
+
+<div class="table-responsive">
+
+| Name | Type | Description |
+| --- | --- | --- |
+| $folder_name | `string` | The folder name inside `/resources/` where the favicons are stored. Default 'favicons'. |
+
+</div>
+
+**PHP**
+
+```php
+add_filter('highground/bulldozer/site-icons/folder-name', function (): string {
+
+  if ('other' == get_constant('WEBSITE_VARIANT')) {
+     return 'favicons-other';
+ }
+
+ return 'favicons';
+});
+```
+
