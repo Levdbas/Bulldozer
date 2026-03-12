@@ -102,40 +102,36 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->name = $block->name;
 		$this->slug = str_replace('acf/', '', $this->name);
 
-		add_action(
-			'acf/init',
-			function () use ($block) {
 
-				$this->setup_fields_group($this->name, $this->slug);
-				$this->add_hidden_fields($block);
-				$this->add_fields();
 
-				/**
-				 * Filters the registered fields for a particular block.
-				 *
-				 * `$slug` The block slug.
-				 *
-				 * @since 5.10.0
-				 * @param array<string, mixed> An array of scroll values.
-				 * @return FieldsBuilder
-				 * @example
-				 * ```php
-				 * add_filter('bulldozer/blockrenderer/block/section/fields', function (FieldsBuilder $fields) {
-				 *     ->addText('custom_field', [
-				 *         'label' => 'Custom Field',
-				 *    ]);
-				 *
-				 *    return $fields;
-				 * });
-				 * ```
-				 */
-				$this->registered_fields = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/fields', $this->registered_fields);
+		$this->setup_fields_group($this->name, $this->slug);
+		$this->add_hidden_fields($block);
+		$this->add_fields();
 
-				if ($this->registered_fields) {
-					acf_add_local_field_group($this->registered_fields->build());
-				}
-			}
-		);
+		/**
+		 * Filters the registered fields for a particular block.
+		 *
+		 * `$slug` The block slug.
+		 *
+		 * @since 5.10.0
+		 * @param array<string, mixed> An array of scroll values.
+		 * @return FieldsBuilder
+		 * @example
+		 * ```php
+		 * add_filter('bulldozer/blockrenderer/block/section/fields', function (FieldsBuilder $fields) {
+		 *     ->addText('custom_field', [
+		 *         'label' => 'Custom Field',
+		 *    ]);
+		 *
+		 *    return $fields;
+		 * });
+		 * ```
+		 */
+		$this->registered_fields = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/fields', $this->registered_fields);
+
+		if ($this->registered_fields) {
+			acf_add_local_field_group($this->registered_fields->build());
+		}
 	}
 
 	/**
