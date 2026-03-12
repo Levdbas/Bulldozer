@@ -2,6 +2,8 @@
 
 /**
  * Site icons class.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer;

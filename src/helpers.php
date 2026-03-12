@@ -2,6 +2,8 @@
 
 /**
  * Helper functions for this package.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer\helpers;

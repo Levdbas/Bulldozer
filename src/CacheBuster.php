@@ -2,6 +2,8 @@
 
 /**
  * Cachebuster class.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer;
@@ -58,7 +60,7 @@ class CacheBuster
 			return;
 		}
 
-		if (class_exists('DeliciousBrains\SpinupWp\Cache')) {
+		if (class_exists('DeliciousBrains\SpinupWp\Cache', false)) {
 			spinupwp()->cache->purge_page_cache();
 		}
 

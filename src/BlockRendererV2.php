@@ -105,25 +105,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 		$this->add_hidden_fields($block);
 		$this->add_fields();
 
-		/**
-		 * Filters the registered fields for a particular block.
-		 *
-		 * `$slug` The block slug.
-		 *
-		 * @since 5.10.0
-		 * @param array<string, mixed> An array of scroll values.
-		 * @return FieldsBuilder
-		 * @example
-		 * ```php
-		 * add_filter('bulldozer/blockrenderer/block/section/fields', function (FieldsBuilder $fields) {
-		 *     ->addText('custom_field', [
-		 *         'label' => 'Custom Field',
-		 *    ]);
-		 *
-		 *    return $fields;
-		 * });
-		 * ```
-		 */
 		$this->registered_fields = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/fields', $this->registered_fields);
 
 		if ($this->registered_fields) {
@@ -208,14 +189,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * on a per block basis.
 	 *
 	 * @api
-	 *
-	 * @example
-	 * ```php
-	 * public function register_requirements(): bool
-	 * {
-	 *	  return class_exists('RankMath\Helper', false);
-	 * }
-	 * ```
 	 */
 	public function register_requirements(): bool
 	{
@@ -228,13 +201,7 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * @see https://www.advancedcustomfields.com/blog/acf-5-9-introducing-block-variations/
 	 *
 	 * @api
-	 * @example
-	 * ```php
-	 * public function register_requirements(): bool
-	 * {
-	 *  return class_exists('RankMath\Helper', false);
-	 * }
-	 * ```
+	 *
 	 * @return array|false
 	 */
 	public function add_block_variations()
@@ -246,15 +213,8 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * Empty function that can be overwritten by the blocks to add a custom icon.
 	 *
 	 * @api
-	 * @example
-	 * ```php
-	 * public function add_icon(): string|false
-	 * {
-	 *  return '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid-3x3-gap-fill" viewBox="0 0 16 16"><path d="M1 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V2zM1 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V7zM1 12a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2zm5 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2z"/></svg>';
-	 * }
-	 * ```
 	 */
-	public function add_icon(): false|string
+	public function add_icon(): false | string
 	{
 		return false;
 	}
@@ -263,14 +223,6 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 	 * Empty function that can be overwritten by the blocks to add custom logic to hide the block from the inserter.
 	 *
 	 * @api
-	 * @example
-	 * ```php
-	 * public function hide_from_inserter(): bool
-	 * {
-	 *  $env = get_constant('WP_ENV');
-	 *  return $env === 'production';
-	 * }
-	 * ```
 	 */
 	public function hide_from_inserter(): bool
 	{
@@ -324,32 +276,10 @@ abstract class BlockRendererV2 extends AbstractBlockRenderer
 			'inline_css'    => $this->generate_css(),
 			'notifications' => self::$notifications,
 			'parent_id'     => isset($wp_block->context['acf/parentID']) ? $wp_block->context['acf/parentID'] : null,
-			// 'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
+			//'wrapper_attributes' => $this->get_block_wrapper_attributes($this->classes),
 		];
 
 		$context = array_merge($context, $args);
-
-		/**
-		 * Filters the block context for a particular block.
-		 *
-		 * Be aware to not overwrite existing context keys unless intended. If you overwrite existing keys you may break the block rendering.
-		 *
-		 * `$slug` The block slug.
-		 *
-		 * @since 5.10.0
-		 * @param array< mixed> The block context.
-		 * @return array< mixed> The block context.
-		 * @example
-		 * ```php
-		 * add_filter('bulldozer/blockrenderer/block/section/context', function (array $context) {
-		 *    $context['custom_key'] = 'Custom Value';
-		 *
-		 *    return $context;
-		 * });
-		 * ```
-		 */
-		$context = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/context', $context);
-
 		$this->render($context);
 	}
 

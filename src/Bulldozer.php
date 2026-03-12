@@ -2,6 +2,8 @@
 
 /**
  * Bulldozer main class.
+ *
+ * @package HighGround\Bulldozer
  */
 
 namespace HighGround\Bulldozer;
@@ -21,7 +23,7 @@ class Bulldozer
 	/**
 	 * Current Bulldozer version.
 	 */
-	public const VERSION = '5.10.1';
+	public const VERSION = '6.0.0';
 
 	/**
 	 * Active theme object.
@@ -55,14 +57,11 @@ class Bulldozer
 		add_action('enqueue_block_editor_assets', [$this, 'add_editor_assets']);
 
 		// Register WP-CLI commands
-		add_action(
-			'wp_loaded',
-			function () {
-				if (defined('WP_CLI') && \WP_CLI) {
-					AutoloaderWpCli::register();
-				}
+		add_action('wp_loaded', function () {
+			if (defined('WP_CLI') && \WP_CLI) {
+				AutoloaderWpCli::register();
 			}
-		);
+		});
 
 		// CacheBuster::register();
 	}
@@ -257,7 +256,7 @@ class Bulldozer
 		}
 
 		// check if ACF is installed
-		if (!class_exists('ACF')) {
+		if (!class_exists('ACF', false)) {
 			$message = sprintf(__('Your theme %1$s requires the plugin %2$s. Please install it.', 'bulldozer'), self::$theme, 'Advanced Custom Fields');
 			add_action(
 				'after_setup_theme',

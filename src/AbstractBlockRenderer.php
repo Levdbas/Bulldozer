@@ -93,7 +93,7 @@ abstract class AbstractBlockRenderer
 	/**
 	 * Block name with acf/ prefix.
 	 */
-	protected string $name = '';
+	protected string $name;
 
 	/**
 	 * Block slug without acf/prefix.
@@ -121,10 +121,10 @@ abstract class AbstractBlockRenderer
 	protected static array $notifications = [];
 
 	/*
-	 * Boolean whether block is disabled or not.
-	 *
-	 * @var bool
-	 */
+     * Boolean whether block is disabled or not.
+     *
+     * @var bool
+     */
 	protected bool $block_disabled = false;
 
 	/**
@@ -169,22 +169,13 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * Add css variable with the value based on an acf field.
-	 *
+	 * 
 	 * @api
 	 * @since 1.8.0
 	 *
 	 * @param string       $field_name   acf field name
 	 * @param string       $css_var_name the css variable without the -- prefix
 	 * @param false|string $selector     the css selector where the css variable should be applied
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 *  $this->add_css_var('color_card_bg', 'card-base-background-color', '.crd');
-	 *
-	 *  return $context;
-	 * }
-	 * ```
 	 */
 	public function add_css_var(string $field_name, string $css_var_name, false|string $selector = false)
 	{
@@ -199,22 +190,10 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * Compose a notification to be shown in the backend.
-	 *
+	 * 
 	 * @api
 	 * @param string $message the message, translatable
 	 * @param string $type    type of notification, can be notice, warning or error
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * $posts = Timber::get_posts([
-	 *    'post_type' => 'post',
-	 *    'posts_per_page' => 3,
-	 * ])->to_array();
-	 * if (empty($posts)) {
-	 *   $this->add_notification(__('Please add some posts.', 'wp-lemon-child'), 'warning');
-	 * }
-	 * ```
 	 */
 	public static function add_notification(string $message, string $type)
 	{
@@ -237,7 +216,7 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * Generate inner blocks appender.
-	 *
+	 * 
 	 * @api
 	 * @param array|false  $allowed_blocks array with allowed blocks or false
 	 * @param array|false  $template       array with template
@@ -248,17 +227,6 @@ abstract class AbstractBlockRenderer
 	 * @return string $inner_blocks the inner blocks appender
 	 *
 	 * @since 3.3.0
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 *  $args = [
-	 *      'InnerBlocks' => self::create_inner_blocks($allowed_blocks, $template, 'row archive-content', 'horizontal'),
-	 *  ];
-	 *  return array_merge($context, $args);
-	 * }
-	 * ```
 	 */
 	public static function create_inner_blocks(array|false $allowed_blocks = false, array|false $template = false, false|string $classes = false, false|string $orientation = false, bool|string $templatelock = false)
 	{
@@ -308,12 +276,9 @@ abstract class AbstractBlockRenderer
 	 */
 	protected function setup_fields_group($name, $slug)
 	{
-		$this->registered_fields = new FieldsBuilder(
-			$slug,
-			[
-				'title' => sprintf(__('Block - %s', 'bulldozer'), ucfirst($slug)),
-			]
-		);
+		$this->registered_fields = new FieldsBuilder($slug, [
+			'title' => sprintf(__('Block - %s', 'bulldozer'), ucfirst($slug)),
+		]);
 
 		$this->registered_fields
 			->setLocation('block', '==', $name);
@@ -324,7 +289,7 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * A way to deprecate a block.
-	 *
+	 * 
 	 * @example Use this field in your block.json file to deprecate a block:
 	 * ```json
 	 * ...
@@ -337,7 +302,9 @@ abstract class AbstractBlockRenderer
 	 *    }
 	 * }
 	 * ```
-	 *
+	 *  
+	 * 
+	 * 
 	 * @return void
 	 */
 	protected function maybe_add_deprecation_notice()
@@ -418,18 +385,6 @@ abstract class AbstractBlockRenderer
 	 * Adds notice to backend if the block is deprecated.
 	 *
 	 * Checks registered block array for 'lemon_deprecated'.
-	 * 
-	 * @example
-	 * 
-	 * ```json
-	 * ...
-	 * "supports": {
-	 *    "mode": false,
-	 *    "align": false,
-	 *    "showDisableButton": true
-	 * }
-	 * ```
-	 * 
 	 *
 	 * @return bool
 	 */
@@ -583,10 +538,10 @@ abstract class AbstractBlockRenderer
 		}
 
 		/*
-		 * This is a hack to make sure that the block supports are applied.
-		 *
-		 * @link https://github.com/woocommerce/woocommerce-blocks-hydration-experiments/blob/acf16e70a89a7baf968ef26d7c4d8a0479a62db5/src/BlockTypesController.php#L186
-		 */
+         * This is a hack to make sure that the block supports are applied.
+         *
+         * @link https://github.com/woocommerce/woocommerce-blocks-hydration-experiments/blob/acf16e70a89a7baf968ef26d7c4d8a0479a62db5/src/BlockTypesController.php#L186
+         */
 		\WP_Block_Supports::$block_to_render['blockName'] = $attributes['name'];
 		$attributes = \WP_Block_Supports::get_instance()->apply_block_supports();
 
@@ -612,30 +567,6 @@ abstract class AbstractBlockRenderer
 		// add $this->slug  as class at the start
 		array_unshift($this->classes, $this->slug);
 
-		/**
-		 * Filters the block classes before rendering.
-		 *
-		 * `$slug` The block slug.
-		 *
-		 * @since 5.10.0
-		 * @param array<string> $classes Array of block classes.
-		 * @param array        $fields  Array of block fields values.
-		 * @param array        $attributes Array of block attributes.
-		 * @return array<string>
-		 * @example
-		 * ```php
-		 * add_filter('bulldozer/blockrenderer/block/section/classes', function (array $classes, array $fields, array $attributes) {
-		 *     // Add a custom class based on a field value
-		 *    if (!empty($fields['custom_field'])) {
-		 *        $classes[] = 'custom-class-' . $fields['custom_field'];
-		 *    }
-		 *
-		 *    return $classes;
-		 * }, 10, 3);
-		 * ```
-		 */
-		$this->classes = apply_filters('bulldozer/blockrenderer/block/' . $this->slug . '/classes', $this->classes, $this->fields, $this->attributes);
-
 		$this->classes = array_unique($this->classes);
 	}
 
@@ -655,22 +586,13 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * Add class to block classes.
-	 *
+	 * 
 	 * When an array is passed, it will merge the array with the existing classes.
-	 *
+	 * 
 	 * @api
 	 * @since 5.2.0
 	 * @param string|array $class the class or array of classes
 	 * @return void
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * $this->add_class(['section', 'has-background']);
-	 * return $context;
-	 * }
-	 * ```
 	 */
 	public function add_class(string|array $class)
 	{
@@ -684,19 +606,9 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * Add modifier class to block classes.
-	 *
+	 * 
 	 * @api
 	 * @param string $modifier the part after the -- from the BEM principle
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * if ($this->get_field('is_featured')) {
-	 *  	$this->add_modifier_class('featured');
-	 * }
-	 * return $context;
-	 * }
-	 * ```
 	 */
 	public function add_modifier_class(string $modifier)
 	{
@@ -705,69 +617,21 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * get ACF field value.
-	 *
 	 * @api
 	 * @since 5.2.0
 	 * @param string $field_name the field name
 	 * @return mixed $field the field value
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * 	$is_featured = $this->get_field('is_featured');
-	 * 	return $context;
-	 * }
-	 * ```
 	 */
 	public function get_field(string $field_name)
 	{
 		return $this->fields[$field_name] ?? null;
 	}
 
-	/**
-	 * Get block attribute.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @param string $attribute_name the attribute name
-	 * @return mixed the attribute value
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * 	$align = $this->get_attribute('align');
-	 * 	return $context;
-	 * }
-	 * ```
-	 */
 	public function get_attribute(string $attribute_name)
 	{
 		return $this->attributes[$attribute_name] ?? null;
 	}
 
-	/**
-	 * Check if the block is rendered in preview mode.
-	 *
-	 * This is true when the block is rendered in the backend.
-	 *
-	 * Use this method to conditionally load assets or change the rendering.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @return bool
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * 	if ($this->is_preview()) {
-	 *  		$this->add_notification(__('This is a preview mode.', 'wp-lemon-child'), 'notice');
-	 * 	}
-	 * 	return $context;
-	 * }
-	 * ```
-	 */
 	public function is_preview(): bool
 	{
 		return $this->is_preview;
@@ -775,19 +639,10 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * Get the block id.
-	 *
+	 * 
 	 * @since 5.5.1
 	 * @api
 	 * @return string
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 *   $block_id = $this->get_block_id();
-	 *   return $context;
-	 * }
-	 * ```
 	 */
 	public function get_block_id(): string
 	{
@@ -796,203 +651,44 @@ abstract class AbstractBlockRenderer
 
 	/**
 	 * Get the block alignment.
-	 *
-	 * @since 5.9.1
-	 * @api
-	 * @return string
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 *   $post_id = $this->get_post_id();
-	 *   return $context;
-	 * }
-	 * ```
-	 */
-	public function get_post_id(): int
-	{
-		return $this->post_id ?? 0;
-	}
-
-	/**
-	 * Get the block alignment.
-	 *
+	 * 
 	 * @since 5.5.1
 	 * @api
 	 * @return string
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 *   $alignment = $this->get_block_alignment();
-	 *   return $context;
-	 *  }
-	 * ```
 	 */
 	public function get_block_alignment(): string
 	{
 		return $this->attributes['align'] ?? '';
 	}
 
-	/**
-	 * Check if the block is full width.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @return bool
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 *  if ($this->is_full_width()) {
-	 *      $this->add_class('has-background');
-	 *  }
-	 *  return $context;
-	 * }
-	 * ```
-	 */
 	public function is_full_width(): bool
 	{
 		return 'full' === $this->get_block_alignment();
 	}
 
-	/**
-	 * Check if the block is wide width.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @return bool
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 *  if ($this->is_wide_width()) {
-	 *      $this->add_class('has-background');
-	 *  }
-	 *  return $context;
-	 * }
-	 * ```
-	 */
 	public function is_wide_width(): bool
 	{
 		return 'wide' === $this->get_block_alignment();
 	}
 
 
-	/**
-	 * Mark the renderer's block as disabled.
-	 *
-	 * Sets the internal flag indicating the block is disabled so that subsequent
-	 * rendering logic can treat this block as inactive or skip its output.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @return void
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 *  if (empty($this->get_field('gallery'))) {
-	 *      $this->add_notification(__('Add images to the slider', 'wp-lemon-child'), 'warning');
-	 *      $this->set_disabled();
-	 *      return $context;
-	 *  }
-	 *  return $context;
-	 * }
-	 * ```
-	 */
 	public function set_disabled()
 	{
 		$this->block_disabled = true;
 	}
 
-	/**
-	 * Add css to the compiled css.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @param string $css the css to add
-	 * @return string the compiled css
-	 */
 	public function add_css(string $css): string
 	{
 		$this->compiled_css .= $css;
 		return $this->compiled_css;
 	}
 
-	/**
-	 * Set the block alignment.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @param string $alignment the alignment, can be wide or full
-	 * @return void
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * 	$this->set_alignment('full');
-	 * 	return $context;
-	 * }
-	 * ```
-	 */
-	public function set_alignment(string $alignment): void
-	{
-		// can be wide or full
-		if (!in_array($alignment, ['wide', 'full'])) {
-			_doing_it_wrong('set_alignment', 'Alignment must be either "wide" or "full".', '5.8.1');
-			return;
-		}
-
-		$this->attributes['align'] = $alignment;
-	}
-
-	/**
-	 * Set a block attribute.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @param string $attribute_name the attribute name
-	 * @param mixed  $value          the value to set
-	 * @return void
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * 	$this->set_attribute('align', 'full');
-	 * 	return $context;
-	 * }
-	 * ```
-	 */
 	public function set_attribute(string $attribute_name, mixed $value): void
 	{
-		$this->attributes[$attribute_name] = $value;
-	}
+		if (!isset($this->attributes[$attribute_name])) {
+			throw new Exception(sprintf('Attribute %s does not exist in the block attributes.', $attribute_name));
+		}
 
-	/**
-	 * Set the block anchor.
-	 *
-	 * @since 5.5.1
-	 * @api
-	 * @param string $value the anchor value
-	 * @return void
-	 *
-	 * @example
-	 * ```php
-	 * public function block_context($context): array
-	 * {
-	 * 	$this->set_anchor('my-custom-anchor');
-	 * 	return $context;
-	 * }
-	 * ```
-	 */
-	public function set_anchor(string $value): void
-	{
-		$this->attributes['anchor'] = $value;
+		$this->attributes[$attribute_name] = $value;
 	}
 }
