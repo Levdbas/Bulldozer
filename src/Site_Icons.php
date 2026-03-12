@@ -20,7 +20,7 @@ require_once 'helpers.php';
  *
  * - **Custom Favicon Path**: Serves site icons from `/resources/favicons/` in your child or parent theme.
  * - **Generated Web Manifest**: Writes a `site.webmanifest` (or `site-{blog_id}.webmanifest` on multisite)
- *   file to the uploads directory and serves it directly.
+ *   file to the uploads directory and serves it directly. Clear the cache with the `wp bulldozer clear-manifest-cache` WP-CLI command after updating icons or manifest attributes.
  * - **PWA Support**: Configure name, colors, display mode, orientation, and start URL for installable web apps.
  * - **Multisite Compatible**: Automatically generates unique manifest filenames per site in a multisite network.
  * - **Theme Fallback**: First checks the child theme for icons, then falls back to the parent theme.
@@ -29,7 +29,7 @@ require_once 'helpers.php';
  *
  * Place these files in your theme at `/resources/favicons/`:
  *
- * - `favicon.svg` (32x32 fallback)
+ * - `favicon.svg` (32x32)
  * - `apple-touch-icon.png` (180x180)
  * - `android-chrome-192x192.png` or `web-app-manifest-192x192.png` (192x192)
  * - `android-chrome-512x512.png` or `web-app-manifest-512x512.png` (512x512)
@@ -37,12 +37,6 @@ require_once 'helpers.php';
  * The class auto-detects whether you're using the newer `web-app-manifest-*` naming convention.
  *
  * ## Usage
- *
- * Basic usage with default settings:
- *
- * ```php
- * new \HighGround\Bulldozer\Site_Icons([]);
- * ```
  *
  * Customize manifest attributes:
  *
@@ -442,6 +436,10 @@ class Site_Icons
 				break;
 		}
 
+		if (! file_exists(get_stylesheet_directory() . '/resources/' . $this->favicon_folder_name . '/' . $filename)) {
+			return false;
+		}
+
 		return $this->favicon_path . $filename;
 	}
 
@@ -463,7 +461,7 @@ class Site_Icons
 	 *
 	 * @return string
 	 */
-	private function get_manifest_filename()
+	private static function get_manifest_filename()
 	{
 		// Return empty string if not a multisite
 		if (! is_multisite()) {
@@ -517,5 +515,28 @@ class Site_Icons
 		$manifest['icons'] = $this->get_icons();
 
 		return $manifest;
+	}
+
+	/**
+	 * Clears the manifest cache by deleting the manifest file and the transient storing its hash.
+	 * @api
+	 * @return void 
+	 */
+	public static function clear_manifest_cache()
+	{
+		$blog_ids = is_multisite() ? get_sites(['fields' => 'ids']) : false;
+
+		if (false == $blog_ids) {
+			wp_delete_file(trailingslashit(wp_upload_dir()['basedir']) . '/' . self::get_manifest_filename());
+			delete_transient('highground_bulldozer_site_icons_manifest_hash');
+			return;
+		}
+
+		foreach ($blog_ids as $blog_id) {
+			switch_to_blog($blog_id);
+			wp_delete_file(trailingslashit(wp_upload_dir()['basedir']) . '/' . self::get_manifest_filename());
+			delete_transient('highground_bulldozer_site_icons_manifest_hash');
+			restore_current_blog();
+		}
 	}
 }

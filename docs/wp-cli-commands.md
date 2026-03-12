@@ -9,11 +9,13 @@ This document describes the new WP-CLI commands added to Bulldozer for managing 
 This command collects all files loaded by the Bulldozer autoloader and appends them to an `$includes` array in the child theme's `functions.php` file.
 
 **Usage:**
+
 ```bash
 wp bulldozer update-includes
 ```
 
 **What it does:**
+
 1. Initializes the Bulldozer autoloader
 2. Loads files from parent theme, child blocks, and fields
 3. Collects all loaded file paths
@@ -21,6 +23,7 @@ wp bulldozer update-includes
 5. Updates or creates an `$includes` array in the child theme's `functions.php` file
 
 **Example output:**
+
 ```
 Success: Successfully updated functions.php with 15 autoloaded files.
 Files added to $includes array:
@@ -31,6 +34,7 @@ Files added to $includes array:
 ```
 
 **Generated code in functions.php:**
+
 ```php
 // Auto-generated includes array by Bulldozer
 $includes = [
@@ -41,16 +45,38 @@ $includes = [
 ];
 ```
 
+### `wp bulldozer clear-manifest-cache`
+
+Clears the cached `site.webmanifest` file so it is regenerated on the next page load.
+
+Bulldozer writes the web app manifest to disk and caches a hash of its contents to avoid unnecessary writes. Run this command after changing favicon files or manifest attributes (name, colors, etc.) to force a fresh manifest to be written.
+
+**Usage:**
+
+```bash
+wp bulldozer clear-manifest-cache
+```
+
+**Example output:**
+
+```
+Success: Site icons manifest cache cleared successfully.
+```
+
+---
+
 ### `wp bulldozer list-files`
 
 This command lists all files that would be loaded by the autoloader without modifying any files.
 
 **Usage:**
+
 ```bash
 wp bulldozer list-files
 ```
 
 **Example output:**
+
 ```
 Success: Found 15 autoloaded files:
   - library/models/post-types/CustomPost.php
@@ -66,6 +92,7 @@ The WP-CLI commands are automatically registered when Bulldozer is loaded and WP
 ## Use Case
 
 This is particularly useful when you want to:
+
 1. Optimize theme performance by replacing autoloading with explicit includes
 2. Generate a list of all files that your theme depends on
 3. Create a static include file for production environments

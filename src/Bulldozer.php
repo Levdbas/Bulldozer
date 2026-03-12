@@ -59,7 +59,7 @@ class Bulldozer
 			'wp_loaded',
 			function () {
 				if (defined('WP_CLI') && \WP_CLI) {
-					AutoloaderWpCli::register();
+					BulldozerCli::register();
 				}
 			}
 		);
