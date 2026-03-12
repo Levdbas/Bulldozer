@@ -16,7 +16,7 @@ class BulldozerCli
     */
    public static function register()
    {
-      if (!class_exists('WP_CLI')) {
+      if (!class_exists('WP_CLI', false)) {
          return;
       }
 
