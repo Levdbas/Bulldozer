@@ -9,18 +9,18 @@ namespace HighGround\Bulldozer;
 require_once 'helpers.php';
 
 /**
- * Overwrite WordPress site icons and generate a virtual Web App Manifest.
+ * Overwrite WordPress site icons and generate a Web App Manifest file.
  *
  * This class allows you to bypass WordPress's default site icon handling and serve custom
  * favicons and PWA icons from your theme's `/resources/favicons/` directory. It also generates
- * a virtual `site.webmanifest` file dynamically, enabling Progressive Web App (PWA) features
- * without requiring a physical manifest file.
+ * a real `site.webmanifest` file in the uploads directory, enabling Progressive Web App (PWA)
+ * features without routing manifest requests through WordPress.
  *
  * ## Features
  *
  * - **Custom Favicon Path**: Serves site icons from `/resources/favicons/` in your child or parent theme.
- * - **Virtual Web Manifest**: Generates a `site.webmanifest` (or `site-{blog_id}.webmanifest` on multisite)
- *   on-the-fly via WordPress rewrite rules.
+ * - **Generated Web Manifest**: Writes a `site.webmanifest` (or `site-{blog_id}.webmanifest` on multisite)
+ *   file to the uploads directory and serves it directly.
  * - **PWA Support**: Configure name, colors, display mode, orientation, and start URL for installable web apps.
  * - **Multisite Compatible**: Automatically generates unique manifest filenames per site in a multisite network.
  * - **Theme Fallback**: First checks the child theme for icons, then falls back to the parent theme.
@@ -93,6 +93,11 @@ class Site_Icons
 	 * This is overwritten in multisite sites.
 	 */
 	public string $manifest_filename = '';
+
+	/**
+	 * Public URL to the generated manifest file.
+	 */
+	private string $manifest_url = '';
 
 	/**
 	 * Name of the site.
@@ -246,7 +251,6 @@ class Site_Icons
 			self::$attributes['start_url'] = isset($attributes['start_url']) ? $attributes['start_url'] : $this->start_url;
 		}
 
-		add_action('parse_request', [$this, 'generate_manifest']);
 		add_action('init', [$this, 'init']);
 		add_filter('site_icon_meta_tags', [$this, 'add_meta_to_head'], 0);
 		add_filter('get_site_icon_url', [$this, 'filter_favicon_path'], 10, 2);
@@ -294,7 +298,7 @@ class Site_Icons
 	}
 
 	/**
-	 * Add rewrite rule for virtual manifest file.
+	 * Prepare the manifest file and icon paths.
 	 */
 	public function init()
 	{
@@ -322,35 +326,40 @@ class Site_Icons
 		$this->manifest_filename   = $this->get_manifest_filename();
 		$this->favicon_path        = $this->get_favicon_path();
 		$this->file_prefix         = $this->new_filenames && ! $this->parent_theme ? 'web-app-manifest' : 'android-chrome';
-
-		$manifest_filename = $this->manifest_filename;
-
-		add_rewrite_rule(
-			"^/{$manifest_filename}$",
-			"index.php?{$manifest_filename}=1"
-		);
+		$this->manifest_url        = $this->generate_manifest();
 	}
 
 	/**
-	 * Generates manifest and outputs it on the virtual path.
+	 * Generate the manifest file and return its public URL.
 	 *
-	 * @param \WP $wp current WordPress environment instance (passed by reference)
+	 * @return string
 	 */
-	public function generate_manifest($wp)
+	public function generate_manifest(): string
 	{
-		if (! property_exists($wp, 'query_vars') || ! is_array($wp->query_vars)) {
-			return;
+		$upload_directory = wp_upload_dir();
+
+		$transient = get_transient($this->get_manifest_hash_option_name());
+
+		if (false !== $transient && file_exists(trailingslashit($upload_directory['basedir']) . '/' . $this->manifest_filename)) {
+			return trailingslashit($upload_directory['baseurl']) . $this->manifest_filename;
 		}
 
-		$query_vars_as_string = http_build_query($wp->query_vars);
-		$manifest_filename    = $this->manifest_filename;
+		$manifest_directory = trailingslashit($upload_directory['basedir']);
+		$manifest_path      = trailingslashit($manifest_directory) . $this->manifest_filename;
+		$manifest_url       = trailingslashit($upload_directory['baseurl']) . $this->manifest_filename;
+		$manifest_contents  = wp_json_encode($this->create_manifest(), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+		$manifest_hash      = md5($manifest_contents);
 
-		if (false !== strpos($query_vars_as_string, $manifest_filename)) {
-			header('Content-Type: application/json');
-			echo json_encode($this->create_manifest());
+		if ($transient !== $manifest_hash || ! file_exists($manifest_path)) {
+			if (file_put_contents($manifest_path, $manifest_contents) === false) {
+				Bulldozer::frontend_error(__('Could not write the site manifest file.', 'bulldozer'));
+				return '';
+			}
 
-			exit;
+			set_transient($this->get_manifest_hash_option_name(), $manifest_hash, DAY_IN_SECONDS);
 		}
+
+		return $manifest_url;
 	}
 
 	/**
@@ -359,8 +368,6 @@ class Site_Icons
 	public function add_meta_to_head($tags)
 	{
 		$meta_tags = [];
-
-
 
 		$favicon = get_site_icon_url('ico');
 		if ($favicon) {
@@ -385,7 +392,9 @@ class Site_Icons
 
 		$meta_tags[] = '<meta name="apple-mobile-web-app-title" content="' . self::$attributes['name'] . '" />';
 		$meta_tags[] = '<!-- Manifest added by bulldozer library -->';
-		$meta_tags[] = '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">';
+		if ('' !== $this->manifest_url) {
+			$meta_tags[] = sprintf('<link rel="manifest" href="%s">', esc_url($this->manifest_url));
+		}
 		return $meta_tags;
 	}
 
@@ -465,6 +474,14 @@ class Site_Icons
 	}
 
 	/**
+	 * Option key used to cache the generated manifest hash.
+	 */
+	private function get_manifest_hash_option_name(): string
+	{
+		return 'highground_bulldozer_site_icons_manifest_hash';
+	}
+
+	/**
 	 * Adds the icon array.
 	 *
 	 * @return array $icons_array
@@ -496,7 +513,7 @@ class Site_Icons
 	 */
 	private function create_manifest()
 	{
-		$manifest = self::$attributes;
+		$manifest          = self::$attributes;
 		$manifest['icons'] = $this->get_icons();
 
 		return $manifest;

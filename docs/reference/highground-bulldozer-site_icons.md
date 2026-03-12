@@ -1,15 +1,15 @@
-# Site\_Icons
+# Site_Icons
 
 This class allows you to bypass WordPress's default site icon handling and serve custom
 favicons and PWA icons from your theme's `/resources/favicons/` directory. It also generates
-a virtual `site.webmanifest` file dynamically, enabling Progressive Web App (PWA) features
-without requiring a physical manifest file.
+a real `site.webmanifest` file in the uploads directory, enabling Progressive Web App (PWA)
+features without routing manifest requests through WordPress.
 
 ## Features
 
 - **Custom Favicon Path**: Serves site icons from `/resources/favicons/` in your child or parent theme.
-- **Virtual Web Manifest**: Generates a `site.webmanifest` (or `site-{blog_id}.webmanifest` on multisite)
-  on-the-fly via WordPress rewrite rules.
+- **Generated Web Manifest**: Writes a `site.webmanifest` (or `site-{blog_id}.webmanifest` on multisite)
+  file to the uploads directory and serves it directly.
 - **PWA Support**: Configure name, colors, display mode, orientation, and start URL for installable web apps.
 - **Multisite Compatible**: Automatically generates unique manifest filenames per site in a multisite network.
 - **Theme Fallback**: First checks the child theme for icons, then falls back to the parent theme.
@@ -66,13 +66,12 @@ new \HighGround\Bulldozer\Site_Icons([
 
 <div class="table-methods table-responsive">
 
-| Name | Return Type | Summary/Returns |
-| --- | --- | --- |
-| <span class="method-name">[__construct()](#__construct)</span> | <span class="method-type"></span> | <span class="method-description">Constructor.</span> |
+| Name                                                               | Return Type                       | Summary/Returns                                        |
+| ------------------------------------------------------------------ | --------------------------------- | ------------------------------------------------------ |
+| <span class="method-name">[\_\_construct()](#__construct)</span>   | <span class="method-type"></span> | <span class="method-description">Constructor.</span>   |
 | <span class="method-name">[get_attribute()](#get_attribute)</span> | <span class="method-type"></span> | <span class="method-description">Get attribute.</span> |
 
 </div>
-
 
 ## Class Methods
 
@@ -86,8 +85,8 @@ Sets up site icons with an array of attributes.
 
 <div class="table-responsive">
 
-| Name | Type | Description |
-| --- | --- | --- |
+| Name        | Type              | Description                                                                                            |
+| ----------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
 | $attributes | `array` or `bool` | an array containing name, short_name, background_color, theme_color, display, orientation, installable |
 
 </div>
@@ -104,7 +103,7 @@ new Site_Icons([
 
 ---
 
-### get\_attribute()
+### get_attribute()
 
 Get attribute.
 
@@ -112,11 +111,10 @@ Get attribute.
 
 <div class="table-responsive">
 
-| Name | Type | Description |
-| --- | --- | --- |
+| Name       | Type     | Description    |
+| ---------- | -------- | -------------- |
 | $attribute | `string` | attribute name |
 
 </div>
 
 ---
-
