@@ -248,7 +248,7 @@ class Site_Icons
 
 		add_action('parse_request', [$this, 'generate_manifest']);
 		add_action('init', [$this, 'init']);
-		add_action('wp_head', [$this, 'add_meta_to_head'], 0);
+		add_filter('site_icon_meta_tags', [$this, 'add_meta_to_head'], 0);
 		add_filter('get_site_icon_url', [$this, 'filter_favicon_path'], 10, 2);
 	}
 
@@ -356,13 +356,37 @@ class Site_Icons
 	/**
 	 * Append manifest and other meta to head.
 	 */
-	public function add_meta_to_head()
+	public function add_meta_to_head($tags)
 	{
-		$tags = '<!-- Manifest added by bulldozer library -->' . PHP_EOL;
-		$tags .= '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">' . PHP_EOL;
-		$tags .= '<meta name="theme-color" content="' . self::$attributes['theme_color'] . '">' . PHP_EOL;
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo $tags;
+		$meta_tags = [];
+
+
+
+		$favicon = get_site_icon_url('ico');
+		if ($favicon) {
+			$meta_tags[] = sprintf('<link rel="shortcut icon" href="%s" />', esc_url($favicon));
+		}
+
+		$icon_32 = get_site_icon_url(32);
+
+		if ($icon_32) {
+			$meta_tags[] = sprintf('<link rel="icon" type="image/svg+xml" href="%s" sizes="32x32" />', esc_url($icon_32));
+		} else {
+			$icon_96 = get_site_icon_url(96);
+			if ($icon_96) {
+				$meta_tags[] = sprintf('<link rel="icon" type="image/png" href="%s" sizes="96x96" />', esc_url($icon_96));
+			}
+		}
+
+		$icon_180 = get_site_icon_url(180);
+		if ($icon_180) {
+			$meta_tags[] = sprintf('<link rel="apple-touch-icon" href="%s" />', esc_url($icon_180));
+		}
+
+		$meta_tags[] = '<meta name="apple-mobile-web-app-title" content="' . self::$attributes['name'] . '" />';
+		$meta_tags[] = '<!-- Manifest added by bulldozer library -->';
+		$meta_tags[] = '<link rel="manifest" href="' . parse_url(home_url('/') . $this->manifest_filename, PHP_URL_PATH) . '">';
+		return $meta_tags;
 	}
 
 	/**
@@ -376,11 +400,18 @@ class Site_Icons
 	public function filter_favicon_path($url, $size)
 	{
 		switch ($size) {
+
+			case 'ico':
+				$filename = 'favicon.ico';
+				break;
 			case 32:
 				$filename = 'favicon.svg';
 
 				break;
+			case 96:
+				$filename = 'favicon-96x96.png';
 
+				break;
 			case 180:
 				$filename = 'apple-touch-icon.png';
 
