@@ -436,7 +436,7 @@ class Site_Icons
 				break;
 		}
 
-		if (! file_exists(get_stylesheet_directory() . '/resources/' . $this->favicon_folder_name . '/' . $filename)) {
+		if (! file_exists(get_theme_file_path('/resources/' . $this->favicon_folder_name . '/' . $filename))) {
 			return false;
 		}
 
