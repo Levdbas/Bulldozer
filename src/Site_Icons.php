@@ -73,7 +73,7 @@ class Site_Icons
 	 *
 	 * @var boolean
 	 */
-	private bool $new_filenames = false;
+	private bool $new_filenames = true;
 
 	/**
 	 * Whether the parent theme is used or not.
@@ -246,7 +246,7 @@ class Site_Icons
 		}
 
 		add_action('init', [$this, 'init']);
-		add_filter('site_icon_meta_tags', [$this, 'add_meta_to_head'], 0);
+		add_filter('site_icon_meta_tags', [$this, 'add_meta_to_head'], 10);
 		add_filter('get_site_icon_url', [$this, 'filter_favicon_path'], 10, 2);
 	}
 
@@ -276,16 +276,17 @@ class Site_Icons
 	public function get_favicon_path()
 	{
 		if (file_exists(get_stylesheet_directory() . '/resources/' . $this->favicon_folder_name . '/web-app-manifest-512x512.png')) {
-			$this->new_filenames = true;
 			return get_stylesheet_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
 		}
 
 		if (file_exists(get_stylesheet_directory() . '/resources/' . $this->favicon_folder_name . '/android-chrome-512x512.png')) {
+			$this->new_filenames = false;
 			return get_stylesheet_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
 		}
 
-		if (file_exists(get_template_directory() . '/resources/' . $this->favicon_folder_name . '/android-chrome-512x512.png')) {
+		if (file_exists(get_template_directory() . '/resources/' . $this->favicon_folder_name . '/web-app-manifest-512x512.png')) {
 			$this->parent_theme = true;
+
 			return get_template_directory_uri() . '/resources/' . $this->favicon_folder_name . '/';
 		}
 		Bulldozer::frontend_error(sprintf(__('No icons found at /resources/%s/', 'bulldozer'), $this->favicon_folder_name));
@@ -319,7 +320,7 @@ class Site_Icons
 		$this->favicon_folder_name = apply_filters('highground/bulldozer/site-icons/folder-name', 'favicons');
 		$this->manifest_filename   = $this->get_manifest_filename();
 		$this->favicon_path        = $this->get_favicon_path();
-		$this->file_prefix         = $this->new_filenames && ! $this->parent_theme ? 'web-app-manifest' : 'android-chrome';
+		$this->file_prefix         = $this->new_filenames ? 'web-app-manifest' : 'android-chrome';
 		$this->manifest_url        = $this->generate_manifest();
 	}
 
@@ -436,7 +437,9 @@ class Site_Icons
 				break;
 		}
 
-		if (! file_exists(get_theme_file_path('/resources/' . $this->favicon_folder_name . '/' . $filename))) {
+		$path = get_theme_file_path('/resources/' . $this->favicon_folder_name . '/' . $filename);
+
+		if (! file_exists($path)) {
 			return false;
 		}
 
