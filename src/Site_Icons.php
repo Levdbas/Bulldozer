@@ -364,21 +364,21 @@ class Site_Icons
 	{
 		$meta_tags = [];
 
-		$favicon = get_site_icon_url('ico');
-		if ($favicon) {
-			$meta_tags[] = sprintf('<link rel="shortcut icon" href="%s" />', esc_url($favicon));
+
+		$icon_96 = get_site_icon_url(96);
+		if ($icon_96) {
+			$meta_tags[] = sprintf('<link rel="icon" type="image/png" href="%s" sizes="96x96" />', esc_url($icon_96));
 		}
 
 		$icon_32 = get_site_icon_url(32);
-
 		if ($icon_32) {
-			$meta_tags[] = sprintf('<link rel="icon" type="image/svg+xml" href="%s" sizes="32x32" />', esc_url($icon_32));
-		} else {
-			$icon_96 = get_site_icon_url(96);
-			if ($icon_96) {
-				$meta_tags[] = sprintf('<link rel="icon" type="image/png" href="%s" sizes="96x96" />', esc_url($icon_96));
-			}
+			$meta_tags[] = sprintf('<link rel="icon" type="image/svg+xml" href="%s" />', esc_url($icon_32));
 		}
+
+		// $favicon = get_site_icon_url('ico');
+		// if ($favicon) {
+		// 	$meta_tags[] = sprintf('<link rel="shortcut icon" href="%s" />', esc_url($favicon));
+		// }
 
 		$icon_180 = get_site_icon_url(180);
 		if ($icon_180) {

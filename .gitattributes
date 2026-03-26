@@ -15,3 +15,5 @@ CHANGELOG.md export-ignore
 composer.lock export-ignore
 workspace.code-workspace export-ignore
 example/ export-ignore
+package-lock.json export-ignore
+package.json export-ignore
