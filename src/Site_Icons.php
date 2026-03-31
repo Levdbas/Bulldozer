@@ -364,15 +364,14 @@ class Site_Icons
 	{
 		$meta_tags = [];
 
-
-		$icon_96 = get_site_icon_url(96);
+		$icon_96 = $this->get_favicon_url('favicon-96x96.png');
 		if ($icon_96) {
-			$meta_tags[] = sprintf('<link rel="icon" type="image/png" href="%s" sizes="96x96" />', esc_url($icon_96));
+			$meta_tags[] = sprintf('<link rel="icon" type="image/png" href="%s" sizes="96x96" />', esc_url($icon_96[0]));
 		}
 
-		$icon_32 = get_site_icon_url(32);
+		$icon_32 = $this->get_favicon_url('favicon-32x32.png');
 		if ($icon_32) {
-			$meta_tags[] = sprintf('<link rel="icon" type="image/svg+xml" href="%s" />', esc_url($icon_32));
+			$meta_tags[] = sprintf('<link rel="icon" type="image/svg+xml" sizes="32x32" href="%s" />', esc_url($icon_32));
 		}
 
 		// $favicon = get_site_icon_url('ico');
@@ -380,7 +379,7 @@ class Site_Icons
 		// 	$meta_tags[] = sprintf('<link rel="shortcut icon" href="%s" />', esc_url($favicon));
 		// }
 
-		$icon_180 = get_site_icon_url(180);
+		$icon_180 = $this->get_favicon_url('apple-touch-icon.png');
 		if ($icon_180) {
 			$meta_tags[] = sprintf('<link rel="apple-touch-icon" href="%s" />', esc_url($icon_180));
 		}
@@ -523,7 +522,7 @@ class Site_Icons
 	/**
 	 * Clears the manifest cache by deleting the manifest file and the transient storing its hash.
 	 * @api
-	 * @return void 
+	 * @return void
 	 */
 	public static function clear_manifest_cache()
 	{
@@ -541,5 +540,22 @@ class Site_Icons
 			delete_transient('highground_bulldozer_site_icons_manifest_hash');
 			restore_current_blog();
 		}
+	}
+
+	private function get_favicon_url(string $filename): string
+	{
+		// Determine which theme directory to use
+		$directory     = $this->parent_theme ? get_template_directory() : get_stylesheet_directory();
+		$directory_uri = $this->parent_theme ? get_template_directory_uri() : get_stylesheet_directory_uri();
+
+		// Build the relative path to the favicon
+		$relative_path = '/resources/' . $this->favicon_folder_name . '/' . $filename;
+
+		// Check if the file exists before returning the URL
+		if (! file_exists($directory . $relative_path)) {
+			return '';
+		}
+
+		return $directory_uri . $relative_path;
 	}
 }
