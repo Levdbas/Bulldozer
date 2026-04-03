@@ -364,20 +364,22 @@ class Site_Icons
 	{
 		$meta_tags = [];
 
+		$svg = $this->get_favicon_url('favicon.svg');
+		if ($svg) {
+			$meta_tags[] = sprintf('<link rel="icon" type="image/svg+xml" href="%s" />', esc_url($svg));
+		}
+
 		$icon_96 = $this->get_favicon_url('favicon-96x96.png');
 		if ($icon_96) {
-			$meta_tags[] = sprintf('<link rel="icon" type="image/png" href="%s" sizes="96x96" />', esc_url($icon_96[0]));
+			$meta_tags[] = sprintf('<link rel="icon" type="image/png" href="%s" sizes="96x96" />', esc_url($icon_96));
 		}
 
 		$icon_32 = $this->get_favicon_url('favicon-32x32.png');
 		if ($icon_32) {
-			$meta_tags[] = sprintf('<link rel="icon" type="image/svg+xml" sizes="32x32" href="%s" />', esc_url($icon_32));
+			$meta_tags[] = sprintf('<link rel="icon" type="image/png" sizes="32x32" href="%s" />', esc_url($icon_32));
 		}
 
-		// $favicon = get_site_icon_url('ico');
-		// if ($favicon) {
-		// 	$meta_tags[] = sprintf('<link rel="shortcut icon" href="%s" />', esc_url($favicon));
-		// }
+
 
 		$icon_180 = $this->get_favicon_url('apple-touch-icon.png');
 		if ($icon_180) {
@@ -389,6 +391,29 @@ class Site_Icons
 		if ('' !== $this->manifest_url) {
 			$meta_tags[] = sprintf('<link rel="manifest" href="%s">', esc_url($this->manifest_url));
 		}
+
+		/**
+		 * Filters the meta tags added by the Site_Icons class.
+		 *
+		 * @since 5.12.0
+		 * @param array<string, mixed> An array of meta tags.
+		 * @return array<string, mixed> The filtered array of meta tags.
+		 * @example
+		 * ```php
+		 * add_filter('bulldozer/site-icons/meta-tags', function (array $meta_tags) {
+		 *     $meta_tags[] = '<meta name="custom-meta" content="value">';
+		 *     return $meta_tags;
+		 * });
+		 * ```
+		 *         'label' => 'Custom Field',
+		 *    ]);
+		 *
+		 *    return $fields;
+		 * });
+		 * ```
+		 */
+		$meta_tags = (array) apply_filters('bulldozer/site-icons/meta-tags', $meta_tags);
+
 		return $meta_tags;
 	}
 
