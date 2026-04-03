@@ -97,7 +97,7 @@ class Autoloader
 	 * After that, we will search for the `fields/reusable` folder and load all PHP files from that folder.
 	 * This ensures that any reusable fields are loaded before any other fields. Make sure to not include full field groups, including locations here.
 	 *
-	 * Finally, it will load all other PHP files in the `fields` directory within the `acf/init` action.
+	 * Finally, it will load all other PHP files in the `fields` directory within the `acf/include_fields` action.
 	 *
 	 * @api
 	 * @since 5.7.0
@@ -124,7 +124,7 @@ class Autoloader
 		}
 
 		add_action(
-			'acf/init',
+			'acf/include_fields',
 			function () use ($fields_dir) {
 				$reusable_dir = $fields_dir . '/reusable';
 

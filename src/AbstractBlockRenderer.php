@@ -137,7 +137,7 @@ abstract class AbstractBlockRenderer
 	 */
 	public function __construct()
 	{
-		add_action('acf/init', [$this, 'register_block']);
+		add_action('acf/include_fields', [$this, 'register_block']);
 	}
 
 	/**
