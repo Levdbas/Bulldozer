@@ -335,7 +335,7 @@ class Site_Icons
 
 		$transient = get_transient($this->get_manifest_hash_option_name());
 
-		if (false !== $transient && file_exists(trailingslashit($upload_directory['basedir']) . '/' . $this->manifest_filename)) {
+		if (false !== $transient && file_exists(trailingslashit($upload_directory['basedir']) . $this->manifest_filename)) {
 			return trailingslashit($upload_directory['baseurl']) . $this->manifest_filename;
 		}
 
