@@ -331,7 +331,7 @@ class Site_Icons
 	 */
 	public function generate_manifest(): string
 	{
-		$upload_directory = wp_upload_dir();
+		$upload_directory = wp_upload_dir(null, false);
 
 		$transient = get_transient($this->get_manifest_hash_option_name());
 
