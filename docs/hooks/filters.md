@@ -116,3 +116,26 @@ add_filter('highground/bulldozer/site-icons/folder-name', function (): string {
 });
 ```
 
+## bulldozer/site-icons/meta-tags
+
+Filters the meta tags added by the Site_Icons class.
+
+**since** 5.12.0
+
+<div class="table-responsive">
+
+| Name | Type | Description |
+| --- | --- | --- |
+| $ | `array<string,mixed>` | An array of meta tags. |
+
+</div>
+
+**PHP**
+
+```php
+add_filter('bulldozer/site-icons/meta-tags', function (array $meta_tags) {
+    $meta_tags[] = '<meta name="custom-meta" content="value">';
+    return $meta_tags;
+});
+```
+

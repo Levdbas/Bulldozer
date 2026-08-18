@@ -405,12 +405,6 @@ class Site_Icons
 		 *     return $meta_tags;
 		 * });
 		 * ```
-		 *         'label' => 'Custom Field',
-		 *    ]);
-		 *
-		 *    return $fields;
-		 * });
-		 * ```
 		 */
 		$meta_tags = (array) apply_filters('bulldozer/site-icons/meta-tags', $meta_tags);
 
