@@ -234,6 +234,10 @@ abstract class AbstractBlockRenderer
 					[
 						'code' => [],
 						'br'   => [],
+						'a'	 => [
+							'href'   => [],
+							'target' => [],
+						],
 					]
 				),
 				'type' => $type,
