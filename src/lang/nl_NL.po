@@ -1,8 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-02-22 08:07+0100\n"
-"PO-Revision-Date: 2024-02-22 08:07+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-18T12:25:09+00:00\n"
+"PO-Revision-Date: 2026-08-18 14:26+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -10,12 +11,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.9\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;esc_html__\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: AbstractBlockRenderer.php:253
+#: AbstractBlockRenderer.php:224 Bulldozer.php:171
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: AbstractBlockRenderer.php:225 Bulldozer.php:172
+msgid "Error"
+msgstr "Foutmelding"
+
+#: AbstractBlockRenderer.php:231
+#, php-format
+msgid "%s block"
+msgstr "%s blok"
+
+#: AbstractBlockRenderer.php:329
+#, php-format
+msgid "Block - %s"
+msgstr "Blok - %s"
+
+#: AbstractBlockRenderer.php:365
 #, php-format
 msgid ""
 "This block is deprecated since %1$s. Please replace this block in favor of "
@@ -23,15 +42,15 @@ msgid ""
 msgstr ""
 "Dit blok is verouderd sinds %1$s. Vervang dit blok ten gunste van %2$s."
 
-#: AbstractBlockRenderer.php:339
+#: AbstractBlockRenderer.php:463
 msgid "This block is disabled and thus not visible on the frontend."
 msgstr "Dit blok is uitgeschakeld en dus niet zichtbaar op de frontend."
 
-#: AbstractBlockRenderer.php:357
+#: AbstractBlockRenderer.php:481
 msgid "Disable block"
 msgstr "Blok uitschakelen"
 
-#: AbstractBlockRenderer.php:358
+#: AbstractBlockRenderer.php:482
 msgid ""
 "You can disable the block if you need to temporarily hide its content. For "
 "example, an announcement block can be still kept inside the editor but will "
@@ -41,35 +60,24 @@ msgstr ""
 "aankondigingsblok kan bijvoorbeeld nog steeds in de editor worden bewaard, "
 "maar wordt pas weergegeven als het opnieuw is ingeschakeld."
 
-#: AbstractBlockRenderer.php:360
+#: AbstractBlockRenderer.php:484
 msgid "True"
 msgstr "Ja"
 
-#: AbstractBlockRenderer.php:361
+#: AbstractBlockRenderer.php:485
 msgid "False"
 msgstr "Nee"
 
-#: AbstractBlockRenderer.php:528 Bulldozer.php:190
-msgid "Notice"
-msgstr "Melding"
-
-#: AbstractBlockRenderer.php:529 Bulldozer.php:191
-msgid "Warning"
-msgstr "Waarschuwing"
-
-#: AbstractBlockRenderer.php:530 Bulldozer.php:192
-msgid "Error"
-msgstr "Foutmelding"
-
-#: AbstractBlockRenderer.php:536
-msgid "block"
-msgstr "blok"
-
-#: Asset.php:95 Asset.php:96
+#: Asset.php:62 Asset.php:63
 msgid "Did you run Webpack for the first time?"
 msgstr "Heb je Webpack voor het eerst gedraaid?"
 
-#: BlockRendererV1.php:79
+#: BlockRendererV1.php:121
+#, php-format
+msgid "Block %s.twig not found."
+msgstr "Blok %s.twig niet gevonden."
+
+#: BlockRendererV1.php:143
 #, php-format
 msgid ""
 "This block is deprecated since version %1$s. Please replace this block in "
@@ -78,50 +86,63 @@ msgstr ""
 "Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
 "%2$s."
 
-#: BlockRendererV1.php:151
-#, php-format
-msgid "Block %s.twig not found."
-msgstr "Blok %s.twig niet gevonden."
+#: BlockRendererV2.php:82
+msgctxt "Error explanation"
+msgid "ACF not activated."
+msgstr "ACF is niet geactiveerd."
 
-#: Bulldozer.php:87
+#: BlockRendererV2.php:372
+#, php-format
+msgid "Twig file %s not found."
+msgstr "Het Twig-bestand %s is niet gevonden."
+
+#: Bulldozer.php:96
 #, php-format
 msgid ""
 "Your theme %1$s requires at least Bulldozer %2$s. You have %3$s installed. "
-"Please update/downgrade by setting the version number like this in your "
-"composer file: highground/bulldozer\": \"%2$s\""
+"Please update by setting the version number like this in your composer file: "
+"<code>highground/bulldozer\": \"^%2$s\"</code>"
 msgstr ""
-"Je thema %1$s vereist ten minste Bulldozer %2$s. U hebt %3$s geïnstalleerd. "
-"Werk bij/downgrade door het versienummer als volgt in te stellen in uw "
-"composer-bestand: highground/bulldozer\": \"%2$s\""
+"Voor je thema %1$s is minimaal Bulldozer %2$s vereist. Je hebt %3$s "
+"geïnstalleerd. Werk dit bij door het versienummer als volgt in je Composer-"
+"bestand in te stellen: <code>„highground/bulldozer”: „^%2$s”</code>"
 
-#: Bulldozer.php:118
-#, php-format
-msgid "Your theme %1$s requires the plugin %2$s. Please install it."
-msgstr ""
-"Voor jouw thema %1$s is de plug-in %2$s vereist. Installeer het alstublieft."
-
-#: Bulldozer.php:162
+#: Bulldozer.php:140
 msgid "&rsaquo; error"
 msgstr "&rsaquo; fout"
 
-#: Bulldozer.php:195
+#: Bulldozer.php:170
+msgid "Notice"
+msgstr "Melding"
+
+#: Bulldozer.php:175
 msgid "&rsaquo; "
 msgstr "&rsaquo; "
 
-#: Bulldozer.php:237 Bulldozer.php:238
+#: Bulldozer.php:216 Bulldozer.php:217
 msgid "Timber not activated. Make sure to composer require timber/timber"
 msgstr ""
 "Timber niet geactiveerd. Zorg ervoor dat timber/timber is toegevoegd aan uw "
 "dependencies"
 
-#: Site_Icons.php:179
+#: Bulldozer.php:261
+#, php-format
+msgid "Your theme %1$s requires the plugin %2$s. Please install it."
+msgstr ""
+"Voor jouw thema %1$s is de plug-in %2$s vereist. Installeer het alstublieft."
+
+#: Site_Icons.php:225
+msgid "No attributes provided, using defaults."
+msgstr "Er zijn geen kenmerken opgegeven; de standaardwaarden worden gebruikt."
+
+#: Site_Icons.php:292
 #, php-format
 msgid "No icons found at /resources/%s/"
 msgstr "Geen icons gevonden bij /resources/%s/"
 
-#, php-format
-#~ msgid "Block %s not found."
-#~ msgstr "Blok %s niet gevonden."
+#: Site_Icons.php:350
+msgid "Could not write the site manifest file."
+msgstr "Het manifestbestand van de site kon niet worden geschreven."
 
 #, php-format
 #~ msgid "Edit %1$s"

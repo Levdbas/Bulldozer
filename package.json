@@ -6,7 +6,9 @@
   "scripts": {
     "docs:serve": "docsify serve docs",
     "docs:start": "docsify serve docs --port 3000",
-    "docs:open": "docsify serve docs --open"
+    "docs:open": "docsify serve docs --open",
+    "translate:pot": "wp i18n make-pot ./src src/lang/bulldozer.pot --slug=bulldozer --exclude=node_modules,vendor",
+    "translate:make-php": "wp i18n make-php src/lang/ src/lang/"
   },
   "devDependencies": {
     "docsify-cli": "^4.4.4"
