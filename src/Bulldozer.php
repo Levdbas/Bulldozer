@@ -21,7 +21,7 @@ class Bulldozer
 	/**
 	 * Current Bulldozer version.
 	 */
-	public const VERSION = '5.12.1';
+	public const VERSION = '5.12.2';
 
 	/**
 	 * Active theme object.
@@ -219,13 +219,8 @@ class Bulldozer
 			);
 		}
 
-		// if version starts with 2
-		if (version_compare(Timber::$version, '2', '<')) {
-			new Timber();
-			Timber::$cache = true;
-		} else {
-			Timber::init();
-		}
+
+		Timber::init();
 	}
 
 	/**
