@@ -8,6 +8,7 @@ namespace HighGround\Bulldozer;
 
 require_once 'helpers.php';
 
+use StoutLogic\AcfBuilder\FieldsBuilder;
 use Timber\Timber;
 
 /**
