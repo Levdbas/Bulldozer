@@ -219,7 +219,8 @@ abstract class AbstractBlockRenderer
 	public static function add_notification(string $message, string $type)
 	{
 		$types = [
-			'notice' => __('Notice', 'bulldozer'),
+			'success' => false,
+			'notice' => false,
 			'warning' => __('Warning', 'bulldozer'),
 			'error' => __('Error', 'bulldozer'),
 		];
@@ -227,7 +228,7 @@ abstract class AbstractBlockRenderer
 		array_push(
 			self::$notifications,
 			[
-				'title' => self::$title . ' ' . __('block', 'bulldozer'),
+				'title' => sprintf(__('%s block', 'bulldozer'), self::$title),
 				'message' => $message,
 				'type' => $type,
 				'type_name' => $types[$type],
