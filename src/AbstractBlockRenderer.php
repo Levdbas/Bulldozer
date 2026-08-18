@@ -229,7 +229,13 @@ abstract class AbstractBlockRenderer
 			self::$notifications,
 			[
 				'title' => sprintf(__('%s block', 'bulldozer'), self::$title),
-				'message' => $message,
+				'message' => wp_kses(
+					$message,
+					[
+						'code' => [],
+						'br'   => [],
+					]
+				),
 				'type' => $type,
 				'type_name' => $types[$type],
 			]
