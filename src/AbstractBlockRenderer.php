@@ -255,7 +255,6 @@ abstract class AbstractBlockRenderer
 	 * @param false|string $classes        string with classes
 	 * @param false|string $orientation    string with orientation, can be 'horizontal' or 'vertical'
 	 * @param bool|string  $templatelock   true or one of 'all' or 'insert'. True defaults to 'all'.
-	 * @param bool         $block_render_appender whether to render the default appender or not
 	 *
 	 * @return string $inner_blocks the inner blocks appender
 	 *
@@ -272,7 +271,7 @@ abstract class AbstractBlockRenderer
 	 * }
 	 * ```
 	 */
-	public static function create_inner_blocks(array|false $allowed_blocks = false, array|false $template = false, false|string $classes = false, false|string $orientation = false, bool|string $templatelock = false, bool $block_render_appender = false): string
+	public static function create_inner_blocks(array|false $allowed_blocks = false, array|false $template = false, false|string $classes = false, false|string $orientation = false, bool|string $templatelock = false): string
 	{
 		if ($allowed_blocks) {
 			$allowed_blocks = esc_attr(wp_json_encode($allowed_blocks));
@@ -303,9 +302,9 @@ abstract class AbstractBlockRenderer
 		$inner_blocks .= $orientation ? ' orientation="' . $orientation . '"' : '';
 		$inner_blocks .= $templatelock ? ' templateLock="' . $templatelock . '"' : '';
 
-		if ($block_render_appender) {
-			$inner_blocks .= ' renderAppender="ButtonBlockAppender"';
-		}
+		// if ($block_render_appender) {
+		// 	$inner_blocks .= ' renderAppender="ButtonBlockAppender"';
+		// }
 
 		$inner_blocks .= ' />';
 
