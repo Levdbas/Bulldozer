@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-18T12:25:09+00:00\n"
-"PO-Revision-Date: 2026-08-18 14:26+0200\n"
+"POT-Creation-Date: 2026-08-20T09:55:45+00:00\n"
+"PO-Revision-Date: 2026-08-20 11:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: nl_NL\n"
@@ -17,8 +17,8 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: AbstractBlockRenderer.php:224 Bulldozer.php:171
-msgid "Warning"
-msgstr "Waarschuwing"
+msgid "Warningg"
+msgstr "Waarschuwing!"
 
 #: AbstractBlockRenderer.php:225 Bulldozer.php:172
 msgid "Error"
@@ -86,12 +86,12 @@ msgstr ""
 "Dit blok is afgeschaft sinds versie %1$s. Vervang dit blok ten gunste van "
 "%2$s."
 
-#: BlockRendererV2.php:82
+#: BlockRendererV2.php:83
 msgctxt "Error explanation"
 msgid "ACF not activated."
 msgstr "ACF is niet geactiveerd."
 
-#: BlockRendererV2.php:372
+#: BlockRendererV2.php:373
 #, php-format
 msgid "Twig file %s not found."
 msgstr "Het Twig-bestand %s is niet gevonden."
@@ -125,7 +125,7 @@ msgstr ""
 "Timber niet geactiveerd. Zorg ervoor dat timber/timber is toegevoegd aan uw "
 "dependencies"
 
-#: Bulldozer.php:261
+#: Bulldozer.php:256
 #, php-format
 msgid "Your theme %1$s requires the plugin %2$s. Please install it."
 msgstr ""

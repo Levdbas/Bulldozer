@@ -50,7 +50,7 @@ class Bulldozer
 
 		$active_theme = wp_get_theme(get_template());
 		self::$theme = esc_html($active_theme->get('Name'));
-		add_action('after_setup_theme', [$this, 'load_textdomain']);
+		add_action('init', [$this, 'load_textdomain']);
 		$this->test_compatibility();
 		add_action('enqueue_block_editor_assets', [$this, 'add_editor_assets']);
 
