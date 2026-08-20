@@ -21,7 +21,7 @@ class Bulldozer
 	/**
 	 * Current Bulldozer version.
 	 */
-	public const VERSION = '5.12.2';
+	public const VERSION = '5.12.3';
 
 	/**
 	 * Active theme object.
@@ -50,7 +50,7 @@ class Bulldozer
 
 		$active_theme = wp_get_theme(get_template());
 		self::$theme = esc_html($active_theme->get('Name'));
-		add_action('init', [$this, 'load_textdomain']);
+		add_action('after_setup_theme', [$this, 'load_textdomain']);
 		$this->test_compatibility();
 		add_action('enqueue_block_editor_assets', [$this, 'add_editor_assets']);
 
