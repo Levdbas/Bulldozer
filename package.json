@@ -1,6 +1,6 @@
 {
   "name": "bulldozer-docs",
-  "version": "1.0.0",
+  "version": "5.12.6",
   "description": "Documentation for Bulldozer - A collection of classes to extend your Timber-based WordPress theme",
   "private": true,
   "scripts": {
