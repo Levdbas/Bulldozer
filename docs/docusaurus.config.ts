@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
@@ -63,6 +64,50 @@ const config: Config = {
           position: 'right',
         },
       ],
+    }, footer: {
+      style: 'dark',
+      links: [
+        {
+          title: 'Learn More',
+          items: [
+            {
+              label: 'wp-lemon docs',
+              href: 'https://studio-lemon.github.io/wp-lemon-docs/docs/',
+            },
+            {
+              label: 'Timber',
+              href: 'https://timber.github.io/docs/',
+            },
+            {
+              label: 'ACF Builder',
+              href: 'https://github.com/StoutLogic/acf-builder/wiki/',
+            },
+            {
+              label: 'Bedrock',
+              href: 'https://github.com/roots/bedrock',
+            },
+            {
+              label: 'Bootstrap',
+              href: 'https://getbootstrap.com/docs/5.3/getting-started/introduction/',
+            },
+          ],
+        },
+        {
+          title: 'Community',
+          items: [
+            {
+              label: 'GitHub',
+              href: 'https://github.com/Studio-Lemon/wp-lemon-docs',
+            },
+          ],
+        },
+      ],
+      copyright: `Copyright © ${new Date().getFullYear()} wp-lemon. Built with Docusaurus.`,
+    },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.dracula,
+      additionalLanguages: ['php', 'bash', 'scss'],
     },
   } satisfies Preset.ThemeConfig,
 };
