@@ -464,7 +464,8 @@ class Site_Icons
 		if (! file_exists($path)) {
 
 			if (32 === $size) {
-				return $this->favicon_path . 'favicon-32x32.png';
+				add_filter('wp_admin_bar_show_site_icons', '__return_false');
+				return $url;
 			}
 
 			return $url;
