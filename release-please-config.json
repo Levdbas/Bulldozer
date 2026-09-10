@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "php",
+  "initial-version": "5.12.6",
+  "changelog-sections": [
+    { "type": "feat", "section": "⛰️ Features" },
+    { "type": "fix", "section": "🐛 Bug Fixes" },
+    { "type": "bug", "section": "🐛 Bug Fixes" },
+    { "type": "refactor", "section": "🚜 Refactor" },
+    { "type": "enhance", "section": "⚡ Enhancements" },
+    { "type": "enhancement", "section": "⚡ Enhancements" },
+    { "type": "docs", "section": "📚 Documentation" },
+    { "type": "doc", "section": "📚 Documentation" },
+    { "type": "style", "section": "🎨 Styling" },
+    { "type": "scss", "section": "🎨 Styling" },
+    { "type": "test", "section": "🧪 Testing" },
+    { "type": "tests", "section": "🧪 Testing" },
+    { "type": "deprecate", "section": "🪦 Deprecate" },
+    { "type": "chore", "section": "⚙️ Miscellaneous Tasks" },
+    { "type": "ci", "section": "⚙️ Miscellaneous Tasks" },
+    { "type": "security", "section": "🛡️ Security" },
+    { "type": "revert", "section": "◀️ Revert" }
+  ],
+  "date-format": "%d-%m-%Y",
+  "include-component-in-tag": false,
+  "include-v-in-tag": false,
+  "include-v-in-release-name": false,
+  "bootstrap-sha": "89e2f0f0efac6530fb38f4c867a9de22fa3a368d",
+  "packages": {
+    ".": {
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        { "type": "generic", "path": "src/Bulldozer.php" },
+        { "type": "json", "path": "package.json", "jsonpath": "$.version" },
+        { "type": "generic", "path": "readme.txt" }
+      ]
+    }
+  }
+}
