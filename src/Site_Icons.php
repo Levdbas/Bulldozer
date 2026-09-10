@@ -421,6 +421,7 @@ class Site_Icons
 	 */
 	public function filter_favicon_path($url, $size)
 	{
+
 		switch ($size) {
 
 			case 'ico':
@@ -450,15 +451,23 @@ class Site_Icons
 				break;
 
 			default:
-				return false;
+				return $url;
 
 				break;
 		}
 
-		$path = get_theme_file_path('/resources/' . $this->favicon_folder_name . '/' . $filename);
+		$path = get_stylesheet_directory() . '/resources/' . $this->favicon_folder_name . '/' . $filename;
+
+
+
 
 		if (! file_exists($path)) {
-			return false;
+
+			if (32 === $size) {
+				return $this->favicon_path . 'favicon-32x32.png';
+			}
+
+			return $url;
 		}
 
 		return $this->favicon_path . $filename;
