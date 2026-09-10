@@ -1,5 +1,24 @@
 # Changelog
 
+## [5.12.6](https://github.com/Levdbas/Bulldozer/compare/5.12.5...5.12.6) (2026-09-10)
+
+
+### 🐛 Bug Fixes
+
+* update branch name from master to main in release-please workflow ([5f24aba](https://github.com/Levdbas/Bulldozer/commit/5f24aba0f0f0db50b30e29974079ac216341a705))
+
+
+### 📚 Documentation
+
+* update docs site to docusaurus ([4141460](https://github.com/Levdbas/Bulldozer/commit/41414603e0a5dc698fd364567d8dfe436a6949e3))
+
+
+### ⚙️ Miscellaneous Tasks
+
+* add release-please configuration and workflow files for versioning ([c2a885e](https://github.com/Levdbas/Bulldozer/commit/c2a885ef04531550642c1e01961b868d763f6dc4))
+* update docs ([58f7906](https://github.com/Levdbas/Bulldozer/commit/58f790686561bec96745ee7c9b08dd8a4b7a05f4))
+* working on docs ([63d05c1](https://github.com/Levdbas/Bulldozer/commit/63d05c1bde2fa6bd2e44e48020acd3f972d9a9b8))
+
 ## [5.12.5](https://github.com/Levdbas/Bulldozer/compare/5.12.4...5.12.5) (2026-09-10)
 
 ### 🐛 Bug Fixes
