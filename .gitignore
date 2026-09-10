@@ -2,3 +2,7 @@ vendor
 wordpress
 wp-content
 node_modules
+docs/.docusaurus
+docs/build
+.docusaurus
+build

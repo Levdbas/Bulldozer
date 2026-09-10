@@ -1,6 +1,6 @@
 # BlockRendererV1
 
-{@inheritDoc}
+This class inherits the methods and behavior of `AbstractBlockRenderer`.
 
 In addition to AbstractBlockRenderer this extended class adds the following:
 
@@ -20,15 +20,15 @@ In addition to AbstractBlockRenderer this extended class adds the following:
 | Name | Return Type | Summary/Returns |
 | --- | --- | --- |
 | <span class="method-name">[add_class()](#add_class)</span> | <span class="method-type">`void`</span> | <span class="method-description">Add class to block classes.</span> |
-| <span class="method-name">[add_css()](#add_css)</span> | <span class="method-type">`string`</span> | <span class="method-description">Add css to the compiled css.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> the compiled css</span></span> |
+| <span class="method-name">[add_css()](#add_css)</span> | <span class="method-type">`string`</span> | <span class="method-description">Add css to the compiled css. <span class="method-return"><span class="method-return-label">Returns:</span> the compiled css</span></span> |
 | <span class="method-name">[add_css_var()](#add_css_var)</span> | <span class="method-type"></span> | <span class="method-description">Add css variable with the value based on an acf field.</span> |
 | <span class="method-name">[add_modifier_class()](#add_modifier_class)</span> | <span class="method-type"></span> | <span class="method-description">Add modifier class to block classes.</span> |
 | <span class="method-name">[add_notification()](#add_notification)</span> | <span class="method-type"></span> | <span class="method-description">Compose a notification to be shown in the backend.</span> |
-| <span class="method-name">[create_inner_blocks()](#create_inner_blocks)</span> | <span class="method-type">`string`</span> | <span class="method-description">Generate inner blocks appender.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> $inner_blocks the inner blocks appender</span></span> |
-| <span class="method-name">[get_attribute()](#get_attribute)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">Get block attribute.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> the attribute value</span></span> |
+| <span class="method-name">[create_inner_blocks()](#create_inner_blocks)</span> | <span class="method-type">`string`</span> | <span class="method-description">Generate inner blocks appender. <span class="method-return"><span class="method-return-label">Returns:</span> $inner_blocks the inner blocks appender</span></span> |
+| <span class="method-name">[get_attribute()](#get_attribute)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">Get block attribute. <span class="method-return"><span class="method-return-label">Returns:</span> the attribute value</span></span> |
 | <span class="method-name">[get_block_alignment()](#get_block_alignment)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block alignment.</span> |
 | <span class="method-name">[get_block_id()](#get_block_id)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block id.</span> |
-| <span class="method-name">[get_field()](#get_field)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">get ACF field value.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> $field the field value</span></span> |
+| <span class="method-name">[get_field()](#get_field)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">get ACF field value. <span class="method-return"><span class="method-return-label">Returns:</span> $field the field value</span></span> |
 | <span class="method-name">[get_post_id()](#get_post_id)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block alignment.</span> |
 | <span class="method-name">[is_full_width()](#is_full_width)</span> | <span class="method-type">`bool`</span> | <span class="method-description">Check if the block is full width.</span> |
 | <span class="method-name">[is_preview()](#is_preview)</span> | <span class="method-type">`bool`</span> | <span class="method-description">Check if the block is rendered in preview mode.</span> |

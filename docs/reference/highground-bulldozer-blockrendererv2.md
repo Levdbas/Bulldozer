@@ -1,6 +1,6 @@
 # BlockRendererV2
 
-{@inheritDoc}
+This class inherits the methods and behavior of `AbstractBlockRenderer`.
 
 Registration of the block is done by register_block() that locates the block.json file and registers the block with WordPress
 .
@@ -25,16 +25,16 @@ In addition to AbstractBlockRenderer this extended class adds the following:
 | --- | --- | --- |
 | <span class="method-name">[add_block_variations()](#add_block_variations)</span> | <span class="method-type">`array` or `false`</span> | <span class="method-description">Register the block variants.</span> |
 | <span class="method-name">[add_class()](#add_class)</span> | <span class="method-type">`void`</span> | <span class="method-description">Add class to block classes.</span> |
-| <span class="method-name">[add_css()](#add_css)</span> | <span class="method-type">`string`</span> | <span class="method-description">Add css to the compiled css.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> the compiled css</span></span> |
+| <span class="method-name">[add_css()](#add_css)</span> | <span class="method-type">`string`</span> | <span class="method-description">Add css to the compiled css. <span class="method-return"><span class="method-return-label">Returns:</span> the compiled css</span></span> |
 | <span class="method-name">[add_css_var()](#add_css_var)</span> | <span class="method-type"></span> | <span class="method-description">Add css variable with the value based on an acf field.</span> |
 | <span class="method-name">[add_icon()](#add_icon)</span> | <span class="method-type"></span> | <span class="method-description">Empty function that can be overwritten by the blocks to add a custom icon.</span> |
 | <span class="method-name">[add_modifier_class()](#add_modifier_class)</span> | <span class="method-type"></span> | <span class="method-description">Add modifier class to block classes.</span> |
 | <span class="method-name">[add_notification()](#add_notification)</span> | <span class="method-type"></span> | <span class="method-description">Compose a notification to be shown in the backend.</span> |
-| <span class="method-name">[create_inner_blocks()](#create_inner_blocks)</span> | <span class="method-type">`string`</span> | <span class="method-description">Generate inner blocks appender.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> $inner_blocks the inner blocks appender</span></span> |
-| <span class="method-name">[get_attribute()](#get_attribute)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">Get block attribute.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> the attribute value</span></span> |
+| <span class="method-name">[create_inner_blocks()](#create_inner_blocks)</span> | <span class="method-type">`string`</span> | <span class="method-description">Generate inner blocks appender. <span class="method-return"><span class="method-return-label">Returns:</span> $inner_blocks the inner blocks appender</span></span> |
+| <span class="method-name">[get_attribute()](#get_attribute)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">Get block attribute. <span class="method-return"><span class="method-return-label">Returns:</span> the attribute value</span></span> |
 | <span class="method-name">[get_block_alignment()](#get_block_alignment)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block alignment.</span> |
 | <span class="method-name">[get_block_id()](#get_block_id)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block id.</span> |
-| <span class="method-name">[get_field()](#get_field)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">get ACF field value.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> $field the field value</span></span> |
+| <span class="method-name">[get_field()](#get_field)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">get ACF field value. <span class="method-return"><span class="method-return-label">Returns:</span> $field the field value</span></span> |
 | <span class="method-name">[get_post_id()](#get_post_id)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block alignment.</span> |
 | <span class="method-name">[hide_from_inserter()](#hide_from_inserter)</span> | <span class="method-type"></span> | <span class="method-description">Empty function that can be overwritten by the blocks to add custom logic to hide the block from the inserter.</span> |
 | <span class="method-name">[is_full_width()](#is_full_width)</span> | <span class="method-type">`bool`</span> | <span class="method-description">Check if the block is full width.</span> |

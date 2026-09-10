@@ -4,14 +4,33 @@
   "description": "Documentation for Bulldozer - A collection of classes to extend your Timber-based WordPress theme",
   "private": true,
   "scripts": {
-    "docs:serve": "docsify serve docs",
-    "docs:start": "docsify serve docs --port 3000",
-    "docs:open": "docsify serve docs --open",
+    "docusaurus": "docusaurus",
+    "docs:start": "docusaurus start --config docs/docusaurus.config.ts",
+    "docs:build": "docusaurus build --config docs/docusaurus.config.ts --out-dir docs/build",
+    "docs:serve": "docusaurus serve --config docs/docusaurus.config.ts",
+    "docs:clear": "docusaurus clear --config docs/docusaurus.config.ts",
     "translate:pot": "wp i18n make-pot ./src src/lang/bulldozer.pot --slug=bulldozer --exclude=node_modules,vendor",
     "translate:make-php": "wp i18n make-php src/lang/ src/lang/"
   },
+  "dependencies": {
+    "@docusaurus/core": "^3.10.1",
+    "@docusaurus/preset-classic": "^3.10.1",
+    "@easyops-cn/docusaurus-search-local": "^0.55.2",
+    "@mdx-js/react": "^3.1.1",
+    "clsx": "^2.1.1",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
   "devDependencies": {
-    "docsify-cli": "^4.4.4"
+    "@docusaurus/module-type-aliases": "^3.10.1",
+    "@docusaurus/tsconfig": "^3.10.1",
+    "@docusaurus/types": "^3.10.1",
+    "gh-pages": "^5.0.0",
+    "typescript": "~5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0"
   },
   "repository": {
     "type": "git",

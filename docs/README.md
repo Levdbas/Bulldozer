@@ -1,3 +1,10 @@
+---
+id: introduction
+slug: /
+title: Bulldozer
+sidebar_label: Introduction
+---
+
 # Bulldozer
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/highground/bulldozer.svg?style=flat-square)](https://packagist.org/packages/highground/bulldozer)

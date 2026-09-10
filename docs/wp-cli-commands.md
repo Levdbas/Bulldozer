@@ -1,4 +1,4 @@
-# Bulldozer WP-CLI Commands
+# WP-CLI Commands
 
 This document describes the new WP-CLI commands added to Bulldozer for managing autoloaded files.
 
