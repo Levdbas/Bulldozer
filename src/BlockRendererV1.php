@@ -65,6 +65,8 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 	 */
 	public function compile($attributes, $content = '', $is_preview = false, $post_id = 0, $wp_block = null)
 	{
+		$this->block_disabled = false;
+		$this->disabled_notification_added = false;
 		$this->fields = [];
 		$this->context = [];
 		self::$notifications = [];
@@ -90,7 +92,7 @@ abstract class BlockRendererV1 extends AbstractBlockRenderer
 
 		$args = [
 			'block_id' => $this->block_id,
-			'is_disabled' => $this->block_disabled,
+			'is_disabled' => $this->is_disabled(),
 			'slug' => $this->slug,
 			'attributes' => $this->attributes,
 			'is_preview' => $this->is_preview,

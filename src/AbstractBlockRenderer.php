@@ -127,6 +127,8 @@ abstract class AbstractBlockRenderer
 	 */
 	protected bool $block_disabled = false;
 
+	protected bool $disabled_notification_added = false;
+
 	/**
 	 * Compiled css that gets injected.
 	 */
@@ -430,9 +432,9 @@ abstract class AbstractBlockRenderer
 	}
 
 	/**
-	 * Adds notice to backend if the block is deprecated.
+	 * Disable the block when its disable field is set.
 	 *
-	 * Checks registered block array for 'lemon_deprecated'.
+	 * Checks registered block supports for 'showDisableButton'.
 	 * 
 	 * @example
 	 * 
@@ -458,10 +460,7 @@ abstract class AbstractBlockRenderer
 			return false;
 		}
 
-		$this->block_disabled = true;
-
-		$message = __('This block is disabled and thus not visible on the frontend.', 'bulldozer');
-		$this->add_notification($message, 'warning');
+		$this->set_disabled();
 
 		return true;
 	}
@@ -787,6 +786,30 @@ abstract class AbstractBlockRenderer
 	{
 		return $this->is_preview;
 	}
+
+	/**
+	 * Check if the block is disabled for frontend rendering.
+	 *
+	 * Disabled blocks remain visible in editor previews. Adds the disabled
+	 * warning once per render, including when set_disabled() is used.
+	 *
+	 * @api
+	 * @return bool
+	 */
+	public function is_disabled(): bool
+	{
+		if ($this->block_disabled && !$this->disabled_notification_added) {
+			$message = __('This block is disabled and thus not visible on the frontend.', 'bulldozer');
+			$this->add_notification($message, 'warning');
+			$this->disabled_notification_added = true;
+		}
+
+		return $this->block_disabled && !$this->is_preview();
+	}
+
+
+
+
 
 	/**
 	 * Get the block id.
