@@ -28,3 +28,9 @@ To add a disable button to a block in BlockRenderer v3, you need to include the 
 }
 ```
 This will add a disable button to the ACF fields of the block in the editor. When set to `true`, it will disable the block and display a message in the backend indicating that the block is disabled. In the frontend it will render with the additional class `acf-block--disabled` that will set the visibility to `hidden`.
+
+## Check whether a block is disabled
+
+Use `$this->is_disabled()` to check whether a block is disabled for frontend rendering. It returns `false` in editor previews so the block remains visible for editing. Both BlockRendererV1 and BlockRendererV2 use this method for the `is_disabled` template context value.
+
+A block can be disabled by its disable field or programmatically with `$this->set_disabled()`. In either case, `is_disabled()` adds the standard disabled warning once per render. Repeated calls do not duplicate the warning.

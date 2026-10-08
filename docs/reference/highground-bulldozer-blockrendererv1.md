@@ -1,6 +1,6 @@
 # BlockRendererV1
 
-This class inherits the methods and behavior of `AbstractBlockRenderer`.
+{@inheritDoc}
 
 In addition to AbstractBlockRenderer this extended class adds the following:
 
@@ -10,38 +10,41 @@ In addition to AbstractBlockRenderer this extended class adds the following:
 
 ## Overview
 
-_This class extends `HighGround\Bulldozer\AbstractBlockRenderer`_
+*This class extends `HighGround\Bulldozer\AbstractBlockRenderer`*  
+  
 
 ### Methods
 
 <div class="table-methods table-responsive">
 
-| Name                                                                           | Return Type                               | Summary/Returns                                                                                                                                                                                      |
-| ------------------------------------------------------------------------------ | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <span class="method-name">[add_class()](#add_class)</span>                     | <span class="method-type">`void`</span>   | <span class="method-description">Add class to block classes.</span>                                                                                                                                  |
-| <span class="method-name">[add_css()](#add_css)</span>                         | <span class="method-type">`string`</span> | <span class="method-description">Add css to the compiled css. <span class="method-return"><span class="method-return-label">Returns:</span> the compiled css</span></span>                           |
-| <span class="method-name">[add_css_var()](#add_css_var)</span>                 | <span class="method-type"></span>         | <span class="method-description">Add css variable with the value based on an acf field.</span>                                                                                                       |
-| <span class="method-name">[add_modifier_class()](#add_modifier_class)</span>   | <span class="method-type"></span>         | <span class="method-description">Add modifier class to block classes.</span>                                                                                                                         |
-| <span class="method-name">[add_notification()](#add_notification)</span>       | <span class="method-type"></span>         | <span class="method-description">Compose a notification to be shown in the backend.</span>                                                                                                           |
-| <span class="method-name">[create_inner_blocks()](#create_inner_blocks)</span> | <span class="method-type">`string`</span> | <span class="method-description">Generate inner blocks appender. <span class="method-return"><span class="method-return-label">Returns:</span> $inner_blocks the inner blocks appender</span></span> |
-| <span class="method-name">[get_attribute()](#get_attribute)</span>             | <span class="method-type">`mixed`</span>  | <span class="method-description">Get block attribute. <span class="method-return"><span class="method-return-label">Returns:</span> the attribute value</span></span>                                |
-| <span class="method-name">[get_block_alignment()](#get_block_alignment)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block alignment.</span>                                                                                                                                     |
-| <span class="method-name">[get_block_id()](#get_block_id)</span>               | <span class="method-type">`string`</span> | <span class="method-description">Get the block id.</span>                                                                                                                                            |
-| <span class="method-name">[get_field()](#get_field)</span>                     | <span class="method-type">`mixed`</span>  | <span class="method-description">get ACF field value. <span class="method-return"><span class="method-return-label">Returns:</span> $field the field value</span></span>                             |
-| <span class="method-name">[get_post_id()](#get_post_id)</span>                 | <span class="method-type">`string`</span> | <span class="method-description">Get the block alignment.</span>                                                                                                                                     |
-| <span class="method-name">[is_full_width()](#is_full_width)</span>             | <span class="method-type">`bool`</span>   | <span class="method-description">Check if the block is full width.</span>                                                                                                                            |
-| <span class="method-name">[is_preview()](#is_preview)</span>                   | <span class="method-type">`bool`</span>   | <span class="method-description">Check if the block is rendered in preview mode.</span>                                                                                                              |
-| <span class="method-name">[is_wide_width()](#is_wide_width)</span>             | <span class="method-type">`bool`</span>   | <span class="method-description">Check if the block is wide width.</span>                                                                                                                            |
-| <span class="method-name">[set_alignment()](#set_alignment)</span>             | <span class="method-type">`void`</span>   | <span class="method-description">Set the block alignment.</span>                                                                                                                                     |
-| <span class="method-name">[set_anchor()](#set_anchor)</span>                   | <span class="method-type">`void`</span>   | <span class="method-description">Set the block anchor.</span>                                                                                                                                        |
-| <span class="method-name">[set_attribute()](#set_attribute)</span>             | <span class="method-type">`void`</span>   | <span class="method-description">Set a block attribute.</span>                                                                                                                                       |
-| <span class="method-name">[set_disabled()](#set_disabled)</span>               | <span class="method-type">`void`</span>   | <span class="method-description">Mark the renderer's block as disabled.</span>                                                                                                                       |
+| Name | Return Type | Summary/Returns |
+| --- | --- | --- |
+| <span class="method-name">[add_class()](#add_class)</span> | <span class="method-type">`void`</span> | <span class="method-description">Add class to block classes.</span> |
+| <span class="method-name">[add_css()](#add_css)</span> | <span class="method-type">`string`</span> | <span class="method-description">Add css to the compiled css.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> the compiled css</span></span> |
+| <span class="method-name">[add_css_var()](#add_css_var)</span> | <span class="method-type"></span> | <span class="method-description">Add css variable with the value based on an acf field.</span> |
+| <span class="method-name">[add_modifier_class()](#add_modifier_class)</span> | <span class="method-type"></span> | <span class="method-description">Add modifier class to block classes.</span> |
+| <span class="method-name">[add_notification()](#add_notification)</span> | <span class="method-type"></span> | <span class="method-description">Compose a notification to be shown in the backend.</span> |
+| <span class="method-name">[create_inner_blocks()](#create_inner_blocks)</span> | <span class="method-type">`string`</span> | <span class="method-description">Generate inner blocks appender.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> $inner_blocks the inner blocks appender</span></span> |
+| <span class="method-name">[get_attribute()](#get_attribute)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">Get block attribute.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> the attribute value</span></span> |
+| <span class="method-name">[get_block_alignment()](#get_block_alignment)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block alignment.</span> |
+| <span class="method-name">[get_block_id()](#get_block_id)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block id.</span> |
+| <span class="method-name">[get_field()](#get_field)</span> | <span class="method-type">`mixed`</span> | <span class="method-description">get ACF field value.<br><br><span class="method-return"><span class="method-return-label">Returns:</span> $field the field value</span></span> |
+| <span class="method-name">[get_post_id()](#get_post_id)</span> | <span class="method-type">`string`</span> | <span class="method-description">Get the block alignment.</span> |
+| <span class="method-name">[is_disabled()](#is_disabled)</span> | <span class="method-type">`bool`</span> | <span class="method-description">Check if the block is disabled for frontend rendering.</span> |
+| <span class="method-name">[is_full_width()](#is_full_width)</span> | <span class="method-type">`bool`</span> | <span class="method-description">Check if the block is full width.</span> |
+| <span class="method-name">[is_preview()](#is_preview)</span> | <span class="method-type">`bool`</span> | <span class="method-description">Check if the block is rendered in preview mode.</span> |
+| <span class="method-name">[is_wide_width()](#is_wide_width)</span> | <span class="method-type">`bool`</span> | <span class="method-description">Check if the block is wide width.</span> |
+| <span class="method-name">[set_alignment()](#set_alignment)</span> | <span class="method-type">`void`</span> | <span class="method-description">Set the block alignment.</span> |
+| <span class="method-name">[set_anchor()](#set_anchor)</span> | <span class="method-type">`void`</span> | <span class="method-description">Set the block anchor.</span> |
+| <span class="method-name">[set_attribute()](#set_attribute)</span> | <span class="method-type">`void`</span> | <span class="method-description">Set a block attribute.</span> |
+| <span class="method-name">[set_disabled()](#set_disabled)</span> | <span class="method-type">`void`</span> | <span class="method-description">Mark the renderer's block as disabled.</span> |
 
 </div>
 
+
 ## Class Methods
 
-### add_class()
+### add\_class()
 
 Add class to block classes.
 
@@ -51,14 +54,15 @@ When an array is passed, it will merge the array with the existing classes.
 
 `add_class( string|array $class )`
 
-**Returns:** `void`
+**Returns:** `void` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name   | Type                | Description                   |
-| ------ | ------------------- | ----------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | $class | `string` or `array` | the class or array of classes |
 
 </div>
@@ -75,7 +79,7 @@ return $context;
 
 ---
 
-### add_css()
+### add\_css()
 
 Add css to the compiled css.
 
@@ -85,19 +89,20 @@ Add css to the compiled css.
 
 **Returns:** `string` the compiled css
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name | Type     | Description    |
-| ---- | -------- | -------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | $css | `string` | the css to add |
 
 </div>
 
 ---
 
-### add_css_var()
+### add\_css\_var()
 
 Add css variable with the value based on an acf field.
 
@@ -105,15 +110,16 @@ Add css variable with the value based on an acf field.
 
 `add_css_var( string $field_name, string $css_var_name, false|string $selector = false )`
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name          | Type                | Description                                               |
-| ------------- | ------------------- | --------------------------------------------------------- |
-| $field_name   | `string`            | acf field name                                            |
-| $css_var_name | `string`            | the css variable without the -- prefix                    |
-| $selector     | `false` or `string` | the css selector where the css variable should be applied |
+| Name | Type | Description |
+| --- | --- | --- |
+| $field_name | `string` | acf field name |
+| $css_var_name | `string` | the css variable without the -- prefix |
+| $selector | `false` or `string` | the css selector where the css variable should be applied |
 
 </div>
 
@@ -130,18 +136,19 @@ public function block_context($context): array
 
 ---
 
-### add_modifier_class()
+### add\_modifier\_class()
 
 Add modifier class to block classes.
 
 `add_modifier_class( string $modifier )`
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name      | Type     | Description                                  |
-| --------- | -------- | -------------------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | $modifier | `string` | the part after the -- from the BEM principle |
 
 </div>
@@ -160,20 +167,21 @@ return $context;
 
 ---
 
-### add_notification()
+### add\_notification()
 
 Compose a notification to be shown in the backend.
 
 `add_notification( string $message, string $type )`
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name     | Type     | Description                                           |
-| -------- | -------- | ----------------------------------------------------- |
-| $message | `string` | the message, translatable                             |
-| $type    | `string` | type of notification, can be notice, warning or error |
+| Name | Type | Description |
+| --- | --- | --- |
+| $message | `string` | the message, translatable |
+| $type | `string` | type of notification, can be notice, warning or error |
 
 </div>
 
@@ -193,7 +201,7 @@ if (empty($posts)) {
 
 ---
 
-### create_inner_blocks()
+### create\_inner\_blocks()
 
 Generate inner blocks appender.
 
@@ -203,17 +211,18 @@ Generate inner blocks appender.
 
 **Returns:** `string` $inner_blocks the inner blocks appender
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name            | Type                | Description                                                |
-| --------------- | ------------------- | ---------------------------------------------------------- |
-| $allowed_blocks | `array` or `false`  | array with allowed blocks or false                         |
-| $template       | `array` or `false`  | array with template                                        |
-| $classes        | `false` or `string` | string with classes                                        |
-| $orientation    | `false` or `string` | string with orientation, can be 'horizontal' or 'vertical' |
-| $templatelock   | `bool` or `string`  | true or one of 'all' or 'insert'. True defaults to 'all'.  |
+| Name | Type | Description |
+| --- | --- | --- |
+| $allowed_blocks | `array` or `false` | array with allowed blocks or false |
+| $template | `array` or `false` | array with template |
+| $classes | `false` or `string` | string with classes |
+| $orientation | `false` or `string` | string with orientation, can be 'horizontal' or 'vertical' |
+| $templatelock | `bool` or `string` | true or one of 'all' or 'insert'. True defaults to 'all'. |
 
 </div>
 
@@ -231,7 +240,7 @@ public function block_context($context): array
 
 ---
 
-### get_attribute()
+### get\_attribute()
 
 Get block attribute.
 
@@ -241,12 +250,13 @@ Get block attribute.
 
 **Returns:** `mixed` the attribute value
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name            | Type     | Description        |
-| --------------- | -------- | ------------------ |
+| Name | Type | Description |
+| --- | --- | --- |
 | $attribute_name | `string` | the attribute name |
 
 </div>
@@ -263,15 +273,16 @@ public function block_context($context): array
 
 ---
 
-### get_block_alignment()
+### get\_block\_alignment()
 
 Get the block alignment.
 
 **since** 5.5.1
 
-**Returns:** `string`
+**Returns:** `string` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 **PHP**
 
@@ -285,15 +296,16 @@ public function block_context($context): array
 
 ---
 
-### get_block_id()
+### get\_block\_id()
 
 Get the block id.
 
 **since** 5.5.1
 
-**Returns:** `string`
+**Returns:** `string` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 **PHP**
 
@@ -307,7 +319,7 @@ public function block_context($context): array
 
 ---
 
-### get_field()
+### get\_field()
 
 get ACF field value.
 
@@ -317,12 +329,13 @@ get ACF field value.
 
 **Returns:** `mixed` $field the field value
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name        | Type     | Description    |
-| ----------- | -------- | -------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | $field_name | `string` | the field name |
 
 </div>
@@ -339,15 +352,16 @@ public function block_context($context): array
 
 ---
 
-### get_post_id()
+### get\_post\_id()
 
 Get the block alignment.
 
 **since** 5.9.1
 
-**Returns:** `string`
+**Returns:** `string` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 **PHP**
 
@@ -361,15 +375,30 @@ public function block_context($context): array
 
 ---
 
-### is_full_width()
+### is\_disabled()
+
+Check if the block is disabled for frontend rendering.
+
+Disabled blocks remain visible in editor previews. Adds the disabled
+warning once per render, including when set_disabled() is used.
+
+**Returns:** `bool` 
+
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
+
+---
+
+### is\_full\_width()
 
 Check if the block is full width.
 
 **since** 5.5.1
 
-**Returns:** `bool`
+**Returns:** `bool` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 **PHP**
 
@@ -385,7 +414,7 @@ public function block_context($context): array
 
 ---
 
-### is_preview()
+### is\_preview()
 
 Check if the block is rendered in preview mode.
 
@@ -395,9 +424,10 @@ Use this method to conditionally load assets or change the rendering.
 
 **since** 5.5.1
 
-**Returns:** `bool`
+**Returns:** `bool` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 **PHP**
 
@@ -413,15 +443,16 @@ public function block_context($context): array
 
 ---
 
-### is_wide_width()
+### is\_wide\_width()
 
 Check if the block is wide width.
 
 **since** 5.5.1
 
-**Returns:** `bool`
+**Returns:** `bool` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 **PHP**
 
@@ -437,7 +468,7 @@ public function block_context($context): array
 
 ---
 
-### set_alignment()
+### set\_alignment()
 
 Set the block alignment.
 
@@ -445,14 +476,15 @@ Set the block alignment.
 
 `set_alignment( string $alignment )`
 
-**Returns:** `void`
+**Returns:** `void` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name       | Type     | Description                        |
-| ---------- | -------- | ---------------------------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | $alignment | `string` | the alignment, can be wide or full |
 
 </div>
@@ -469,7 +501,7 @@ public function block_context($context): array
 
 ---
 
-### set_anchor()
+### set\_anchor()
 
 Set the block anchor.
 
@@ -477,14 +509,15 @@ Set the block anchor.
 
 `set_anchor( string $value )`
 
-**Returns:** `void`
+**Returns:** `void` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name   | Type     | Description      |
-| ------ | -------- | ---------------- |
+| Name | Type | Description |
+| --- | --- | --- |
 | $value | `string` | the anchor value |
 
 </div>
@@ -501,7 +534,7 @@ public function block_context($context): array
 
 ---
 
-### set_attribute()
+### set\_attribute()
 
 Set a block attribute.
 
@@ -509,16 +542,17 @@ Set a block attribute.
 
 `set_attribute( string $attribute_name, mixed $value )`
 
-**Returns:** `void`
+**Returns:** `void` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 <div class="table-responsive">
 
-| Name            | Type     | Description        |
-| --------------- | -------- | ------------------ |
+| Name | Type | Description |
+| --- | --- | --- |
 | $attribute_name | `string` | the attribute name |
-| $value          | `mixed`  | the value to set   |
+| $value | `mixed` | the value to set |
 
 </div>
 
@@ -534,7 +568,7 @@ public function block_context($context): array
 
 ---
 
-### set_disabled()
+### set\_disabled()
 
 Mark the renderer's block as disabled.
 
@@ -543,9 +577,10 @@ rendering logic can treat this block as inactive or skip its output.
 
 **since** 5.5.1
 
-**Returns:** `void`
+**Returns:** `void` 
 
-_This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`._
+
+*This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
 
 **PHP**
 
@@ -561,3 +596,4 @@ public function block_context($context): array
 ```
 
 ---
+
