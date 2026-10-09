@@ -6,6 +6,8 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "docs:start": "docusaurus start --config docs/docusaurus.config.ts",
+    "docs:sanitize": "node docs/sanitize-docs.js",
+    "predocs:build": "npm run docs:sanitize",
     "docs:build": "docusaurus build --config docs/docusaurus.config.ts --out-dir docs/build",
     "docs:serve": "docusaurus serve --config docs/docusaurus.config.ts",
     "docs:clear": "docusaurus clear --config docs/docusaurus.config.ts",
