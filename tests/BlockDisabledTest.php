@@ -16,10 +16,6 @@ trait DisabledBlockFixture
 
 	public array $rendered_context = [];
 
-	public function __construct()
-	{
-	}
-
 	public function add_fields(): object
 	{
 		return new \stdClass();
@@ -70,6 +66,26 @@ trait DisabledBlockFixture
 	}
 }
 
+final class DisabledBlockV1Fixture extends BlockRendererV1
+{
+	use DisabledBlockFixture;
+
+	public function block_register(): array
+	{
+		return [];
+	}
+
+	public function render()
+	{
+		$this->rendered_context = $this->context;
+	}
+}
+
+final class DisabledBlockV2Fixture extends BlockRendererV2
+{
+	use DisabledBlockFixture;
+}
+
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
@@ -81,6 +97,7 @@ final class BlockDisabledTest extends TestCase
 		parent::setUp();
 		Monkey\setUp();
 		Functions\when('__')->returnArg();
+		Functions\when('wp_kses')->returnArg();
 	}
 
 	protected function tearDown(): void
@@ -91,20 +108,9 @@ final class BlockDisabledTest extends TestCase
 
 	private function renderer(string $version): AbstractBlockRenderer
 	{
-		if ('v1' === $version) {
-			return new class extends BlockRendererV1 {
-				use DisabledBlockFixture;
+		$class = 'v1' === $version ? DisabledBlockV1Fixture::class : DisabledBlockV2Fixture::class;
 
-				public function render()
-				{
-					$this->rendered_context = $this->context;
-				}
-			};
-		}
-
-		return new class extends BlockRendererV2 {
-			use DisabledBlockFixture;
-		};
+		return (new \ReflectionClass($class))->newInstanceWithoutConstructor();
 	}
 
 	public static function disabledStates(): array

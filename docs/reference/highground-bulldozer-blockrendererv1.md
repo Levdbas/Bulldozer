@@ -382,7 +382,7 @@ Check if the block is disabled for frontend rendering.
 Disabled blocks remain visible in editor previews. Adds the disabled
 warning once per render, including when set_disabled() is used.
 
-**Returns:** `bool` 
+**Returns:** `bool`
 
 
 *This method is inherited from `\HighGround\Bulldozer\AbstractBlockRenderer`.*
@@ -596,4 +596,3 @@ public function block_context($context): array
 ```
 
 ---
-
