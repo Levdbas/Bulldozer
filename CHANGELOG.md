@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.14.1](https://github.com/Levdbas/Bulldozer/compare/5.14.0...5.14.1) (2026-11-18)
+
+
+### ⚙️ Miscellaneous Tasks
+
+* Update Bulldozer version comment for release tracking ([2925774](https://github.com/Levdbas/Bulldozer/commit/2925774e0d7ec7d3c9d61f44280c72b626fc8b5d))
+
 ## [5.14.0](https://github.com/Levdbas/Bulldozer/compare/5.13.0...5.14.0) (2026-11-18)
 
 
