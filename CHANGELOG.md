@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.14.0](https://github.com/Levdbas/Bulldozer/compare/5.13.0...5.14.0) (2026-11-18)
+
+
+### ⛰️ Features
+
+* Add Twig version check in Bulldozer constructor ([4970fd0](https://github.com/Levdbas/Bulldozer/commit/4970fd023159c0f13e105ee1f989867b9179c70d))
+
 ## [5.13.0](https://github.com/Levdbas/Bulldozer/compare/5.12.5...5.13.0) (2026-10-08)
 
 
