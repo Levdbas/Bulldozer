@@ -251,6 +251,18 @@ class Bulldozer
 			trigger_error('Bulldozer requires PHP 8.0.2 or greater. You have ' . phpversion(), E_USER_ERROR);
 		}
 
+		// check if the installed Twig version is supported
+		if (class_exists(\Twig\Environment::class) && version_compare(\Twig\Environment::VERSION, '3.24.0', '<')) {
+			$message = sprintf(__('Your theme %1$s requires Twig %2$s or greater. You have %3$s.', 'bulldozer'), self::$theme, '3.24.0', \Twig\Environment::VERSION);
+			add_action(
+				'after_setup_theme',
+				function () use ($message) {
+					self::backend_error($message);
+					self::frontend_error($message);
+				}
+			);
+		}
+
 		// check if ACF is installed
 		if (!class_exists('ACF', false)) {
 			$message = sprintf(__('Your theme %1$s requires the plugin %2$s. Please install it.', 'bulldozer'), self::$theme, 'Advanced Custom Fields');
